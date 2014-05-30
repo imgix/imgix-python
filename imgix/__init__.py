@@ -15,6 +15,7 @@ class UrlBuilder(object):
 		self._sign_mode = sign_mode
 		self._use_https = use_https
 
+
 	def create_url(self, path, **parameters):
 		crc = zlib.crc32(path) & 0xffffffff
 		index = crc % len(self._domains) # Deterministically choose a domain
