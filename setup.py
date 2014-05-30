@@ -5,7 +5,6 @@ try:
 except:
 	from distutils.core import setup
 from distutils.command.build_py import build_py
-import blacktip
 
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
