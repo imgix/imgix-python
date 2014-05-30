@@ -3,12 +3,22 @@ imgix-python
 
 A Python client library for generating URLs with imgix.
 
+Installation
+------------
+
+To install the library from source code, run the following command from inside
+the root folder of the source code:
+
+    sudo python setup.py build install
+
+
 Basic Usage
 -----------
 
 To begin creating imgix URLs programmatically, simply import the imgix library
 and create a URL builder. The URL builder can be reused to create URLs for any
 images on the domains it is provided.
+
 
     import imgix
 
@@ -18,7 +28,9 @@ images on the domains it is provided.
 	# Prints out:
     # http://demos.imgix.net/bridge.png?h=100&w=100
 
+
 For HTTPS support, simply specify the HTTPS flag like so:
+
 
     import imgix
 
@@ -34,6 +46,7 @@ Signed URLs
 
 To produce a signed URL, you must enable secure URLs on your source and then
 provide your signature key to the URL builder.
+
 
     import imgix
 
@@ -54,6 +67,7 @@ recommend 2-3 domain shards maximum if you are going to use domain sharding.
 In order to use domain sharding, you need to add multiple domains to your 
 source. You then provide a list of these domains to a builder.
 
+
     import imgix
 
 	builder = imgix.UrlBuilder([
@@ -68,10 +82,12 @@ source. You then provide a list of these domains to a builder.
     # http://demos-2.imgix.net/bridge.png?h=100&w=100
     # http://demos-3.imgix.net/flower.png?h=100&w=100
 
+
 By default, shards are calculated using a checksum so that the image path
 always resolves to the same domain. This improves caching in the browser. 
 However, you can supply a different strategy that cycles through domains 
 instead. For example:
+
 
     import imgix
 
