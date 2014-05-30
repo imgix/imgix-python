@@ -6,7 +6,7 @@ A Python client library for generating URLs with imgix.
 Installation
 ------------
 
-To install the library from source code, run the following command from inside
+To install the library from source, run the following command from inside
 the root folder of the source code:
 
     sudo python setup.py build install
