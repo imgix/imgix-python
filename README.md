@@ -41,7 +41,7 @@ provide your signature key to the URL builder.
 	print builder.create_url("/bridge.png", w=100, h=100)
 
 	# Prints out:
-    # http://demos.imgix.net/bridge.png?h=100&w=100
+    # http://demos.imgix.net/bridge.png?h=100&w=100&s=7370d6e36bb2262e73b19578739af1af
 
 
 Domain Sharded URLs
