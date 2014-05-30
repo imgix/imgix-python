@@ -1,6 +1,8 @@
 imgix-python
 ============
 
+![imgix logo](/https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200&fit=fill&bg=fff)
+
 A Python client library for generating URLs with imgix.
 
 Installation
