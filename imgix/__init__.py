@@ -83,7 +83,6 @@ class UrlHelper(object):
 		if self._sign_key:
 			delim = "" if query == "" else "?"
 			signing_value = self._sign_key + path + delim + query
-			print signing_value
 			signature = hashlib.md5(signing_value).hexdigest()
 			if query:
 				query += "&s=" + signature
