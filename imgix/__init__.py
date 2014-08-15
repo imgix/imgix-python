@@ -77,10 +77,14 @@ class UrlHelper(object):
 			query_pairs.append((str(key), str(self._parameters[key])))
 
 		path = urllib.quote(self._path, safe=":/")
+		if not path.startswith("/"):
+			path = "/" + path # Fix web proxy style URLs
 		query = urllib.urlencode(query_pairs)
 		if self._sign_key:
 			delim = "" if query == "" else "?"
-			signature = hashlib.md5(path + delim + query).hexdigest()
+			signing_value = self._sign_key + path + delim + query
+			print signing_value
+			signature = hashlib.md5(signing_value).hexdigest()
 			if query:
 				query += "&s=" + signature
 			else:
