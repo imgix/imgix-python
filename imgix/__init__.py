@@ -76,7 +76,7 @@ class UrlHelper(object):
 		for key in sorted(self._parameters.keys()):
 			query_pairs.append((str(key), str(self._parameters[key])))
 
-		path = urllib.quote(self._path)
+		path = urllib.quote(self._path, safe=":/")
 		query = urllib.urlencode(query_pairs)
 		if self._sign_key:
 			delim = "" if query == "" else "?"
