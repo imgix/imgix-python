@@ -39,12 +39,12 @@ def test_url_builder_create_url_with_path_and_paremeters_and_signature():
 def test_url_builder_create_url_with_fully_qualified_url():
     builder = default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png")
-    assert url == "https://my-social-network.imgix.net/http%3A%2F%2Favatars.com%2Fjohn-smith.png?s=493a52f008c91416351f8b33d4883135"
+    assert url == "http://my-social-network.imgix.net/http%3A%2F%2Favatars.com%2Fjohn-smith.png?s=493a52f008c91416351f8b33d4883135"
 
 def test_url_builder_create_url_with_fully_qualified_url_and_parameters():
     builder = default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png", w=400, h=300)
-    assert url == "https://my-social-network.imgix.net/http%3A%2F%2Favatars.com%2Fjohn-smith.png?h=300&w=400&s=a201fe1a3caef4944dcb40f6ce99e746"
+    assert url == "http://my-social-network.imgix.net/http%3A%2F%2Favatars.com%2Fjohn-smith.png?h=300&w=400&s=a201fe1a3caef4944dcb40f6ce99e746"
 
 def test_url_builder_use_https():
     # Defaults to http
