@@ -9,7 +9,7 @@ from distutils.command.build_py import build_py
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
 
-VERSION="0.0.2"
+VERSION="0.0.3"
 
 install_requires = []
 
