@@ -75,7 +75,7 @@ In order to use domain sharding, you need to add multiple domains to your
 source. You then provide a list of these domains to a builder.
 
 ```python
-  import imgix
+import imgix
 
 builder = imgix.UrlBuilder([
     "demos-1.imgix.net",
