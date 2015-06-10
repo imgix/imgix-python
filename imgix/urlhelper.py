@@ -3,6 +3,15 @@
 import hashlib
 import urllib
 
+try: # Python 3
+    from urllib.parse import urlencode
+    from urllib.parse import quote
+    import urllib.parse as urlparse
+except ImportError: # Python 2.7
+    import urlparse
+    from urllib import urlencode
+    from urllib import quote
+
 from .constants import *
 
 class UrlHelper(object):
@@ -51,15 +60,15 @@ class UrlHelper(object):
         path = self._path
 
         if path.startswith("http"):
-            path = urllib.parse.quote(self._path, safe="")
+            path = quote(self._path, safe="")
 
         if not path.startswith("/"):
             path = "/" + path  # Fix web proxy style URLs
 
         if not path.startswith("/http") and not self._str_is_ascii(path):
-            path = urllib.parse.quote(path)
+            path = quote(path)
 
-        query = urllib.parse.urlencode(query_pairs)
+        query = urlencode(query_pairs)
         if self._sign_key:
             delim = "" if query == "" else "?"
             signing_value = self._sign_key + path + delim + query
@@ -70,7 +79,7 @@ class UrlHelper(object):
             else:
                 query = "s=" + signature
 
-        return urllib.parse.urlunparse([
+        return urlparse.urlunparse([
             self._scheme,
             self._host,
             path,

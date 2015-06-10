@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import imgix
-import urllib.parse
+
+try: # Python 3
+    from urllib.parse import urlencode
+    from urllib.parse import quote
+    import urllib.parse as urlparse
+except ImportError: # Python 2.7
+    import urlparse
+    from urllib import urlencode
+    from urllib import quote
 
 def default_builder():
     return imgix.UrlBuilder('my-social-network.imgix.net')
@@ -55,19 +63,19 @@ def test_url_builder_use_https():
     # Defaults to http
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     url = builder.create_url("/users/1.png")
-    assert urllib.parse.urlparse(url).scheme == "http"
+    assert urlparse.urlparse(url).scheme == "http"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', use_https=False)
     url = builder.create_url("/users/1.png")
-    assert urllib.parse.urlparse(url).scheme == "http"
+    assert urlparse.urlparse(url).scheme == "http"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', True)
     url = builder.create_url("/users/1.png")
-    assert urllib.parse.urlparse(url).scheme == "https"
+    assert urlparse.urlparse(url).scheme == "https"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', use_https=True)
     url = builder.create_url("/users/1.png")
-    assert urllib.parse.urlparse(url).scheme == "https"
+    assert urlparse.urlparse(url).scheme == "https"
 
 # def test_utf_8_characters():
 #     builder = imgix.UrlBuilder('my-social-network.imgix.net')
