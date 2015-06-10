@@ -2,16 +2,25 @@
 
 import zlib
 
-from .constants import *
 from .urlhelper import UrlHelper
 
-class UrlBuilder(object):
+from .constants import SHARD_STRATEGY_CYCLE
+from .constants import SHARD_STRATEGY_CRC
+from .constants import SIGNATURE_MODE_QUERY
 
-    def __init__(self, domains, use_https=False, sign_key=None,
-                 sign_mode=SIGNATURE_MODE_QUERY,
-                 shard_strategy=SHARD_STRATEGY_CRC):
+
+class UrlBuilder(object):
+    def __init__(
+            self,
+            domains,
+            use_https=False,
+            sign_key=None,
+            sign_mode=SIGNATURE_MODE_QUERY,
+            shard_strategy=SHARD_STRATEGY_CRC):
+
         if not isinstance(domains, list):
             domains = [domains]
+
         self._domains = domains
         self._sign_key = sign_key
         self._sign_mode = sign_mode
@@ -34,7 +43,13 @@ class UrlBuilder(object):
             domain = self._domains[0]
 
         scheme = "https" if self._use_https else "http"
-        url_obj = UrlHelper(domain, path, scheme,
-                            sign_key=self._sign_key, sign_mode=self._sign_mode,
-                            **parameters)
+
+        url_obj = UrlHelper(
+            domain,
+            path,
+            scheme,
+            sign_key=self._sign_key,
+            sign_mode=self._sign_mode,
+            **parameters)
+
         return str(url_obj)

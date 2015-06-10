@@ -2,7 +2,6 @@
 
 import imgix
 
-
 try:
     # Python 3
     import urllib.parse as urlparse
