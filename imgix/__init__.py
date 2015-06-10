@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from constants import *
-from urlbuilder import UrlBuilder
+from .constants import *
+from .urlbuilder import UrlBuilder
 
 __all__ = [
     'UrlBuilder',

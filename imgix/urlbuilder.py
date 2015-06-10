@@ -2,8 +2,8 @@
 
 import zlib
 
-from constants import *
-from urlhelper import UrlHelper
+from .constants import *
+from .urlhelper import UrlHelper
 
 class UrlBuilder(object):
 
@@ -21,7 +21,7 @@ class UrlBuilder(object):
 
     def create_url(self, path, **parameters):
         if self._shard_strategy == SHARD_STRATEGY_CRC:
-            crc = zlib.crc32(path) & 0xffffffff
+            crc = zlib.crc32(path.encode('ascii')) & 0xffffffff
             index = crc % len(self._domains)  # Deterministically choose domain
             domain = self._domains[index]
 

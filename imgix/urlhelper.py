@@ -2,9 +2,8 @@
 
 import hashlib
 import urllib
-import urlparse
 
-from constants import *
+from .constants import *
 
 class UrlHelper(object):
 
@@ -22,7 +21,7 @@ class UrlHelper(object):
             raise Exception("Path signatures are not supported yet.")
         self._sign_mode = sign_mode
         self._parameters = {}
-        for key, value in parameters.iteritems():
+        for key, value in parameters.items():
             self.set_parameter(key, value)
 
     def set_parameter(self, key, value):
@@ -52,26 +51,26 @@ class UrlHelper(object):
         path = self._path
 
         if path.startswith("http"):
-            path = urllib.quote(self._path, safe="")
+            path = urllib.parse.quote(self._path, safe="")
 
         if not path.startswith("/"):
             path = "/" + path  # Fix web proxy style URLs
 
-        if not self._str_is_ascii(path):
-            path = urllib.quote(self._path)
+        if not path.startswith("/http") and not self._str_is_ascii(path):
+            path = urllib.parse.quote(path)
 
-        query = urllib.urlencode(query_pairs)
+        query = urllib.parse.urlencode(query_pairs)
         if self._sign_key:
             delim = "" if query == "" else "?"
             signing_value = self._sign_key + path + delim + query
-            signature = hashlib.md5(signing_value).hexdigest()
+            signature = hashlib.md5(signing_value.encode('utf-8')).hexdigest()
 
             if query:
                 query += "&s=" + signature
             else:
                 query = "s=" + signature
 
-        return urlparse.urlunparse([
+        return urllib.parse.urlunparse([
             self._scheme,
             self._host,
             path,
