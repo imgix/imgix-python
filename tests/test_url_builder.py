@@ -19,10 +19,6 @@ def default_builder_with_signature():
     return imgix.UrlBuilder('my-social-network.imgix.net', False, "FOO123bar")
 
 
-def test_smoke():
-    assert True
-
-
 def test_that_constants_are_exported():
     builder = imgix.UrlBuilder(
         'my-social-network.imgix.net',
