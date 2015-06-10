@@ -1,8 +1,16 @@
 language: python
-python:
-- '2.7'
-- pypy
-install:
-  - pip install -U pytest
-script: py.test
 
+python:
+    - 2.7
+    - 3.4
+    - pypy
+
+env:
+  - TOX_ENV=core
+  - TOX_ENV=flake8
+
+install:
+    - pip install tox
+
+script:
+  - tox -e $TOX_ENV

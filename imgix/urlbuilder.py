@@ -2,16 +2,25 @@
 
 import zlib
 
-from constants import *
-from urlhelper import UrlHelper
+from .urlhelper import UrlHelper
+
+from .constants import SHARD_STRATEGY_CYCLE
+from .constants import SHARD_STRATEGY_CRC
+from .constants import SIGNATURE_MODE_QUERY
+
 
 class UrlBuilder(object):
+    def __init__(
+            self,
+            domains,
+            use_https=False,
+            sign_key=None,
+            sign_mode=SIGNATURE_MODE_QUERY,
+            shard_strategy=SHARD_STRATEGY_CRC):
 
-    def __init__(self, domains, use_https=False, sign_key=None,
-                 sign_mode=SIGNATURE_MODE_QUERY,
-                 shard_strategy=SHARD_STRATEGY_CRC):
         if not isinstance(domains, list):
             domains = [domains]
+
         self._domains = domains
         self._sign_key = sign_key
         self._sign_mode = sign_mode
@@ -19,9 +28,9 @@ class UrlBuilder(object):
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
 
-    def create_url(self, path, **parameters):
+    def create_url(self, path, **kwargs):
         if self._shard_strategy == SHARD_STRATEGY_CRC:
-            crc = zlib.crc32(path) & 0xffffffff
+            crc = zlib.crc32(path.encode('utf-8')) & 0xffffffff
             index = crc % len(self._domains)  # Deterministically choose domain
             domain = self._domains[index]
 
@@ -34,7 +43,13 @@ class UrlBuilder(object):
             domain = self._domains[0]
 
         scheme = "https" if self._use_https else "http"
-        url_obj = UrlHelper(domain, path, scheme,
-                            sign_key=self._sign_key, sign_mode=self._sign_mode,
-                            **parameters)
+
+        url_obj = UrlHelper(
+            domain,
+            path,
+            scheme,
+            sign_key=self._sign_key,
+            sign_mode=self._sign_mode,
+            **kwargs)
+
         return str(url_obj)
