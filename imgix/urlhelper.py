@@ -60,13 +60,19 @@ class UrlHelper(object):
         path = self._path
 
         if path.startswith("http"):
-            path = quote(self._path, safe="")
+            try:
+                path = quote(path, safe="")
+            except KeyError:
+                path = quote(path.encode('utf-8'), safe="")
 
         if not path.startswith("/"):
             path = "/" + path  # Fix web proxy style URLs
 
         if not path.startswith("/http") and not self._str_is_ascii(path):
-            path = quote(path)
+            try:
+                path = quote(path)
+            except KeyError:
+                path = quote(path.encode('utf-8'))
 
         query = urlencode(query_pairs)
         if self._sign_key:
