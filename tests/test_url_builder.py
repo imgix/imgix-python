@@ -2,12 +2,7 @@
 
 import imgix
 
-try:
-    # Python 3
-    import urllib.parse as urlparse
-except ImportError:
-    # Python 2.7
-    import urlparse
+from imgix.compat import urlparse
 
 
 def default_builder():

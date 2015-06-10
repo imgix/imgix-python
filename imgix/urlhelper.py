@@ -4,16 +4,9 @@ import hashlib
 
 from .constants import SIGNATURE_MODE_QUERY
 
-try:
-    # Python 3
-    from urllib.parse import urlencode
-    from urllib.parse import quote
-    import urllib.parse as urlparse
-except ImportError:
-    # Python 2.7
-    import urlparse
-    from urllib import urlencode
-    from urllib import quote
+from .compat import urlencode
+from .compat import urlparse
+from .compat import quote
 
 
 class UrlHelper(object):
@@ -24,7 +17,7 @@ class UrlHelper(object):
             scheme="http",
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
-            **parameters):
+            **kwargs):
 
         self._scheme = scheme
         self._host = domain
@@ -36,7 +29,7 @@ class UrlHelper(object):
 
         self._sign_mode = sign_mode
         self._parameters = {}
-        for key, value in parameters.items():
+        for key, value in kwargs.items():
             self.set_parameter(key, value)
 
     @classmethod
