@@ -75,6 +75,13 @@ class UrlHelper(object):
         if key in self._parameters:
             del self._parameters[key]
 
+    def _str_is_ascii(self, s):
+        try:
+            s.decode('ascii')
+            return True
+        except:
+            return False
+
     def __str__(self):
         query_pairs = []
 
@@ -88,6 +95,9 @@ class UrlHelper(object):
 
         if not path.startswith("/"):
             path = "/" + path  # Fix web proxy style URLs
+
+        if not self._str_is_ascii(path):
+            path = urllib.quote(self._path)
 
         query = urllib.urlencode(query_pairs)
         if self._sign_key:
