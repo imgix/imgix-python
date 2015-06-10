@@ -115,15 +115,17 @@ for i in xrange(4):
 # http://demos-1.imgix.net/bridge.png?h=100&w=100
 ```
 
-Usage in a country with ', `, ^ or any other accent
+Usage with UTF-8
 ---------------------------------------------------
 
-If you are using this package with some image names with ', `, ^ or any other accent (like for example, Spain, with words like camión, or tiburón), you will need to add to the script where you are using imgix, some encoding in the beginning of the file, like in the following example:
+For usage with non-ASCII characters, please be sure to that your project’s source files specify UTF-8 encoding:
 
-# coding=utf-8
+```python
+# -*- coding: utf-8 -*-
+```
 
 If you don't add this encoding, and you have an image with name for example 'tiburón.jpeg', you will get the following error trying to run your script:
 
+```
 SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
-
-and instead of *** the code that correspond to your (in my case), ó, from tiburón.
+```
