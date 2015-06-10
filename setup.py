@@ -1,25 +1,18 @@
-import os
-import sys
-try:
-    from setuptools import setup
-except:
-    from distutils.core import setup
-from distutils.command.build_py import build_py
+import re
 
-path, script = os.path.split(sys.argv[0])
-os.chdir(os.path.abspath(path))
+from setuptools import setup
 
-VERSION="0.0.3"
 
-install_requires = []
+metadata = dict(
+    re.findall("__([a-z]+)__ = '([^']+)'", open('imgix/__init__.py').read()))
 
-setup(name='imgix',
-    cmdclass={'build_py': build_py},
-    version=VERSION,
-    description='Python client library for imgix.',
+
+setup(
+    name='imgix',
+    version=metadata['version'],
     author='imgix',
     author_email='support@imgix.com',
-    url='http://www.imgix.com/',
     packages=['imgix'],
-    install_requires=install_requires
-)
+    url='http://www.imgix.com/',
+    description='Python client library for imgix.',
+    )
