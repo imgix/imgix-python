@@ -68,3 +68,8 @@ def test_utf_8_characters():
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     url = builder.create_url(u'/ǝ'.encode('utf8'))
     assert url == "http://my-social-network.imgix.net/%C7%9D"
+
+def test_more_involved_utf_8_characters():
+    builder = imgix.UrlBuilder('my-social-network.imgix.net')
+    url = builder.create_url(u'/üsers/1/米国でのパーティーします。.png'.encode('utf8'))
+    assert url == "http://my-social-network.imgix.net/%C3%BCsers/1/%E7%B1%B3%E5%9B%BD%E3%81%A7%E3%81%AE%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3%E3%83%BC%E3%81%97%E3%81%BE%E3%81%99%E3%80%82.png"
