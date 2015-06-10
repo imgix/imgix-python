@@ -63,3 +63,8 @@ def test_url_builder_use_https():
     builder = imgix.UrlBuilder('my-social-network.imgix.net', use_https=True)
     url = builder.create_url("/users/1.png")
     assert urlparse.urlparse(url).scheme == "https"
+
+def test_utf_8_characters():
+    builder = imgix.UrlBuilder('my-social-network.imgix.net')
+    url = builder.create_url(u'/ǝ'.encode('utf8'))
+    assert url == "http://my-social-network.imgix.net/%C7%9D"
