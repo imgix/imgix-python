@@ -2,6 +2,8 @@ import hashlib
 import urllib
 import urlparse
 import zlib
+import requests
+import json
 
 SHARD_STRATEGY_CRC = "crc"
 SHARD_STRATEGY_CYCLE = "cycle"
@@ -43,6 +45,12 @@ class UrlBuilder(object):
                             sign_key=self._sign_key, sign_mode=self._sign_mode,
                             **parameters)
         return str(url_obj)
+
+    def create_shortened_url_using_bitlyAPI(self, url_obj, key=None):
+        bitly = BitlyHelper(url_obj, key)
+        shortenedUrl = bitly.create_shortened_url()
+        if key != None:
+            return shortenedUrl
 
 
 class UrlHelper(object):
@@ -108,3 +116,20 @@ class UrlHelper(object):
             query,
             "",
         ])
+
+class BitlyHelper:
+    def __init__(self, url, key):
+        self._url = url
+        if key == None:
+            print "We need yout bitly key to get the shortened url"
+        self._key = key
+
+    def create_shortened_url(self):
+        if self._key != None:
+            API_KEY = self._key
+            uri = self._url
+            params = {'access_token':API_KEY, 'uri':uri}
+            endpoint = 'https://api-ssl.bitly.com/v3/shorten'
+            r = requests.get(endpoint, params=params)
+            response = json.loads(r.text.decode('utf-8'))
+            return response['data']['url']
