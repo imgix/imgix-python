@@ -19,7 +19,7 @@ setup(name='imgix',
 	description='Python client library for imgix.',
 	author='imgix',
 	author_email='support@imgix.com',
-	url='http://www.imgix.com/',
+	url='https://github.com/imgix/imgix-python',
 	packages=['imgix'],
 	install_requires=install_requires
 )
