@@ -12,6 +12,11 @@ def default_builder_with_signature():
 def test_smoke():
     assert True
 
+def test_that_constants_are_exported():
+    builder = imgix.UrlBuilder('my-social-network.imgix.net', sign_mode=imgix.SIGNATURE_MODE_PATH, shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
+    assert builder._sign_mode == imgix.SIGNATURE_MODE_PATH
+    assert builder._shard_strategy == imgix.SHARD_STRATEGY_CYCLE
+
 def test_url_builder_create():
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     assert type(builder) is imgix.UrlBuilder
