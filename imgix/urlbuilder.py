@@ -28,7 +28,7 @@ class UrlBuilder(object):
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
 
-    def create_url(self, path, **parameters):
+    def create_url(self, path, **kwargs):
         if self._shard_strategy == SHARD_STRATEGY_CRC:
             crc = zlib.crc32(path.encode('utf-8')) & 0xffffffff
             index = crc % len(self._domains)  # Deterministically choose domain
@@ -50,6 +50,6 @@ class UrlBuilder(object):
             scheme,
             sign_key=self._sign_key,
             sign_mode=self._sign_mode,
-            **parameters)
+            **kwargs)
 
         return str(url_obj)
