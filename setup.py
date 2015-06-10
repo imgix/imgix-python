@@ -14,5 +14,6 @@ setup(
     author_email='support@imgix.com',
     packages=['imgix'],
     url='http://www.imgix.com/',
+    license='MIT',
     description='Python client library for imgix.',
     )
