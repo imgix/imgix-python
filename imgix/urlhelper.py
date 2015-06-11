@@ -7,6 +7,7 @@ from .constants import SIGNATURE_MODE_QUERY
 from .compat import urlencode
 from .compat import urlparse
 from .compat import quote
+from . import __version__
 
 
 class UrlHelper(object):
@@ -17,12 +18,14 @@ class UrlHelper(object):
             scheme="http",
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
+            sign_with_library_version=True,
             **kwargs):
 
         self._scheme = scheme
         self._host = domain
         self._path = path
         self._sign_key = sign_key
+        self._sign_with_library_version = sign_with_library_version
 
         if sign_mode != SIGNATURE_MODE_QUERY:
             raise Exception("Path signatures are not supported yet.")
@@ -60,6 +63,9 @@ class UrlHelper(object):
             query_pairs.append((str(key), str(self._parameters[key])))
 
         path = self._path
+
+        if self._sign_with_library_version:
+            query_pairs.append(("ixlib", "python-" + __version__))
 
         if path.startswith("http"):
             try:

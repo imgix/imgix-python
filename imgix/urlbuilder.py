@@ -16,7 +16,8 @@ class UrlBuilder(object):
             use_https=False,
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
-            shard_strategy=SHARD_STRATEGY_CRC):
+            shard_strategy=SHARD_STRATEGY_CRC,
+            sign_with_library_version=True):
 
         if not isinstance(domains, list):
             domains = [domains]
@@ -27,6 +28,7 @@ class UrlBuilder(object):
         self._use_https = use_https
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
+        self._sign_with_library_version = sign_with_library_version
 
     def create_url(self, path, **kwargs):
         if self._shard_strategy == SHARD_STRATEGY_CRC:
@@ -50,6 +52,7 @@ class UrlBuilder(object):
             scheme,
             sign_key=self._sign_key,
             sign_mode=self._sign_mode,
+            sign_with_library_version=self._sign_with_library_version,
             **kwargs)
 
         return str(url_obj)
