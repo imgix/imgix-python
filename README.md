@@ -138,3 +138,12 @@ python setup.py sdist
 python setup.py bdist_wheel --universal
 twine upload dist/*
 ```
+
+Running Tests
+-------------
+
+To run the tests and format the code, simply:
+
+```
+tox
+```
