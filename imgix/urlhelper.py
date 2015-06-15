@@ -15,7 +15,7 @@ class UrlHelper(object):
             self,
             domain,
             path,
-            scheme="http",
+            scheme="https",
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
             sign_with_library_version=True,
