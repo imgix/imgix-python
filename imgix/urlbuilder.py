@@ -13,7 +13,7 @@ class UrlBuilder(object):
     def __init__(
             self,
             domains,
-            use_https=False,
+            use_https=True,
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
             shard_strategy=SHARD_STRATEGY_CRC,
