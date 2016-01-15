@@ -41,6 +41,12 @@ def test_create_url_with_path_and_parameters():
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
+def test_create_url_with_splatted_falsy_parameter():
+    builder = default_builder()
+    url = builder.create_url("/users/1.png", **{"or": 0})
+    assert url == "https://my-social-network.imgix.net/users/1.png?or=0"
+
+
 def test_create_url_with_path_and_signature():
     builder = default_builder_with_signature()
     url = builder.create_url("/users/1.png")
@@ -112,5 +118,6 @@ def test_more_involved_utf_8_characters():
 def test_signing_url_with_ixlib():
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     url = builder.create_url("/users/1.png")
-    assert url == "https://my-social-network.imgix.net/users/1.png?ixlib=python-" \
-        + imgix.__version__
+    assert url == (
+        "https://my-social-network.imgix.net/users/1.png?ixlib=python-" +
+        imgix._version.__version__)

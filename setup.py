@@ -1,14 +1,9 @@
-import re
-
+from imgix._version import __version__
 from setuptools import setup
-
-
-metadata = dict(
-    re.findall("__([a-z]+)__ = '([^']+)'", open('imgix/__init__.py').read()))
 
 setup(
     name='imgix',
-    version=metadata['version'],
+    version=__version__,
     author='imgix',
     author_email='support@imgix.com',
     packages=['imgix'],
