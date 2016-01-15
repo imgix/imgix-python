@@ -4,9 +4,7 @@ import hashlib
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import urlencode
-from .compat import urlparse
-from .compat import quote
+from .compat import iteritems, quote, urlencode, urlparse
 from ._version import __version__
 
 
@@ -19,7 +17,7 @@ class UrlHelper(object):
             sign_key=None,
             sign_mode=SIGNATURE_MODE_QUERY,
             sign_with_library_version=True,
-            **kwargs):
+            opts={}):
 
         self._scheme = scheme
         self._host = domain
@@ -32,7 +30,8 @@ class UrlHelper(object):
 
         self._sign_mode = sign_mode
         self._parameters = {}
-        for key, value in kwargs.items():
+
+        for key, value in iteritems(opts):
             self.set_parameter(key, value)
 
     @classmethod
