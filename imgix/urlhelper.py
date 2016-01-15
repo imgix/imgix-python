@@ -40,7 +40,7 @@ class UrlHelper(object):
         pass
 
     def set_parameter(self, key, value):
-        if not value:
+        if value is None or value is False:
             self.delete_parameter(key)
             return
         self._parameters[key] = value

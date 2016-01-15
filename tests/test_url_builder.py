@@ -41,6 +41,12 @@ def test_create_url_with_path_and_parameters():
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
+def test_create_url_with_splatted_falsy_parameter():
+    builder = default_builder()
+    url = builder.create_url("/users/1.png", **{"or": 0})
+    assert url == "https://my-social-network.imgix.net/users/1.png?or=0"
+
+
 def test_create_url_with_path_and_signature():
     builder = default_builder_with_signature()
     url = builder.create_url("/users/1.png")
