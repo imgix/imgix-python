@@ -37,13 +37,13 @@ def test_create_url_with_path():
 
 def test_create_url_with_path_and_parameters():
     builder = default_builder()
-    url = builder.create_url("/users/1.png", w=400, h=300)
+    url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
 def test_create_url_with_splatted_falsy_parameter():
     builder = default_builder()
-    url = builder.create_url("/users/1.png", **{"or": 0})
+    url = builder.create_url("/users/1.png", {"or": 0})
     assert url == "https://my-social-network.imgix.net/users/1.png?or=0"
 
 
@@ -57,7 +57,7 @@ def test_create_url_with_path_and_signature():
 
 def test_create_url_with_path_and_paremeters_and_signature():
     builder = default_builder_with_signature()
-    url = builder.create_url("/users/1.png", w=400, h=300)
+    url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
     assert url == \
         "https://my-social-network.imgix.net/users/1.png" \
         "?h=300&w=400&s=1a4e48641614d1109c6a7af51be23d18"
@@ -74,7 +74,8 @@ def test_create_url_with_fully_qualified_url():
 
 def test_create_url_with_fully_qualified_url_and_parameters():
     builder = default_builder_with_signature()
-    url = builder.create_url("http://avatars.com/john-smith.png", w=400, h=300)
+    url = builder.create_url("http://avatars.com/john-smith.png",
+                             {"w": 400, "h": 300})
     assert url == \
         "https://my-social-network.imgix.net/" \
         "http%3A%2F%2Favatars.com%2Fjohn-smith.png" \
