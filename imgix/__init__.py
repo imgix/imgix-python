@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-__version__ = '0.2.0'
-
 from .urlbuilder import UrlBuilder
 
 from .constants import SHARD_STRATEGY_CYCLE

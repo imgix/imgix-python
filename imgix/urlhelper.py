@@ -7,7 +7,7 @@ from .constants import SIGNATURE_MODE_QUERY
 from .compat import urlencode
 from .compat import urlparse
 from .compat import quote
-from . import __version__
+from ._version import __version__
 
 
 class UrlHelper(object):
