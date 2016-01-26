@@ -25,7 +25,7 @@ images on the domains it is provided.
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net")
-print builder.create_url("/bridge.png", w=100, h=100)
+print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 
 # Prints out:
 # http://demos.imgix.net/bridge.png?h=100&w=100
@@ -37,7 +37,7 @@ For HTTPS support, simply specify the HTTPS flag like so:
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net", use_https=True)
-print builder.create_url("/bridge.png", w=100, h=100)
+print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 
 # Prints out:
 # https://demos.imgix.net/bridge.png?h=100&w=100
@@ -53,7 +53,7 @@ provide your signature key to the URL builder.
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net", sign_key="test1234")
-print builder.create_url("/bridge.png", w=100, h=100)
+print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 
 # Prints out:
 # http://demos.imgix.net/bridge.png?h=100&w=100&s=7370d6e36bb2262e73b19578739af1af
@@ -79,8 +79,8 @@ builder = imgix.UrlBuilder([
     "demos-3.imgix.net",
 ])
 
-print builder.create_url("/bridge.png", w=100, h=100)
-print builder.create_url("/flower.png", w=100, h=100)
+print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
+print builder.create_url("/flower.png", {'w': 100, 'h': 100})
 
 # Prints out:
 # http://demos-2.imgix.net/bridge.png?h=100&w=100
@@ -102,7 +102,7 @@ builder = imgix.UrlBuilder([
 ], shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
 
 for i in xrange(4):
-    print builder.create_url("/bridge.png", w=100, h=100)
+    print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 
 # Prints out:
 # http://demos-1.imgix.net/bridge.png?h=100&w=100
