@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+from base64 import urlsafe_b64encode
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import iteritems, quote, urlencode, urlparse
+from .compat import iteritems, quote, urlparse
 from ._version import __version__
 
 
@@ -39,10 +40,17 @@ class UrlHelper(object):
         pass
 
     def set_parameter(self, key, value):
+        escaped_key = quote(key, "")
+
         if value is None or value is False:
-            self.delete_parameter(key)
+            self.delete_parameter(escaped_key)
             return
-        self._parameters[key] = value
+
+        if escaped_key.endswith('64'):
+            escaped_value = urlsafe_b64encode(str(value)).replace('=', '')
+        else:
+            escaped_value = quote(str(value), "")
+        self._parameters[escaped_key] = escaped_value
 
     def delete_parameter(self, key):
         if key in self._parameters:
@@ -56,15 +64,15 @@ class UrlHelper(object):
             return False
 
     def __str__(self):
-        query_pairs = []
+        query = {}
 
-        for key in sorted(self._parameters.keys()):
-            query_pairs.append((str(key), str(self._parameters[key])))
+        for key in sorted(self._parameters):
+            query[key] = self._parameters[key]
 
         path = self._path
 
         if self._sign_with_library_version:
-            query_pairs.append(("ixlib", "python-" + __version__))
+            query["ixlib"] = "python-" + __version__
 
         if path.startswith("http"):
             try:
@@ -81,7 +89,10 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        query = urlencode(query_pairs)
+        # query = urlencode(query_pairs)
+        # query = query_pairs.join('&')
+        query = ["%s=%s" % (key, val) for key, val in iteritems(query)]
+        query = '&'.join(query)
 
         if self._sign_key:
             delim = "" if query == "" else "?"

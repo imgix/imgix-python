@@ -116,6 +116,33 @@ def test_more_involved_utf_8_characters():
         "%86%E3%82%A3%E3%83%BC%E3%81%97%E3%81%BE%E3%81%99%E3%80%82.png"
 
 
+def test_param_values_are_escaped():
+    builder = default_builder()
+    url = builder.create_url('demo.png', {"hello world": "interesting"})
+
+    assert url == "https://my-social-network.imgix.net/demo.png?" \
+        "hello%20world=interesting"
+
+
+def test_param_keys_are_escaped():
+    builder = default_builder()
+    url = builder.create_url('demo.png', {
+        "hello_world": "/foo\"> <script>alert(\"hacked\")</script><"})
+
+    assert url == "https://my-social-network.imgix.net/demo.png?" \
+        "hello_world=%2Ffoo%22%3E%20%3Cscript%3Ealert%28%22" \
+        "hacked%22%29%3C%2Fscript%3E%3C"
+
+
+def test_base64_param_variants_are_base64_encoded():
+    builder = default_builder()
+    url = builder.create_url('~text', {
+        "txt64": "I cannøt belîév∑ it wors! 😱"})
+
+    assert url == "https://my-social-network.imgix.net/~text?txt64=" \
+        "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE"
+
+
 def test_signing_url_with_ixlib():
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     url = builder.create_url("/users/1.png")
