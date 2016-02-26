@@ -66,7 +66,7 @@ class UrlHelper(object):
     def __str__(self):
         query = {}
 
-        for key in sorted(self._parameters):
+        for key in self._parameters:
             query[key] = self._parameters[key]
 
         path = self._path
@@ -89,10 +89,12 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        # query = urlencode(query_pairs)
-        # query = query_pairs.join('&')
-        query = ["%s=%s" % (key, val) for key, val in iteritems(sorted(query))]
-        query = '&'.join(query)
+        query_array = []
+        for key in sorted(query):
+            val = query[key]
+            query_array.append("%s=%s" % (key, val))
+
+        query = '&'.join(query_array)
 
         if self._sign_key:
             delim = "" if query == "" else "?"
