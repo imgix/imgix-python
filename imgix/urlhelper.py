@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+from base64 import urlsafe_b64encode
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import iteritems, quote, urlencode, urlparse
+from .compat import iteritems
+from .compat import urlparse
+from .compat import quote
+from .compat import b
+
 from ._version import __version__
 
 
@@ -42,6 +47,14 @@ class UrlHelper(object):
         if value is None or value is False:
             self.delete_parameter(key)
             return
+
+        if isinstance(value, (int, float)):
+            value = str(value)
+
+        if key.endswith('64'):
+            value = urlsafe_b64encode(value.encode('utf-8'))
+            value = value.replace(b('='), b(''))
+
         self._parameters[key] = value
 
     def delete_parameter(self, key):
@@ -50,21 +63,21 @@ class UrlHelper(object):
 
     def _str_is_ascii(self, s):
         try:
-            s.decode('ascii')
+            b(s).decode('ascii')
             return True
         except:
             return False
 
     def __str__(self):
-        query_pairs = []
+        query = {}
 
-        for key in sorted(self._parameters.keys()):
-            query_pairs.append((str(key), str(self._parameters[key])))
+        for key in self._parameters:
+            query[key] = self._parameters[key]
 
         path = self._path
 
         if self._sign_with_library_version:
-            query_pairs.append(("ixlib", "python-" + __version__))
+            query["ixlib"] = "python-" + __version__
 
         if path.startswith("http"):
             try:
@@ -81,13 +94,14 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        query = urlencode(query_pairs)
+        query = "&".join(
+            (quote(key, "") + "=" + quote(query[key], ""))
+            for key in sorted(query))
 
         if self._sign_key:
             delim = "" if query == "" else "?"
             signing_value = self._sign_key + path + delim + query
             signature = hashlib.md5(signing_value.encode('utf-8')).hexdigest()
-
             if query:
                 query += "&s=" + signature
             else:
