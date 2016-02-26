@@ -6,6 +6,9 @@ try:
 
     def iteritems(a_dict):
         return a_dict.items()
+
+    def b(s):
+        return s.encode('utf-8')
 except ImportError:
     # Python 2.7
     import urlparse
@@ -15,5 +18,8 @@ except ImportError:
     def iteritems(a_dict):
         return a_dict.iteritems()
 
+    def b(s):
+        return s
 
-__all__ = ['iteritems', 'quote', 'urlparse', 'urlencode']
+
+__all__ = ['b', 'iteritems', 'quote', 'urlparse', 'urlencode']
