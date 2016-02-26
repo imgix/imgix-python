@@ -91,7 +91,7 @@ class UrlHelper(object):
 
         # query = urlencode(query_pairs)
         # query = query_pairs.join('&')
-        query = ["%s=%s" % (key, val) for key, val in iteritems(query)]
+        query = ["%s=%s" % (key, val) for key, val in iteritems(sorted(query))]
         query = '&'.join(query)
 
         if self._sign_key:
