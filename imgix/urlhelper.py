@@ -5,7 +5,7 @@ from base64 import urlsafe_b64encode
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import iteritems, quote, string_to_bytes, urlparse
+from .compat import iteritems, quote, b, urlparse
 from ._version import __version__
 
 
@@ -48,7 +48,7 @@ class UrlHelper(object):
 
         if escaped_key.endswith('64'):
             escaped_value = urlsafe_b64encode(
-                string_to_bytes(value)).replace('=', '')
+                b(value)).replace('=', '')
         else:
             escaped_value = quote(str(value), "")
         self._parameters[escaped_key] = escaped_value
