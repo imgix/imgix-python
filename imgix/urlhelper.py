@@ -6,6 +6,7 @@ from base64 import urlsafe_b64encode
 from .constants import SIGNATURE_MODE_QUERY
 
 from .compat import iteritems
+from .compat import urlencode
 from .compat import urlparse
 from .compat import quote
 from .compat import b
@@ -44,19 +45,15 @@ class UrlHelper(object):
         pass
 
     def set_parameter(self, key, value):
-        escaped_key = quote(key, "")
-
         if value is None or value is False:
-            self.delete_parameter(escaped_key)
+            self.delete_parameter(key)
             return
 
-        if escaped_key.endswith('64'):
-            escaped_value = urlsafe_b64encode(value.encode('utf-8'))
-            escaped_value = escaped_value.replace(b('='), b(''))
-        else:
-            escaped_value = quote(str(value), "")
+        if key.endswith('64'):
+            value = urlsafe_b64encode(value.encode('utf-8'))
+            value = value.replace(b('='), b(''))
 
-        self._parameters[escaped_key] = escaped_value
+        self._parameters[key] = value
 
     def delete_parameter(self, key):
         if key in self._parameters:
@@ -95,12 +92,7 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        query_array = []
-        for key in sorted(query):
-            val = query[key]
-            query_array.append("%s=%s" % (key, val))
-
-        query = '&'.join(query_array)
+        query = urlencode([(x, query[x]) for x in sorted(query)])
 
         if self._sign_key:
             delim = "" if query == "" else "?"
