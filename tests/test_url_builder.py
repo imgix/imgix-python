@@ -137,7 +137,7 @@ def test_param_keys_are_escaped():
 def test_base64_param_variants_are_base64_encoded():
     builder = default_builder()
     url = builder.create_url('~text', {
-        "txt64": "I cannøt belîév∑ it wors! 😱"})
+        "txt64": u"I cannøt belîév∑ it wors! 😱"})
 
     assert url == "https://my-social-network.imgix.net/~text?txt64=" \
         "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE"

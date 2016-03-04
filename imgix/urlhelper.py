@@ -5,7 +5,12 @@ from base64 import urlsafe_b64encode
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import iteritems, quote, urlparse
+from .compat import iteritems
+from .compat import urlencode
+from .compat import urlparse
+from .compat import quote
+from .compat import b
+
 from ._version import __version__
 
 
@@ -47,10 +52,11 @@ class UrlHelper(object):
             return
 
         if escaped_key.endswith('64'):
-            escaped_value = urlsafe_b64encode(
-                b"%s" % value).replace('=', '')
+            escaped_value = urlsafe_b64encode(value.encode('utf-8'))
+            escaped_value = escaped_value.replace(b('='), b(''))
         else:
             escaped_value = quote(str(value), "")
+
         self._parameters[escaped_key] = escaped_value
 
     def delete_parameter(self, key):
@@ -101,7 +107,6 @@ class UrlHelper(object):
             delim = "" if query == "" else "?"
             signing_value = self._sign_key + path + delim + query
             signature = hashlib.md5(signing_value.encode('utf-8')).hexdigest()
-
             if query:
                 query += "&s=" + signature
             else:
