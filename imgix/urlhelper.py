@@ -63,7 +63,7 @@ class UrlHelper(object):
 
     def _str_is_ascii(self, s):
         try:
-            s.decode('ascii')
+            b(s).decode('ascii')
             return True
         except:
             return False
