@@ -6,7 +6,6 @@ from base64 import urlsafe_b64encode
 from .constants import SIGNATURE_MODE_QUERY
 
 from .compat import iteritems
-from .compat import urlencode
 from .compat import urlparse
 from .compat import quote
 from .compat import b
@@ -97,7 +96,7 @@ class UrlHelper(object):
 
         query = "&".join(
             (quote(key, "") + "=" + quote(query[key], ""))
-                for key in sorted(query))
+            for key in sorted(query))
 
         if self._sign_key:
             delim = "" if query == "" else "?"
