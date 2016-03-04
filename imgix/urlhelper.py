@@ -49,6 +49,9 @@ class UrlHelper(object):
             self.delete_parameter(key)
             return
 
+        if isinstance(value, (int, float)):
+            value = str(value)
+
         if key.endswith('64'):
             value = urlsafe_b64encode(value.encode('utf-8'))
             value = value.replace(b('='), b(''))
@@ -92,7 +95,9 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        query = urlencode([(x, query[x]) for x in sorted(query)])
+        query = "&".join(
+            (quote(key, "") + "=" + quote(query[key], ""))
+                for key in sorted(query))
 
         if self._sign_key:
             delim = "" if query == "" else "?"
