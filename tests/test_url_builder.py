@@ -72,6 +72,14 @@ def test_create_url_with_fully_qualified_url():
         "?s=493a52f008c91416351f8b33d4883135"
 
 
+def test_create_url_with_pre_escaped_fully_qualified_url():
+    builder = default_builder()
+    url = builder.create_url("http://avatars.com/john%20smith.png")
+    assert url == \
+        "https://my-social-network.imgix.net/"\
+        "http%3A%2F%2Favatars.com%2Fjohn%20smith.png"
+
+
 def test_create_url_with_fully_qualified_url_and_parameters():
     builder = default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png",
