@@ -3,7 +3,6 @@ try:
     import urllib.parse as urlparse
     from urllib.parse import urlencode
     from urllib.parse import quote
-    from urllib.parse import unquote
 
     def iteritems(a_dict):
         return a_dict.items()
@@ -16,7 +15,6 @@ except ImportError:
     import urlparse
     from urllib import urlencode
     from urllib import quote
-    from urllib import unquote
 
     def iteritems(a_dict):
         return a_dict.iteritems()
@@ -24,4 +22,4 @@ except ImportError:
     def b(s):
         return s
 
-__all__ = ['iteritems', 'quote', 'unquote', 'urlparse', 'urlencode']
+__all__ = ['iteritems', 'quote', 'urlparse', 'urlencode']

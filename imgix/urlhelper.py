@@ -8,7 +8,6 @@ from .constants import SIGNATURE_MODE_QUERY
 from .compat import iteritems
 from .compat import urlparse
 from .compat import quote
-from .compat import unquote
 from .compat import b
 
 from ._version import __version__
@@ -75,16 +74,16 @@ class UrlHelper(object):
         for key in self._parameters:
             query[key] = self._parameters[key]
 
-        path = unquote(self._path)
+        path = self._path
 
         if self._sign_with_library_version:
             query["ixlib"] = "python-" + __version__
 
         if path.startswith("http"):
             try:
-                path = quote(path, safe="")
+                path = quote(path, safe="~()*!.'")
             except KeyError:
-                path = quote(path.encode('utf-8'), safe="")
+                path = quote(path.encode('utf-8'), safe="~()*!.'")
 
         if not path.startswith("/"):
             path = "/" + path  # Fix web proxy style URLs

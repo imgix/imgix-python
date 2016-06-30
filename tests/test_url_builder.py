@@ -72,12 +72,12 @@ def test_create_url_with_fully_qualified_url():
         "?s=493a52f008c91416351f8b33d4883135"
 
 
-def test_create_url_with_pre_escaped_fully_qualified_url():
+def test_create_url_with_fully_qualified_url_with_tilde():
     builder = default_builder()
-    url = builder.create_url("http://avatars.com/john%20smith.png")
+    url = builder.create_url("http://avatars.com/john~smith.png")
     assert url == \
         "https://my-social-network.imgix.net/"\
-        "http%3A%2F%2Favatars.com%2Fjohn%20smith.png"
+        "http%3A%2F%2Favatars.com%2Fjohn~smith.png"
 
 
 def test_create_url_with_fully_qualified_url_and_parameters():
