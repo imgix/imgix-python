@@ -29,6 +29,30 @@ def test_create():
     assert type(builder) is imgix.UrlBuilder
 
 
+def test_create_accepts_domains_list():
+    domains = [
+        'my-social-network-1.imgix.net',
+        'my-social-network-2.imgix.net'
+    ]
+    builder = imgix.UrlBuilder(domains)
+    assert builder._domains == domains
+
+
+def test_create_accepts_domains_tuple():
+    domains = (
+        'my-social-network-1.imgix.net',
+        'my-social-network-2.imgix.net'
+    )
+    builder = imgix.UrlBuilder(domains)
+    assert builder._domains == domains
+
+
+def test_create_accepts_domains_single_str():
+    domains = 'my-social-network-1.imgix.net'
+    builder = imgix.UrlBuilder(domains)
+    assert builder._domains == [domains]
+
+
 def test_create_url_with_path():
     builder = default_builder()
     url = builder.create_url("/users/1.png")
