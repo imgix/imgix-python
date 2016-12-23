@@ -19,7 +19,7 @@ class UrlBuilder(object):
             shard_strategy=SHARD_STRATEGY_CRC,
             sign_with_library_version=True):
 
-        if not isinstance(domains, list):
+        if not isinstance(domains, (list, tuple)):
             domains = [domains]
 
         self._domains = domains
