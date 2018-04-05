@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from collections import OrderedDict
+
 import imgix
 
 from imgix.compat import urlparse
@@ -61,8 +63,19 @@ def test_create_url_with_path():
 
 def test_create_url_with_path_and_parameters():
     builder = default_builder()
-    url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
+    url = builder.create_url("/users/1.png", OrderedDict({"w": 400, "h": 300}))
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
+
+
+def test_create_url_with_path_and_parameters_with_spaces():
+    builder = default_builder()
+    url = builder.create_url("/users/1.png",
+                             OrderedDict({
+                                 "w": 400, "h": 300,
+                                 "dl": "Sample file.png"}))
+    assert url == \
+        "https://my-social-network.imgix.net/users/1.png?" \
+        "dl=Sample+file.png&h=300&w=400"
 
 
 def test_create_url_with_splatted_falsy_parameter():
@@ -81,7 +94,7 @@ def test_create_url_with_path_and_signature():
 
 def test_create_url_with_path_and_paremeters_and_signature():
     builder = default_builder_with_signature()
-    url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
+    url = builder.create_url("/users/1.png", OrderedDict({"w": 400, "h": 300}))
     assert url == \
         "https://my-social-network.imgix.net/users/1.png" \
         "?h=300&w=400&s=1a4e48641614d1109c6a7af51be23d18"
@@ -107,7 +120,7 @@ def test_create_url_with_fully_qualified_url_with_tilde():
 def test_create_url_with_fully_qualified_url_and_parameters():
     builder = default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png",
-                             {"w": 400, "h": 300})
+                             OrderedDict({"w": 400, "h": 300}))
     assert url == \
         "https://my-social-network.imgix.net/" \
         "http%3A%2F%2Favatars.com%2Fjohn-smith.png" \
@@ -153,7 +166,7 @@ def test_param_values_are_escaped():
     url = builder.create_url('demo.png', {"hello world": "interesting"})
 
     assert url == "https://my-social-network.imgix.net/demo.png?" \
-        "hello%20world=interesting"
+        "hello+world=interesting"
 
 
 def test_param_keys_are_escaped():
@@ -162,7 +175,7 @@ def test_param_keys_are_escaped():
         "hello_world": "/foo\"> <script>alert(\"hacked\")</script><"})
 
     assert url == "https://my-social-network.imgix.net/demo.png?" \
-        "hello_world=%2Ffoo%22%3E%20%3Cscript%3Ealert%28%22" \
+        "hello_world=%2Ffoo%22%3E+%3Cscript%3Ealert%28%22" \
         "hacked%22%29%3C%2Fscript%3E%3C"
 
 
