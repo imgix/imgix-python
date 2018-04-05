@@ -2,11 +2,12 @@
 
 import hashlib
 from base64 import urlsafe_b64encode
+from collections import OrderedDict
 
 from .constants import SIGNATURE_MODE_QUERY
 
-from .compat import iteritems
 from .compat import urlparse
+from .compat import urlencode
 from .compat import quote
 from .compat import b
 
@@ -34,10 +35,10 @@ class UrlHelper(object):
             raise Exception("Path signatures are not supported yet.")
 
         self._sign_mode = sign_mode
-        self._parameters = {}
+        self._parameters = OrderedDict()
 
-        for key, value in iteritems(opts):
-            self.set_parameter(key, value)
+        for key in sorted(opts):
+            self.set_parameter(key, opts[key])
 
     @classmethod
     def from_url(cls, url):
@@ -69,7 +70,7 @@ class UrlHelper(object):
             return False
 
     def __str__(self):
-        query = {}
+        query = OrderedDict()
 
         for key in self._parameters:
             query[key] = self._parameters[key]
@@ -94,9 +95,7 @@ class UrlHelper(object):
             except KeyError:
                 path = quote(path.encode('utf-8'))
 
-        query = "&".join(
-            (quote(key, "") + "=" + quote(query[key], ""))
-            for key in sorted(query))
+        query = urlencode(query)
 
         if self._sign_key:
             delim = "" if query == "" else "?"
