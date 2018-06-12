@@ -65,7 +65,7 @@ class UrlHelper(object):
         try:
             b(s).decode('ascii')
             return True
-        except:
+        except Exception:
             return False
 
     def __str__(self):
