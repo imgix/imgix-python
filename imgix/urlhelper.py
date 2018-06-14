@@ -14,6 +14,42 @@ from ._version import __version__
 
 
 class UrlHelper(object):
+    """
+    Helper class to create single domain Imgix URLs. Example:
+
+      >>> str(UrlHelper('demos.imgix.net', '/bridge.png', opts={'w': 100}))
+      https://demos.imgix.net/bridge.png?w=100
+
+    Parameters
+    ----------
+    domain : str
+    path : str
+    scheme : { 'https', 'http' }
+    sign_key : str or None
+        Use the key to generate signed image URLs. URLs are not signed by
+        default. (default `None`)
+    sign_mode : {`SIGNATURE_MODE_QUERY`, `SIGNATURE_MODE_PATH`}
+        If `SIGNATURE_MODE_QUERY`, sign the whole URL. `SIGNATURE_MODE_PATH`
+        not supported yet. (default `SIGNATURE_MODE_QUERY`)
+    sign_with_library_version : bool
+        If `True`, each created URL is suffixed with 'ixlib' parameter
+        indicating the library used for generating the URLs. (default `True`)
+    opts : dict
+        Dictionary specifying URL parameters. Non-Imgix parameters are
+        added to the URL unprocessed. For a complete list of Imgix
+        supported parameters, visit https://docs.imgix.com/apis/url .
+        (default {})
+
+    Raises
+    ------
+    Exception
+        If an unsupported `sign_mode` is provided.
+
+    Methods
+    -------
+    set_parameter(key, value)
+    delete_parameter(key)
+    """
     def __init__(
             self,
             domain,
@@ -44,6 +80,15 @@ class UrlHelper(object):
         pass
 
     def set_parameter(self, key, value):
+        """
+        Set a url parameter.
+
+        Parameters
+        ----------
+        key : str
+            If key ends with '64', the value will be base64 encoded.
+        value
+        """
         if value is None or value is False:
             self.delete_parameter(key)
             return
@@ -58,6 +103,18 @@ class UrlHelper(object):
         self._parameters[key] = value
 
     def delete_parameter(self, key):
+        """
+        Deletes the value associated with `key` from recorded parameters.
+
+        Parameters
+        ----------
+        key : str
+
+        Raises
+        ------
+        KeyError
+            If key doesn't exist in recorded parameters.
+        """
         if key in self._parameters:
             del self._parameters[key]
 
@@ -69,6 +126,13 @@ class UrlHelper(object):
             return False
 
     def __str__(self):
+        """
+        Generate URL from the recorded parameters.
+
+        Returns
+        -------
+        str
+        """
         query = {}
 
         for key in self._parameters:
