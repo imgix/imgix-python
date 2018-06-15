@@ -24,3 +24,17 @@ tox
 This will run all tests and check PEP8 compliance. Our test suite runs
 continuously on [Travis CI](https://travis-ci.org/imgix/imgix-python) with
 every pull request.
+
+
+Publishing to PyPI
+------------------
+
+To publish a new version of the package to PyPI, increment the version in [imgix/__init__.py](https://github.com/imgix/imgix-python/blob/master/imgix/__init__.py) run the following:
+
+```bash
+pip install wheel
+pip install twine
+python setup.py sdist
+python setup.py bdist_wheel --universal
+twine upload dist/*
+```

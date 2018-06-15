@@ -129,19 +129,6 @@ If you don't add this encoding, and you have an image with name for example 'tib
 
     SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
 
-Publishing to PyPI
-------------------
-
-To publish a new version of the package to PyPI, increment the version in `imgix/__init__.py <https://github.com/imgix/imgix-python/blob/master/imgix/__init__.py>`_ run the following:
-
-.. code-block:: bash
-
-    pip install wheel
-    pip install twine
-    python setup.py sdist
-    python setup.py bdist_wheel --universal
-    twine upload dist/*
-
 Running Tests
 -------------
 
