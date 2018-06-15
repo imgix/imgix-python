@@ -15,7 +15,7 @@ from ._version import __version__
 
 class UrlHelper(object):
     """
-    Helper class to create single domain Imgix URLs. Example:
+    Helper class to create single domain imgix URLs. Example:
 
       >>> str(UrlHelper('demos.imgix.net', '/bridge.png', opts={'w': 100}))
       https://demos.imgix.net/bridge.png?w=100
@@ -26,17 +26,18 @@ class UrlHelper(object):
     path : str
     scheme : { 'https', 'http' }
     sign_key : str or None
-        Use the key to generate signed image URLs. URLs are not signed by
-        default. (default `None`)
-    sign_mode : {`SIGNATURE_MODE_QUERY`, `SIGNATURE_MODE_PATH`}
-        If `SIGNATURE_MODE_QUERY`, sign the whole URL. `SIGNATURE_MODE_PATH`
-        not supported yet. (default `SIGNATURE_MODE_QUERY`)
+        When provided, this key will be used to sign the generated image URLs.
+        You can read more about URL signing on our docs:
+        https://docs.imgix.com/setup/securing-images
+    sign_mode : `SIGNATURE_MODE_QUERY`
+        If `SIGNATURE_MODE_QUERY`, sign the whole URL.
+        (default `SIGNATURE_MODE_QUERY`)
     sign_with_library_version : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
     opts : dict
-        Dictionary specifying URL parameters. Non-Imgix parameters are
-        added to the URL unprocessed. For a complete list of Imgix
+        Dictionary specifying URL parameters. Non-imgix parameters are
+        added to the URL unprocessed. For a complete list of imgix
         supported parameters, visit https://docs.imgix.com/apis/url .
         (default {})
 
@@ -86,8 +87,8 @@ class UrlHelper(object):
         Parameters
         ----------
         key : str
-            If key ends with '64', the value will be base64 encoded.
-        value
+            If key ends with '64', the value provided will be automatically
+            base64 encoded.
         """
         if value is None or value is False:
             self.delete_parameter(key)

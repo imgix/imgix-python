@@ -11,7 +11,7 @@ from .constants import SIGNATURE_MODE_QUERY
 
 class UrlBuilder(object):
     """
-    Create Imgix URLs
+    Create imgix URLs
 
     The URL builder can be reused to create URLs for any images on the
     provided domains.
@@ -19,15 +19,16 @@ class UrlBuilder(object):
     Parameters
     ----------
     domains : str or array_like
-        Domain(s) to use while creating Imgix URLs.
+        Domain(s) to use while creating imgix URLs.
     use_https : bool
-        If `True`, create HTTPS Imgix image URLs. (default `True`)
+        If `True`, create HTTPS imgix image URLs. (default `True`)
     sign_key : str or None
-        Use the key to generate signed image URLs. URLs are not signed by
-        default. (default `None`)
-    sign_mode : {`SIGNATURE_MODE_QUERY`, `SIGNATURE_MODE_PATH`}
-        If `SIGNATURE_MODE_QUERY`, sign the whole URL. `SIGNATURE_MODE_PATH`
-        not supported yet. (default `SIGNATURE_MODE_QUERY`)
+        When provided, this key will be used to sign the generated image URLs.
+        You can read more about URL signing on our docs:
+        https://docs.imgix.com/setup/securing-images
+    sign_mode : `SIGNATURE_MODE_QUERY`
+        If `SIGNATURE_MODE_QUERY`, sign the whole URL.
+        (default `SIGNATURE_MODE_QUERY`)
     shard_strategy : {`SHARD_STRATEGY_CRC`, `SHARD_STRATEGY_CYCLE`}
         If `SHARD_STRATEGY_CRC`, domain sharding performed using a checksum to
         ensure image path always resolves to the same domain. If
@@ -70,15 +71,15 @@ class UrlBuilder(object):
         ----------
         path : str
         opts : dict
-            Dictionary specifying URL parameters. Non-Imgix parameters are
-            added to the URL unprocessed. For a complete list of Imgix
+            Dictionary specifying URL parameters. Non-imgix parameters are
+            added to the URL unprocessed. For a complete list of imgix
             supported parameters, visit https://docs.imgix.com/apis/url .
             (default {})
 
         Returns
         -------
         str
-            Imgix URL
+            imgix URL
         """
         if self._shard_strategy == SHARD_STRATEGY_CRC:
             crc = zlib.crc32(path.encode('utf-8')) & 0xffffffff

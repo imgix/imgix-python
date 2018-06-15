@@ -3,7 +3,7 @@
 imgix
 ~~~~~
 
-A Python client library for generating URLs with Imgix. Basic usage:
+A Python client library for generating URLs with imgix. Basic usage:
 
     >>> import imgix
     >>> builder = imgix.UrlBuilder("demos.imgix.net")
