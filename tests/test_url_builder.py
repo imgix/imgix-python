@@ -5,23 +5,18 @@ import imgix
 from imgix.compat import urlparse
 
 
-def default_builder():
+def _get_domain(url):
+    return urlparse.urlparse(url).hostname
+
+
+def _default_builder():
     return imgix.UrlBuilder('my-social-network.imgix.net',
                             sign_with_library_version=False)
 
 
-def default_builder_with_signature():
+def _default_builder_with_signature():
     return imgix.UrlBuilder('my-social-network.imgix.net', True, "FOO123bar",
                             sign_with_library_version=False)
-
-
-def test_that_constants_are_exported():
-    builder = imgix.UrlBuilder(
-        'my-social-network.imgix.net',
-        sign_mode=imgix.SIGNATURE_MODE_PATH,
-        shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
-    assert builder._sign_mode == imgix.SIGNATURE_MODE_PATH
-    assert builder._shard_strategy == imgix.SHARD_STRATEGY_CYCLE
 
 
 def test_create():
@@ -34,8 +29,10 @@ def test_create_accepts_domains_list():
         'my-social-network-1.imgix.net',
         'my-social-network-2.imgix.net'
     ]
-    builder = imgix.UrlBuilder(domains)
-    assert builder._domains == domains
+    builder = imgix.UrlBuilder(domains,
+                               shard_strategy=imgix.SHARD_STRATEGY_CRC)
+    assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
 
 
 def test_create_accepts_domains_tuple():
@@ -43,36 +40,38 @@ def test_create_accepts_domains_tuple():
         'my-social-network-1.imgix.net',
         'my-social-network-2.imgix.net'
     )
-    builder = imgix.UrlBuilder(domains)
-    assert builder._domains == domains
+    builder = imgix.UrlBuilder(domains,
+                               shard_strategy=imgix.SHARD_STRATEGY_CRC)
+    assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
 
 
 def test_create_accepts_domains_single_str():
-    domains = 'my-social-network-1.imgix.net'
-    builder = imgix.UrlBuilder(domains)
-    assert builder._domains == [domains]
+    domain = 'my-social-network-1.imgix.net'
+    builder = imgix.UrlBuilder(domain)
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
 
 
 def test_create_url_with_path():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url("/users/1.png")
     assert url == "https://my-social-network.imgix.net/users/1.png"
 
 
 def test_create_url_with_path_and_parameters():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
 def test_create_url_with_splatted_falsy_parameter():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url("/users/1.png", {"or": 0})
     assert url == "https://my-social-network.imgix.net/users/1.png?or=0"
 
 
 def test_create_url_with_path_and_signature():
-    builder = default_builder_with_signature()
+    builder = _default_builder_with_signature()
     url = builder.create_url("/users/1.png")
     assert url == \
         "https://my-social-network.imgix.net/users/1.png" \
@@ -80,7 +79,7 @@ def test_create_url_with_path_and_signature():
 
 
 def test_create_url_with_path_and_paremeters_and_signature():
-    builder = default_builder_with_signature()
+    builder = _default_builder_with_signature()
     url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
     assert url == \
         "https://my-social-network.imgix.net/users/1.png" \
@@ -88,7 +87,7 @@ def test_create_url_with_path_and_paremeters_and_signature():
 
 
 def test_create_url_with_fully_qualified_url():
-    builder = default_builder_with_signature()
+    builder = _default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png")
     assert url == \
         "https://my-social-network.imgix.net/"\
@@ -97,7 +96,7 @@ def test_create_url_with_fully_qualified_url():
 
 
 def test_create_url_with_fully_qualified_url_with_tilde():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url("http://avatars.com/john~smith.png")
     assert url == \
         "https://my-social-network.imgix.net/"\
@@ -105,7 +104,7 @@ def test_create_url_with_fully_qualified_url_with_tilde():
 
 
 def test_create_url_with_fully_qualified_url_and_parameters():
-    builder = default_builder_with_signature()
+    builder = _default_builder_with_signature()
     url = builder.create_url("http://avatars.com/john-smith.png",
                              {"w": 400, "h": 300})
     assert url == \
@@ -134,13 +133,13 @@ def test_use_https():
 
 
 def test_utf_8_characters():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url(u'/ǝ')
     assert url == "https://my-social-network.imgix.net/%C7%9D"
 
 
 def test_more_involved_utf_8_characters():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url(u'/üsers/1/米国でのパーティーします。.png')
     assert url == \
         "https://my-social-network.imgix.net/%C3%BCsers/1/" \
@@ -149,7 +148,7 @@ def test_more_involved_utf_8_characters():
 
 
 def test_param_values_are_escaped():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url('demo.png', {"hello world": "interesting"})
 
     assert url == "https://my-social-network.imgix.net/demo.png?" \
@@ -157,7 +156,7 @@ def test_param_values_are_escaped():
 
 
 def test_param_keys_are_escaped():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url('demo.png', {
         "hello_world": "/foo\"> <script>alert(\"hacked\")</script><"})
 
@@ -167,7 +166,7 @@ def test_param_keys_are_escaped():
 
 
 def test_base64_param_variants_are_base64_encoded():
-    builder = default_builder()
+    builder = _default_builder()
     url = builder.create_url('~text', {
         "txt64": u"I cannøt belîév∑ it wors! 😱"})
 
@@ -181,3 +180,67 @@ def test_signing_url_with_ixlib():
     assert url == (
         "https://my-social-network.imgix.net/users/1.png?ixlib=python-" +
         imgix._version.__version__)
+
+
+def test_shard_strategy_crc():
+    domains = (
+        'my-social-network-1.imgix.net',
+        'my-social-network-2.imgix.net'
+    )
+    builder = imgix.UrlBuilder(domains,
+                               shard_strategy=imgix.SHARD_STRATEGY_CRC)
+    assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[0] == _get_domain(builder.create_url('/users/2.png'))
+    assert domains[0] == _get_domain(builder.create_url('/users/2.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/b.png'))
+
+
+def test_shard_strategy_crc_single_domain():
+    domain = 'my-social-network-1.imgix.net'
+
+    builder = imgix.UrlBuilder(domain, shard_strategy=imgix.SHARD_STRATEGY_CRC)
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
+    assert domain == _get_domain(builder.create_url('/users/2.png'))
+    assert domain == _get_domain(builder.create_url('/users/2.png'))
+
+
+def test_shard_strategy_cycle():
+    domains = (
+        'my-social-network-1.imgix.net',
+        'my-social-network-2.imgix.net',
+        'my-social-network-3.imgix.net',
+    )
+    builder = imgix.UrlBuilder(domains,
+                               shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
+    assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[2] == _get_domain(builder.create_url('/users/1.png'))
+    assert domains[0] == _get_domain(builder.create_url('/users/a.png'))
+    assert domains[1] == _get_domain(builder.create_url('/users/b.png'))
+    assert domains[2] == _get_domain(builder.create_url('/users/c.png'))
+
+
+def test_shard_strategy_cycle_single_domain():
+    domain = 'my-social-network-1.imgix.net'
+
+    builder = imgix.UrlBuilder(domain,
+                               shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
+    assert domain == _get_domain(builder.create_url('/users/1.png'))
+    assert domain == _get_domain(builder.create_url('/users/a.png'))
+    assert domain == _get_domain(builder.create_url('/users/b.png'))
+    assert domain == _get_domain(builder.create_url('/users/c.png'))
+
+
+def test_shard_strategy_invalid():
+    domain = 'my-social-network-1.imgix.net'
+
+    builder = imgix.UrlBuilder(domain, shard_strategy='invalid-shard-strategy')
+
+    # Should not throw an exception
+    assert builder.create_url('/users/1.png') is not None

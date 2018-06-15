@@ -1,0 +1,7 @@
+[run]
+omit =
+    imgix/compat.py
+
+[report]
+exclude_lines =
+    pass
