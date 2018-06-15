@@ -5,8 +5,8 @@ imgix-python is developed by Imgix and we happily accept contributions.
 
 If you wish to add a new feature or fix a bug:
 
-- Check for open [issues][issues] or open a fresh issue to start a discussion
-  around a feature idea or a bug.
+- Check for open [issues](https://github.com/imgix/imgix-python/issues) or open
+  a fresh issue to start a discussion around a feature idea or a bug.
 - Fork this repository on Github to start making your changes.
 - Write a test which shows that the bug was fixed or that the feature works
   as expected.
