@@ -10,6 +10,39 @@ from .constants import SIGNATURE_MODE_QUERY
 
 
 class UrlBuilder(object):
+    """
+    Create imgix URLs
+
+    The URL builder can be reused to create URLs for any images on the
+    provided domains.
+
+    Parameters
+    ----------
+    domains : str or array_like
+        Domain(s) to use while creating imgix URLs.
+    use_https : bool
+        If `True`, create HTTPS imgix image URLs. (default `True`)
+    sign_key : str or None
+        When provided, this key will be used to sign the generated image URLs.
+        You can read more about URL signing on our docs:
+        https://docs.imgix.com/setup/securing-images
+    sign_mode : `SIGNATURE_MODE_QUERY`
+        If `SIGNATURE_MODE_QUERY`, sign the whole URL.
+        (default `SIGNATURE_MODE_QUERY`)
+    shard_strategy : {`SHARD_STRATEGY_CRC`, `SHARD_STRATEGY_CYCLE`}
+        If `SHARD_STRATEGY_CRC`, domain sharding performed using a checksum to
+        ensure image path always resolves to the same domain. If
+        `SHARD_STRATEGY_CYCLE`, domain sharding performed by sequentially
+        cycling through the domains list.  (default `SHARD_STRATEGY_CRC`)
+    sign_with_library_version : bool
+        If `True`, each created URL is suffixed with 'ixlib' parameter
+        indicating the library used for generating the URLs. (default `True`)
+
+    Methods
+    -------
+    create_url(path, opts={})
+        Create URL with the supplied path and `opts` parameters dict.
+    """
     def __init__(
             self,
             domains,
@@ -31,6 +64,23 @@ class UrlBuilder(object):
         self._sign_with_library_version = sign_with_library_version
 
     def create_url(self, path, opts={}):
+        """
+        Create URL with supplied path and `opts` parameters dict.
+
+        Parameters
+        ----------
+        path : str
+        opts : dict
+            Dictionary specifying URL parameters. Non-imgix parameters are
+            added to the URL unprocessed. For a complete list of imgix
+            supported parameters, visit https://docs.imgix.com/apis/url .
+            (default {})
+
+        Returns
+        -------
+        str
+            imgix URL
+        """
         if self._shard_strategy == SHARD_STRATEGY_CRC:
             crc = zlib.crc32(path.encode('utf-8')) & 0xffffffff
             index = crc % len(self._domains)  # Deterministically choose domain
