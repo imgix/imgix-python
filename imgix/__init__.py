@@ -25,8 +25,6 @@ from .urlbuilder import UrlBuilder
 
 from .constants import SHARD_STRATEGY_CYCLE
 from .constants import SHARD_STRATEGY_CRC
-from .constants import SIGNATURE_MODE_QUERY
-from .constants import SIGNATURE_MODE_PATH
 
 
 __all__ = [

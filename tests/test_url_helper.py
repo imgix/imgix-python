@@ -16,30 +16,6 @@ def test_create():
     assert type(helper) is UrlHelper
 
 
-def test_create_sign_mode_warning():
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                  sign_mode=imgix.SIGNATURE_MODE_QUERY)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
-def test_create_non_query_sign_mode():
-    try:
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-            UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                      sign_mode=imgix.SIGNATURE_MODE_PATH)
-    except Exception:
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-    else:
-        assert False
-
-
 def test_create_with_url_parameters():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_with_library_version=False,

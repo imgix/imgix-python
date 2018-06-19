@@ -4,8 +4,6 @@ import hashlib
 import warnings
 from base64 import urlsafe_b64encode
 
-from .constants import SIGNATURE_MODE_QUERY
-
 from .compat import iteritems
 from .compat import urlparse
 from .compat import quote
@@ -30,9 +28,6 @@ class UrlHelper(object):
         When provided, this key will be used to sign the generated image URLs.
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
-    sign_mode : `SIGNATURE_MODE_QUERY`
-        *Deprecated* If `SIGNATURE_MODE_QUERY`, sign the whole URL.
-        (default `SIGNATURE_MODE_QUERY`)
     sign_with_library_version : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
@@ -41,11 +36,6 @@ class UrlHelper(object):
         added to the URL unprocessed. For a complete list of imgix
         supported parameters, visit https://docs.imgix.com/apis/url .
         (default {})
-
-    Raises
-    ------
-    Exception
-        If an unsupported `sign_mode` is provided.
 
     Methods
     -------
@@ -58,19 +48,12 @@ class UrlHelper(object):
             path,
             scheme="https",
             sign_key=None,
-            sign_mode=None,
             sign_with_library_version=True,
             params={},
             opts={}):
         if opts:
             warnings.warn('`opts` has been deprecated. Use `params` instead.',
                           DeprecationWarning, stacklevel=2)
-
-        if sign_mode is not None:
-            warnings.warn("`sign_mode` argument is deprecated and will be "
-                          "removed in v2.0", DeprecationWarning, stacklevel=2)
-        else:
-            sign_mode = SIGNATURE_MODE_QUERY
 
         params = params or opts
         self._scheme = scheme
@@ -79,10 +62,6 @@ class UrlHelper(object):
         self._sign_key = sign_key
         self._sign_with_library_version = sign_with_library_version
 
-        if sign_mode != SIGNATURE_MODE_QUERY:
-            raise Exception("Path signatures are not supported yet.")
-
-        self._sign_mode = sign_mode
         self._parameters = {}
 
         for key, value in iteritems(params):
