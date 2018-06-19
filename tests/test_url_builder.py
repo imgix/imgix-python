@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import imgix
+import warnings
 
 from imgix.compat import urlparse
 
@@ -22,6 +23,16 @@ def _default_builder_with_signature():
 def test_create():
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     assert type(builder) is imgix.UrlBuilder
+
+
+def test_create_sign_mode_warning():
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        imgix.UrlBuilder('my-social-network.imgix.net',
+                         sign_mode=imgix.SIGNATURE_MODE_QUERY)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
 
 
 def test_create_accepts_domains_list():
