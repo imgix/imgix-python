@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+import warnings
 from base64 import urlsafe_b64encode
 
 from .constants import SIGNATURE_MODE_QUERY
@@ -30,7 +31,7 @@ class UrlHelper(object):
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
     sign_mode : `SIGNATURE_MODE_QUERY`
-        If `SIGNATURE_MODE_QUERY`, sign the whole URL.
+        *Deprecated* If `SIGNATURE_MODE_QUERY`, sign the whole URL.
         (default `SIGNATURE_MODE_QUERY`)
     sign_with_library_version : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
@@ -57,9 +58,15 @@ class UrlHelper(object):
             path,
             scheme="https",
             sign_key=None,
-            sign_mode=SIGNATURE_MODE_QUERY,
+            sign_mode=None,
             sign_with_library_version=True,
             opts={}):
+
+        if sign_mode is not None:
+            warnings.warn("`sign_mode` argument is deprecated and will be "
+                          "removed in v2.0", DeprecationWarning, stacklevel=2)
+        else:
+            sign_mode = SIGNATURE_MODE_QUERY
 
         self._scheme = scheme
         self._host = domain

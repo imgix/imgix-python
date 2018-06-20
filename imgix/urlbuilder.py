@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import warnings
 import zlib
 
 from .urlhelper import UrlHelper
 
 from .constants import SHARD_STRATEGY_CYCLE
 from .constants import SHARD_STRATEGY_CRC
-from .constants import SIGNATURE_MODE_QUERY
 
 
 class UrlBuilder(object):
@@ -27,7 +27,7 @@ class UrlBuilder(object):
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
     sign_mode : `SIGNATURE_MODE_QUERY`
-        If `SIGNATURE_MODE_QUERY`, sign the whole URL.
+        *Deprecated* If `SIGNATURE_MODE_QUERY`, sign the whole URL.
         (default `SIGNATURE_MODE_QUERY`)
     shard_strategy : {`SHARD_STRATEGY_CRC`, `SHARD_STRATEGY_CYCLE`}
         If `SHARD_STRATEGY_CRC`, domain sharding performed using a checksum to
@@ -48,9 +48,13 @@ class UrlBuilder(object):
             domains,
             use_https=True,
             sign_key=None,
-            sign_mode=SIGNATURE_MODE_QUERY,
+            sign_mode=None,
             shard_strategy=SHARD_STRATEGY_CRC,
             sign_with_library_version=True):
+
+        if sign_mode is not None:
+            warnings.warn("`sign_mode` argument is deprecated and will be "
+                          "removed in v2.0", DeprecationWarning, stacklevel=2)
 
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
