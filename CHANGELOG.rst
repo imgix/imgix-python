@@ -6,6 +6,13 @@ dev (master)
 
 * ... [Short description of non-trivial change.] (Issue #)
 
+1.2.0 (2018-06-20)
+------------------
+
+* `sign_mode` argument deprecated
+* License corrected to BSD-2-Clause.
+* Docstrings added to classes and methods.
+
 
 1.1.2 (2016-06-30)
 -----------------
