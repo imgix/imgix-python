@@ -19,7 +19,7 @@ setup(
     author_email='support@imgix.com',
     packages=['imgix'],
     url='https://github.com/imgix/imgix-python',
-    license='MIT',
+    license='BSD-2-Clause',
     description='Python client library for imgix.',
     long_description=u'\n\n'.join([readme, changelog]),
     classifiers=[
