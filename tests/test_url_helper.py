@@ -43,7 +43,7 @@ def test_create_non_query_sign_mode():
 def test_create_with_url_parameters():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_with_library_version=False,
-                       opts={"w": 400, "h": 300})
+                       params={"w": 400, "h": 300})
     assert str(helper) == "https://my-social-network.imgix.net/users/1.png?" \
                           "h=300&w=400"
 
@@ -51,7 +51,7 @@ def test_create_with_url_parameters():
 def test_create_with_splatted_falsy_parameter():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_with_library_version=False,
-                       opts={"or": 0})
+                       params={"or": 0})
     assert str(helper) == "https://my-social-network.imgix.net" \
                           "/users/1.png?or=0"
 
@@ -69,7 +69,7 @@ def test_create_with_paremeters_and_signature():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_key="FOO123bar",
                        sign_with_library_version=False,
-                       opts={"w": 400, "h": 300})
+                       params={"w": 400, "h": 300})
     assert str(helper) == \
         "https://my-social-network.imgix.net/users/1.png" \
         "?h=300&w=400&s=1a4e48641614d1109c6a7af51be23d18"
@@ -122,7 +122,7 @@ def test_more_involved_utf_8_characters():
 
 def test_param_values_are_escaped():
     helper = UrlHelper('my-social-network.imgix.net', 'demo.png',
-                       opts={"hello world": "interesting"},
+                       params={"hello world": "interesting"},
                        sign_with_library_version=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/demo.png?" \
@@ -130,8 +130,9 @@ def test_param_values_are_escaped():
 
 
 def test_param_keys_are_escaped():
-    opts = {"hello_world": "/foo\"> <script>alert(\"hacked\")</script><"}
-    helper = UrlHelper('my-social-network.imgix.net', 'demo.png', opts=opts,
+    params = {"hello_world": "/foo\"> <script>alert(\"hacked\")</script><"}
+    helper = UrlHelper('my-social-network.imgix.net', 'demo.png',
+                       params=params,
                        sign_with_library_version=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/demo.png?" \
@@ -140,13 +141,41 @@ def test_param_keys_are_escaped():
 
 
 def test_base64_param_variants_are_base64_encoded():
-    opts = {"txt64": u"I cannøt belîév∑ it wors! 😱"}
+    params = {"txt64": u"I cannøt belîév∑ it wors! 😱"}
     helper = UrlHelper('my-social-network.imgix.net', '~text',
-                       opts=opts,
+                       params=params,
                        sign_with_library_version=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/~text?txt64=" \
         "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE"
+
+
+def test_create_with_opts_kwarg():
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
+                           sign_with_library_version=False,
+                           opts={"w": 400, "h": 300})
+        assert str(helper) == "https://my-social-network.imgix.net" \
+                              "/users/1.png?h=300&w=400"
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+
+
+def test_create_url_with_opts_params_kwarg():
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
+                           sign_with_library_version=False,
+                           opts={"w": 500, "h": 400},
+                           params={"w": 400, "h": 300},
+                           )
+        assert str(helper) == "https://my-social-network.imgix.net" \
+                              "/users/1.png?h=300&w=400"
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
 
 
 def test_signing_url_with_ixlib():
@@ -169,9 +198,9 @@ def test_set_parameter():
                           "users/1.png?h=300&w=400"
 
 
-def test_set_parameter_with_init_opts():
+def test_set_parameter_with_init_params():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       opts={"or": 0},
+                       params={"or": 0},
                        sign_with_library_version=False)
 
     helper.set_parameter('w', 400)
@@ -191,7 +220,7 @@ def test_set_parameter_base64_encoded():
 
 def test_set_parameter_with_none_value():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       opts={'h': 300, 'w': 400},
+                       params={'h': 300, 'w': 400},
                        sign_with_library_version=False)
 
     helper.set_parameter("w", None)
@@ -201,7 +230,7 @@ def test_set_parameter_with_none_value():
 
 def test_set_parameter_with_false_value():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       opts={'h': 300, 'w': 400},
+                       params={'h': 300, 'w': 400},
                        sign_with_library_version=False)
 
     helper.set_parameter("w", False)
@@ -211,7 +240,7 @@ def test_set_parameter_with_false_value():
 
 def test_delete_parameter():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       opts={'h': 300, 'w': 400},
+                       params={'h': 300, 'w': 400},
                        sign_with_library_version=False)
 
     helper.delete_parameter('w')
@@ -221,7 +250,7 @@ def test_delete_parameter():
 
 def test_delete_all_parameters():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       opts={'h': 300, 'w': 400},
+                       params={'h': 300, 'w': 400},
                        sign_with_library_version=False)
 
     helper.delete_parameter('w')
