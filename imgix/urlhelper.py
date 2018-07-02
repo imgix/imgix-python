@@ -97,11 +97,7 @@ class UrlHelper(object):
             If key ends with '64', the value provided will be automatically
             base64 encoded.
         """
-        if value is None or value is False:
-            self.delete_parameter(key)
-            return
-
-        if isinstance(value, (int, float)):
+        if value is None or isinstance(value, (int, float, bool)):
             value = str(value)
 
         if key.endswith('64'):

@@ -196,7 +196,7 @@ def test_set_parameter_with_none_value():
 
     helper.set_parameter("w", None)
     assert str(helper) == "https://my-social-network.imgix.net" \
-                          "/users/1.png?h=300"
+                          "/users/1.png?h=300&w=None"
 
 
 def test_set_parameter_with_false_value():
@@ -206,7 +206,7 @@ def test_set_parameter_with_false_value():
 
     helper.set_parameter("w", False)
     assert str(helper) == "https://my-social-network.imgix.net" \
-                          "/users/1.png?h=300"
+                          "/users/1.png?h=300&w=False"
 
 
 def test_delete_parameter():
