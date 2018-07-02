@@ -26,9 +26,6 @@ class UrlBuilder(object):
         When provided, this key will be used to sign the generated image URLs.
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
-    sign_mode : `SIGNATURE_MODE_QUERY`
-        *Deprecated* If `SIGNATURE_MODE_QUERY`, sign the whole URL.
-        (default `SIGNATURE_MODE_QUERY`)
     shard_strategy : {`SHARD_STRATEGY_CRC`, `SHARD_STRATEGY_CYCLE`}
         If `SHARD_STRATEGY_CRC`, domain sharding performed using a checksum to
         ensure image path always resolves to the same domain. If
@@ -48,20 +45,14 @@ class UrlBuilder(object):
             domains,
             use_https=True,
             sign_key=None,
-            sign_mode=None,
             shard_strategy=SHARD_STRATEGY_CRC,
             sign_with_library_version=True):
-
-        if sign_mode is not None:
-            warnings.warn("`sign_mode` argument is deprecated and will be "
-                          "removed in v2.0", DeprecationWarning, stacklevel=2)
 
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
 
         self._domains = domains
         self._sign_key = sign_key
-        self._sign_mode = sign_mode
         self._use_https = use_https
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
@@ -109,7 +100,6 @@ class UrlBuilder(object):
             path,
             scheme,
             sign_key=self._sign_key,
-            sign_mode=self._sign_mode,
             sign_with_library_version=self._sign_with_library_version,
             params=params)
 
