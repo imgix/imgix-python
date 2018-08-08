@@ -22,6 +22,7 @@ setup(
     license='BSD-2-Clause',
     description='Python client library for imgix.',
     long_description=u'\n\n'.join([readme, changelog]),
+    long_description_content_type=u'text/x-rst',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
