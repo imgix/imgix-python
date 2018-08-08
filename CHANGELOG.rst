@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.0.0 (2018-08-08)
+------------------
+
+* `UrlBuilder`'s `sign_mode` argument removed
+* `opts` parameter from `UrlBuilder.create_url` deprecated in favor of `params`.
+
+
 1.2.0 (2018-06-20)
 ------------------
 
