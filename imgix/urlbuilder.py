@@ -2,6 +2,7 @@
 
 import warnings
 import zlib
+import re
 
 from .urlhelper import UrlHelper
 
@@ -76,6 +77,7 @@ class UrlBuilder(object):
         str
             imgix URL
         """
+
         if opts:
             warnings.warn('`opts` has been deprecated. Use `params` instead.',
                           DeprecationWarning, stacklevel=2)
@@ -92,6 +94,23 @@ class UrlBuilder(object):
 
         else:
             domain = self._domains[0]
+
+        regex = re.compile(
+                r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
+                r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
+                r'[a-z\d]{1,63}$'
+        )
+
+        # regex = re.compile(
+        #         r'^(?:[a-z\d\-_]{1,62}\.){0,125}(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)[a-z\d]{1,63}$'
+        # )
+
+        if re.match(regex, domain) is None:
+            warnings.warn(
+                '''\nDomain url does not conform to the required structure.
+                \nCheck to see if the protocol (http/https) was prepended
+                and/or part of the image path was included in the url.''',
+                stacklevel=2)
 
         scheme = "https" if self._use_https else "http"
 
