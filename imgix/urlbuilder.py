@@ -101,10 +101,6 @@ class UrlBuilder(object):
                 r'[a-z\d]{1,63}$'
         )
 
-        # regex = re.compile(
-        #         r'^(?:[a-z\d\-_]{1,62}\.){0,125}(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)[a-z\d]{1,63}$'
-        # )
-
         if re.match(regex, domain) is None:
             warnings.warn(
                 '''\nDomain url does not conform to the required structure.
