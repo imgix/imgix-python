@@ -18,7 +18,7 @@ def test_create():
 
 def test_create_with_url_parameters():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       sign_with_library_version=False,
+                       include_library_param=False,
                        params={"w": 400, "h": 300})
     assert str(helper) == "https://my-social-network.imgix.net/users/1.png?" \
                           "h=300&w=400"
@@ -26,7 +26,7 @@ def test_create_with_url_parameters():
 
 def test_create_with_splatted_falsy_parameter():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       sign_with_library_version=False,
+                       include_library_param=False,
                        params={"or": 0})
     assert str(helper) == "https://my-social-network.imgix.net" \
                           "/users/1.png?or=0"
@@ -35,7 +35,7 @@ def test_create_with_splatted_falsy_parameter():
 def test_create_with_signature():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_key="FOO123bar",
-                       sign_with_library_version=False)
+                       include_library_param=False)
     assert str(helper) == \
         "https://my-social-network.imgix.net/users/1.png" \
         "?s=6797c24146142d5b40bde3141fd3600c"
@@ -44,7 +44,7 @@ def test_create_with_signature():
 def test_create_with_paremeters_and_signature():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        sign_key="FOO123bar",
-                       sign_with_library_version=False,
+                       include_library_param=False,
                        params={"w": 400, "h": 300})
     assert str(helper) == \
         "https://my-social-network.imgix.net/users/1.png" \
@@ -55,7 +55,7 @@ def test_create_with_fully_qualified_url():
     helper = UrlHelper("my-social-network.imgix.net",
                        "http://avatars.com/john-smith.png",
                        sign_key="FOO123bar",
-                       sign_with_library_version=False)
+                       include_library_param=False)
     assert str(helper) == \
         "https://my-social-network.imgix.net/"\
         "http%3A%2F%2Favatars.com%2Fjohn-smith.png" \
@@ -66,7 +66,7 @@ def test_create_with_fully_qualified_url_with_special_chars():
     helper = UrlHelper("my-social-network.imgix.net",
                        u"http://avatars.com/でのパ.png",
                        sign_key="FOO123bar",
-                       sign_with_library_version=False)
+                       include_library_param=False)
     assert str(helper) == "https://my-social-network.imgix.net/http%3A%2F%2F" \
                           "avatars.com%2F%E3%81%A7%E3%81%AE%E3%83%91.png" \
                           "?s=8e04a5dd9a659a6a540d7c817d3df1d3"
@@ -84,14 +84,14 @@ def test_use_https():
 
 def test_utf_8_characters():
     helper = UrlHelper('my-social-network.imgix.net', u'/ǝ',
-                       sign_with_library_version=False)
+                       include_library_param=False)
     assert str(helper) == "https://my-social-network.imgix.net/%C7%9D"
 
 
 def test_more_involved_utf_8_characters():
     helper = UrlHelper('my-social-network.imgix.net',
                        u'/üsers/1/でのパ.png',
-                       sign_with_library_version=False)
+                       include_library_param=False)
     assert str(helper) == 'https://my-social-network.imgix.net/' \
                           '%C3%BCsers/1/%E3%81%A7%E3%81%AE%E3%83%91.png'
 
@@ -99,7 +99,7 @@ def test_more_involved_utf_8_characters():
 def test_param_values_are_escaped():
     helper = UrlHelper('my-social-network.imgix.net', 'demo.png',
                        params={"hello world": "interesting"},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/demo.png?" \
                           "hello%20world=interesting"
@@ -109,7 +109,7 @@ def test_param_keys_are_escaped():
     params = {"hello_world": "/foo\"> <script>alert(\"hacked\")</script><"}
     helper = UrlHelper('my-social-network.imgix.net', 'demo.png',
                        params=params,
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/demo.png?" \
         "hello_world=%2Ffoo%22%3E%20%3Cscript%3Ealert%28%22" \
@@ -120,7 +120,7 @@ def test_base64_param_variants_are_base64_encoded():
     params = {"txt64": u"I cannøt belîév∑ it wors! 😱"}
     helper = UrlHelper('my-social-network.imgix.net', '~text',
                        params=params,
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     assert str(helper) == "https://my-social-network.imgix.net/~text?txt64=" \
         "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE"
@@ -130,7 +130,7 @@ def test_create_with_opts_kwarg():
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter('always')
         helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                           sign_with_library_version=False,
+                           include_library_param=False,
                            opts={"w": 400, "h": 300})
         assert str(helper) == "https://my-social-network.imgix.net" \
                               "/users/1.png?h=300&w=400"
@@ -143,7 +143,7 @@ def test_create_url_with_opts_params_kwarg():
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter('always')
         helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                           sign_with_library_version=False,
+                           include_library_param=False,
                            opts={"w": 500, "h": 400},
                            params={"w": 400, "h": 300},
                            )
@@ -163,7 +163,7 @@ def test_signing_url_with_ixlib():
 
 def test_set_parameter():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.set_parameter('w', 400)
     assert str(helper) == "https://my-social-network.imgix.net/" \
@@ -177,7 +177,7 @@ def test_set_parameter():
 def test_set_parameter_with_init_params():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        params={"or": 0},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.set_parameter('w', 400)
     helper.set_parameter('h', 300)
@@ -187,7 +187,7 @@ def test_set_parameter_with_init_params():
 
 def test_set_parameter_base64_encoded():
     helper = UrlHelper('my-social-network.imgix.net', '~text',
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.set_parameter("txt64", u"I cannøt belîév∑ it wors! 😱")
     assert str(helper) == "https://my-social-network.imgix.net/~text?txt64=" \
@@ -197,7 +197,7 @@ def test_set_parameter_base64_encoded():
 def test_set_parameter_with_none_value():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        params={'h': 300, 'w': 400},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.set_parameter("w", None)
     assert str(helper) == "https://my-social-network.imgix.net" \
@@ -207,7 +207,7 @@ def test_set_parameter_with_none_value():
 def test_set_parameter_with_false_value():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        params={'h': 300, 'w': 400},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.set_parameter("w", False)
     assert str(helper) == "https://my-social-network.imgix.net" \
@@ -217,7 +217,7 @@ def test_set_parameter_with_false_value():
 def test_delete_parameter():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        params={'h': 300, 'w': 400},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.delete_parameter('w')
     assert str(helper) == "https://my-social-network.imgix.net" \
@@ -227,7 +227,7 @@ def test_delete_parameter():
 def test_delete_all_parameters():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
                        params={'h': 300, 'w': 400},
-                       sign_with_library_version=False)
+                       include_library_param=False)
 
     helper.delete_parameter('w')
     helper.delete_parameter('h')

@@ -12,12 +12,12 @@ def _get_domain(url):
 
 def _default_builder():
     return imgix.UrlBuilder('my-social-network.imgix.net',
-                            sign_with_library_version=False)
+                            include_library_param=False)
 
 
 def _default_builder_with_signature():
     return imgix.UrlBuilder('my-social-network.imgix.net', True, "FOO123bar",
-                            sign_with_library_version=False)
+                            include_library_param=False)
 
 
 def test_create():
@@ -278,3 +278,18 @@ def test_shard_strategy_invalid():
 
     # Should not throw an exception
     assert builder.create_url('/users/1.png') is not None
+
+
+def test_create_url_with_sign_with_library_version():
+    with warnings.catch_warnings(record=True) as w:
+        imgix.UrlBuilder('assets.imgix.net', sign_with_library_version=True)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+
+
+def test_create_url_with_include_library_param():
+    url = 'https://assets.imgix.net/image.jpg'
+    ub = imgix.UrlBuilder('assets.imgix.net', include_library_param=False)
+
+    assert url == ub.create_url("image.jpg")
