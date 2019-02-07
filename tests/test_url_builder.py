@@ -282,38 +282,35 @@ def test_shard_strategy_invalid():
 
 def test_invalid_domain_append_slash():
     url_append_slash = 'assets.imgix.net/products'
-    warning_msg = "Domain url does not conform to the required structure."
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        imgix.UrlBuilder(url_append_slash).create_url("image.jpg")
-
-        assert(len(w) == 1)
-        assert(issubclass(w[-1].category, UserWarning))
-        assert(warning_msg in str(w[-1].message))
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_append_slash)
+    except ValueError:
+        pass
+    else:
+        assert(False)
 
 
 def test_invalid_domain_prepend_scheme():
-    url_prepend_protocol = 'https://sherwinski.imgix.net'
-    warning_msg = "Domain url does not conform to the required structure."
+    url_prepend_protocol = 'https://assets.imgix.net'
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        imgix.UrlBuilder(url_prepend_protocol).create_url("image.jpg")
-
-        assert(len(w) == 1)
-        assert(issubclass(w[-1].category, UserWarning))
-        assert(warning_msg in str(w[-1].message))
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_prepend_protocol)
+    except ValueError:
+        pass
+    else:
+        assert(False)
 
 
 def test_invalid_domain_append_dash():
-    url_append_dash = 'sherwinski.imgix.net-products'
-    warning_msg = "Domain url does not conform to the required structure."
+    url_append_dash = 'assets.imgix.net-products'
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        imgix.UrlBuilder(url_append_dash).create_url("image.jpg")
-
-        assert(len(w) == 1)
-        assert(issubclass(w[-1].category, UserWarning))
-        assert(warning_msg in str(w[-1].message))
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_append_dash)
+    except ValueError:
+        pass
+    else:
+        assert(False)
