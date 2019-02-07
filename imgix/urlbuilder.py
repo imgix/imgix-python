@@ -60,21 +60,20 @@ class UrlBuilder(object):
         self._shard_next_index = 0
         self._sign_with_library_version = sign_with_library_version
 
-    def validate_domain(self, domain):
+    def validate_domain(self, domains):
         regex = re.compile(
             r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
             r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
             r'[a-z\d]{1,63}$'
         )
         err_str = str(
-            'Domain url does not conform to the required structure.\n'
-            'Be sure to confirm that the protocol (http/https) is not '
-            'prepended and/or that part of the image path is not '
-            'included in the url: ')
+            'Domains must be passed in as fully-qualified domain names and ' +
+            'should not include a protocol or any path element, i.e. ' +
+            '"example.imgix.net".')
 
-        for url in domain:
-            if re.match(regex, url) is None:
-                raise ValueError(err_str + str(url))
+        for domain in domains:
+            if re.match(regex, domain) is None:
+                raise ValueError(err_str)
 
     def create_url(self, path, params={}, opts={}):
         """
