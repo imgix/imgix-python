@@ -52,12 +52,29 @@ class UrlBuilder(object):
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
 
+        self.validate_domain(domains)
         self._domains = domains
         self._sign_key = sign_key
         self._use_https = use_https
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
         self._sign_with_library_version = sign_with_library_version
+
+    def validate_domain(self, domain):
+        regex = re.compile(
+            r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
+            r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
+            r'[a-z\d]{1,63}$'
+        )
+        err_str = str(
+            'Domain url does not conform to the required structure.\n'
+            'Be sure to confirm that the protocol (http/https) is not '
+            'prepended and/or that part of the image path is not '
+            'included in the url: ')
+
+        for url in domain:
+            if re.match(regex, url) is None:
+                raise ValueError(err_str + str(url))
 
     def create_url(self, path, params={}, opts={}):
         """
@@ -94,19 +111,6 @@ class UrlBuilder(object):
 
         else:
             domain = self._domains[0]
-
-        regex = re.compile(
-                r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
-                r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
-                r'[a-z\d]{1,63}$'
-        )
-
-        if re.match(regex, domain) is None:
-            warnings.warn(
-                '''\nDomain url does not conform to the required structure.
-                \nCheck to see if the protocol (http/https) was prepended
-                and/or part of the image path was included in the url.''',
-                stacklevel=2)
 
         scheme = "https" if self._use_https else "http"
 
