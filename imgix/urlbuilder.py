@@ -10,6 +10,7 @@ from .constants import SHARD_STRATEGY_CYCLE
 from .constants import SHARD_STRATEGY_CRC
 from .constants import DOMAIN_PATTERN
 
+
 class UrlBuilder(object):
     """
     Create imgix URLs
