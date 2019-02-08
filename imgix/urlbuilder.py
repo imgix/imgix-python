@@ -46,17 +46,29 @@ class UrlBuilder(object):
             use_https=True,
             sign_key=None,
             shard_strategy=SHARD_STRATEGY_CRC,
-            sign_with_library_version=True):
+            sign_with_library_version=None,
+            include_library_param=True):
+
+        if sign_with_library_version is not None:
+            warnings.warn('`sign_with_library_version` has been deprecated ' +
+                          'and will be removed in the next major version. ' +
+                          'Use `include_library_param` instead.',
+                          DeprecationWarning, stacklevel=2)
 
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
+
+        include_library_param = (
+                                    sign_with_library_version
+                                    if sign_with_library_version
+                                    is not None else include_library_param)
 
         self._domains = domains
         self._sign_key = sign_key
         self._use_https = use_https
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
-        self._sign_with_library_version = sign_with_library_version
+        self._include_library_param = include_library_param
 
     def create_url(self, path, params={}, opts={}):
         """
@@ -100,7 +112,7 @@ class UrlBuilder(object):
             path,
             scheme,
             sign_key=self._sign_key,
-            sign_with_library_version=self._sign_with_library_version,
+            include_library_param=self._include_library_param,
             params=params)
 
         return str(url_obj)
