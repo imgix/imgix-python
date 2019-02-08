@@ -280,16 +280,41 @@ def test_shard_strategy_invalid():
     assert builder.create_url('/users/1.png') is not None
 
 
-def test_create_url_with_sign_with_library_version():
+def test_sign_with_library_version_true():
+    url = str("https://assets.imgix.net/image.jpg?ixlib=python-" +
+              imgix._version.__version__)
+
     with warnings.catch_warnings(record=True) as w:
-        imgix.UrlBuilder('assets.imgix.net', sign_with_library_version=True)
+        ub = imgix.UrlBuilder("assets.imgix.net",
+                              sign_with_library_version=True)
         assert len(w) == 1
         assert issubclass(w[-1].category, DeprecationWarning)
         assert "deprecated" in str(w[-1].message)
+        assert url == ub.create_url("image.jpg")
 
 
-def test_create_url_with_include_library_param():
+def test_sign_with_library_version_false():
+    url = "https://assets.imgix.net/image.jpg"
+
+    with warnings.catch_warnings(record=True) as w:
+        ub = imgix.UrlBuilder("assets.imgix.net",
+                              sign_with_library_version=False)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert url == ub.create_url("image.jpg")
+
+
+def test_include_library_param_true():
+    url = ("https://assets.imgix.net/image.jpg?ixlib=python-" +
+           imgix._version.__version__)
+    ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=True)
+
+    assert url == ub.create_url("image.jpg")
+
+
+def test_include_library_param_false():
     url = 'https://assets.imgix.net/image.jpg'
-    ub = imgix.UrlBuilder('assets.imgix.net', include_library_param=False)
+    ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=False)
 
     assert url == ub.create_url("image.jpg")
