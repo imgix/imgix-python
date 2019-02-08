@@ -58,7 +58,6 @@ class UrlBuilder(object):
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
 
-        # include_library = include_library_param or sign_with_library_version
         include_library_param = (
                                     sign_with_library_version
                                     if sign_with_library_version
