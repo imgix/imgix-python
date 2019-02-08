@@ -8,7 +8,7 @@ from .urlhelper import UrlHelper
 
 from .constants import SHARD_STRATEGY_CYCLE
 from .constants import SHARD_STRATEGY_CRC
-
+from .constants import DOMAIN_PATTERN
 
 class UrlBuilder(object):
     """
@@ -61,18 +61,13 @@ class UrlBuilder(object):
         self._sign_with_library_version = sign_with_library_version
 
     def validate_domain(self, domains):
-        regex = re.compile(
-            r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
-            r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
-            r'[a-z\d]{1,63}$'
-        )
         err_str = str(
             'Domains must be passed in as fully-qualified domain names and ' +
             'should not include a protocol or any path element, i.e. ' +
             '"example.imgix.net".')
 
         for domain in domains:
-            if re.match(regex, domain) is None:
+            if re.match(DOMAIN_PATTERN, domain) is None:
                 raise ValueError(err_str)
 
     def create_url(self, path, params={}, opts={}):
