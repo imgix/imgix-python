@@ -12,12 +12,12 @@ def _get_domain(url):
 
 def _default_builder():
     return imgix.UrlBuilder('my-social-network.imgix.net',
-                            sign_with_library_version=False)
+                            include_library_param=False)
 
 
 def _default_builder_with_signature():
     return imgix.UrlBuilder('my-social-network.imgix.net', True, "FOO123bar",
-                            sign_with_library_version=False)
+                            include_library_param=False)
 
 
 def test_create():
@@ -314,3 +314,43 @@ def test_invalid_domain_append_dash():
         pass
     else:
         assert(False)
+
+
+def test_sign_with_library_version_true():
+    url = str("https://assets.imgix.net/image.jpg?ixlib=python-" +
+              imgix._version.__version__)
+
+    with warnings.catch_warnings(record=True) as w:
+        ub = imgix.UrlBuilder("assets.imgix.net",
+                              sign_with_library_version=True)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert url == ub.create_url("image.jpg")
+
+
+def test_sign_with_library_version_false():
+    url = "https://assets.imgix.net/image.jpg"
+
+    with warnings.catch_warnings(record=True) as w:
+        ub = imgix.UrlBuilder("assets.imgix.net",
+                              sign_with_library_version=False)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert url == ub.create_url("image.jpg")
+
+
+def test_include_library_param_true():
+    url = ("https://assets.imgix.net/image.jpg?ixlib=python-" +
+           imgix._version.__version__)
+    ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=True)
+
+    assert url == ub.create_url("image.jpg")
+
+
+def test_include_library_param_false():
+    url = 'https://assets.imgix.net/image.jpg'
+    ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=False)
+
+    assert url == ub.create_url("image.jpg")

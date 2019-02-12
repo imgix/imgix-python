@@ -28,9 +28,11 @@ class UrlHelper(object):
         When provided, this key will be used to sign the generated image URLs.
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
-    sign_with_library_version : bool
+    include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
+    sign_with_library_version : bool
+        Deprecated
     opts : dict
         Dictionary specifying URL parameters. Non-imgix parameters are
         added to the URL unprocessed. For a complete list of imgix
@@ -48,7 +50,7 @@ class UrlHelper(object):
             path,
             scheme="https",
             sign_key=None,
-            sign_with_library_version=True,
+            include_library_param=True,
             params={},
             opts={}):
         if opts:
@@ -60,8 +62,7 @@ class UrlHelper(object):
         self._host = domain
         self._path = path
         self._sign_key = sign_key
-        self._sign_with_library_version = sign_with_library_version
-
+        self._include_library_param = include_library_param
         self._parameters = {}
 
         for key, value in iteritems(params):
@@ -128,7 +129,7 @@ class UrlHelper(object):
 
         path = self._path
 
-        if self._sign_with_library_version:
+        if self._include_library_param:
             query["ixlib"] = "python-" + __version__
 
         if path.startswith("http"):
