@@ -32,6 +32,8 @@ class UrlBuilder(object):
         `SHARD_STRATEGY_CYCLE`, domain sharding performed by sequentially
         cycling through the domains list.  (default `SHARD_STRATEGY_CRC`)
     sign_with_library_version : bool
+        Deprecated and to be removed in next major version
+    include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
 
