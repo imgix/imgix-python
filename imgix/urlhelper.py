@@ -31,6 +31,8 @@ class UrlHelper(object):
     include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
+    sign_with_library_version : bool
+        Deprecated
     opts : dict
         Dictionary specifying URL parameters. Non-imgix parameters are
         added to the URL unprocessed. For a complete list of imgix

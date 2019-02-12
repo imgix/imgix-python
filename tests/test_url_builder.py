@@ -280,6 +280,42 @@ def test_shard_strategy_invalid():
     assert builder.create_url('/users/1.png') is not None
 
 
+def test_invalid_domain_append_slash():
+    url_append_slash = 'assets.imgix.net/products'
+
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_append_slash)
+    except ValueError:
+        pass
+    else:
+        assert(False)
+
+
+def test_invalid_domain_prepend_scheme():
+    url_prepend_protocol = 'https://assets.imgix.net'
+
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_prepend_protocol)
+    except ValueError:
+        pass
+    else:
+        assert(False)
+
+
+def test_invalid_domain_append_dash():
+    url_append_dash = 'assets.imgix.net-products'
+
+    # Should fail if the expected error isn't raised
+    try:
+        imgix.UrlBuilder(url_append_dash)
+    except ValueError:
+        pass
+    else:
+        assert(False)
+
+
 def test_sign_with_library_version_true():
     url = str("https://assets.imgix.net/image.jpg?ixlib=python-" +
               imgix._version.__version__)
