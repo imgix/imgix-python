@@ -2,11 +2,13 @@
 
 import warnings
 import zlib
+import re
 
 from .urlhelper import UrlHelper
 
 from .constants import SHARD_STRATEGY_CYCLE
 from .constants import SHARD_STRATEGY_CRC
+from .constants import DOMAIN_PATTERN
 
 
 class UrlBuilder(object):
@@ -58,17 +60,27 @@ class UrlBuilder(object):
         if not isinstance(domains, (list, tuple)):
             domains = [domains]
 
+        self.validate_domain(domains)
         include_library_param = (
                                     sign_with_library_version
                                     if sign_with_library_version
                                     is not None else include_library_param)
-
         self._domains = domains
         self._sign_key = sign_key
         self._use_https = use_https
         self._shard_strategy = shard_strategy
         self._shard_next_index = 0
         self._include_library_param = include_library_param
+
+    def validate_domain(self, domains):
+        err_str = str(
+            'Domains must be passed in as fully-qualified domain names and ' +
+            'should not include a protocol or any path element, i.e. ' +
+            '"example.imgix.net".')
+
+        for domain in domains:
+            if re.match(DOMAIN_PATTERN, domain) is None:
+                raise ValueError(err_str)
 
     def create_url(self, path, params={}, opts={}):
         """
@@ -88,6 +100,7 @@ class UrlBuilder(object):
         str
             imgix URL
         """
+
         if opts:
             warnings.warn('`opts` has been deprecated. Use `params` instead.',
                           DeprecationWarning, stacklevel=2)
