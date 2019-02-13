@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.1.0 (2019-02-13)
+------------------
+
+* Domain validation added during `UrlBuilder` initialization
+* `sign_with_library_version` parameter from `UrlBuilder` deprecated in favor of `include_library_param`.
+
+
 2.0.0 (2018-08-08)
 ------------------
 
