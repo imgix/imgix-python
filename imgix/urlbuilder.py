@@ -33,6 +33,9 @@ class UrlBuilder(object):
         ensure image path always resolves to the same domain. If
         `SHARD_STRATEGY_CYCLE`, domain sharding performed by sequentially
         cycling through the domains list.  (default `SHARD_STRATEGY_CRC`)
+
+        Note: domain sharding is deprecated and will be removed in next major
+        version
     sign_with_library_version : bool
         Deprecated and to be removed in next major version
     include_library_param : bool
@@ -57,6 +60,11 @@ class UrlBuilder(object):
             warnings.warn('`sign_with_library_version` has been deprecated ' +
                           'and will be removed in the next major version. ' +
                           'Use `include_library_param` instead.',
+                          DeprecationWarning, stacklevel=2)
+
+        if isinstance(domains, (list, tuple)) and (len(domains) > 1):
+            warnings.warn('Domain sharding has been deprecated and will ' +
+                          'be removed in the next major version. ',
                           DeprecationWarning, stacklevel=2)
 
         if not isinstance(domains, (list, tuple)):
