@@ -66,8 +66,11 @@ provide your signature key to the URL builder.
 Domain Sharded URLs
 -------------------
 
-**Warning: Domain Sharding has been deprecated and will be removed in the next major release**<br>
-To find out more, see our [blog post](https://blog.imgix.com/2019/05/03/deprecating-domain-sharding) explaining the decision to remove this feature.
+**Warning: Domain Sharding has been deprecated and will be removed in the next major release**
+
+To find out more, see our `blog post`_ explaining the decision to remove this feature.
+
+.. _blog post: https://blog.imgix.com/2019/05/03/deprecating-domain-sharding
 
 Domain sharding enables you to spread image requests across multiple domains.
 This allows you to bypass the requests-per-host limits of browsers. We
