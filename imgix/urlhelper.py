@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
-import warnings
 from base64 import urlsafe_b64encode
 
 from .compat import iteritems
@@ -16,7 +15,7 @@ class UrlHelper(object):
     """
     Helper class to create single domain imgix URLs. Example:
 
-      >>> str(UrlHelper('demos.imgix.net', '/bridge.png', opts={'w': 100}))
+      >>> str(UrlHelper('demos.imgix.net', '/bridge.png', params={'w': 100}))
       https://demos.imgix.net/bridge.png?w=100
 
     Parameters
@@ -33,7 +32,7 @@ class UrlHelper(object):
         indicating the library used for generating the URLs. (default `True`)
     sign_with_library_version : bool
         Deprecated
-    opts : dict
+    params : dict
         Dictionary specifying URL parameters. Non-imgix parameters are
         added to the URL unprocessed. For a complete list of imgix
         supported parameters, visit https://docs.imgix.com/apis/url .
@@ -51,13 +50,8 @@ class UrlHelper(object):
             scheme="https",
             sign_key=None,
             include_library_param=True,
-            params={},
-            opts={}):
-        if opts:
-            warnings.warn('`opts` has been deprecated. Use `params` instead.',
-                          DeprecationWarning, stacklevel=2)
+            params={}):
 
-        params = params or opts
         self._scheme = scheme
         self._host = domain
         self._path = path
