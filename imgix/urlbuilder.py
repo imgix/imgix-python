@@ -42,7 +42,8 @@ class UrlBuilder(object):
             use_https=True,
             sign_key=None,
             sign_with_library_version=None,
-            include_library_param=True):
+            include_library_param=True,
+            domain=None):
 
         if sign_with_library_version is not None:
             warnings.warn('`sign_with_library_version` has been deprecated ' +
