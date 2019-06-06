@@ -36,8 +36,6 @@ class UrlBuilder(object):
 
         Note: domain sharding is deprecated and will be removed in next major
         version
-    sign_with_library_version : bool
-        Deprecated and to be removed in next major version
     include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
@@ -53,14 +51,7 @@ class UrlBuilder(object):
             use_https=True,
             sign_key=None,
             shard_strategy=SHARD_STRATEGY_CRC,
-            sign_with_library_version=None,
             include_library_param=True):
-
-        if sign_with_library_version is not None:
-            warnings.warn('`sign_with_library_version` has been deprecated ' +
-                          'and will be removed in the next major version. ' +
-                          'Use `include_library_param` instead.',
-                          DeprecationWarning, stacklevel=2)
 
         if isinstance(domains, (list, tuple)) and (len(domains) > 1):
             warnings.warn('Domain sharding has been deprecated and will ' +
@@ -71,10 +62,7 @@ class UrlBuilder(object):
             domains = [domains]
 
         self.validate_domain(domains)
-        include_library_param = (
-                                    sign_with_library_version
-                                    if sign_with_library_version
-                                    is not None else include_library_param)
+
         self._domains = domains
         self._sign_key = sign_key
         self._use_https = use_https

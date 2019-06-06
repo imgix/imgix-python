@@ -262,31 +262,6 @@ def test_invalid_domain_append_dash():
         assert(False)
 
 
-def test_sign_with_library_version_true():
-    url = str("https://assets.imgix.net/image.jpg?ixlib=python-" +
-              imgix._version.__version__)
-
-    with warnings.catch_warnings(record=True) as w:
-        ub = imgix.UrlBuilder("assets.imgix.net",
-                              sign_with_library_version=True)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert url == ub.create_url("image.jpg")
-
-
-def test_sign_with_library_version_false():
-    url = "https://assets.imgix.net/image.jpg"
-
-    with warnings.catch_warnings(record=True) as w:
-        ub = imgix.UrlBuilder("assets.imgix.net",
-                              sign_with_library_version=False)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert url == ub.create_url("image.jpg")
-
-
 def test_include_library_param_true():
     url = ("https://assets.imgix.net/image.jpg?ixlib=python-" +
            imgix._version.__version__)
