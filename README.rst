@@ -66,7 +66,7 @@ provide your signature key to the URL builder.
 Domain Sharded URLs
 -------------------
 
-**Warning: Domain Sharding has been deprecated and will be removed in the next major release**
+**Warning: Domain Sharding has been deprecated and will be removed in the next major release. As a result, the** ``domains`` **argument will be deprecated in favor of** ``domain`` **instead.**
 
 To find out more, see our `blog post`_ explaining the decision to remove this feature.
 

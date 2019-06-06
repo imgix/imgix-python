@@ -49,12 +49,13 @@ class UrlBuilder(object):
     """
     def __init__(
             self,
-            domains,
+            domains=None,
             use_https=True,
             sign_key=None,
             shard_strategy=SHARD_STRATEGY_CRC,
             sign_with_library_version=None,
-            include_library_param=True):
+            include_library_param=True,
+            domain=None):
 
         if sign_with_library_version is not None:
             warnings.warn('`sign_with_library_version` has been deprecated ' +
@@ -62,13 +63,23 @@ class UrlBuilder(object):
                           'Use `include_library_param` instead.',
                           DeprecationWarning, stacklevel=2)
 
-        if isinstance(domains, (list, tuple)) and (len(domains) > 1):
-            warnings.warn('Domain sharding has been deprecated and will ' +
-                          'be removed in the next major version. ',
-                          DeprecationWarning, stacklevel=2)
-
-        if not isinstance(domains, (list, tuple)):
-            domains = [domains]
+        if isinstance(domains, (list, tuple)):
+            if (len(domains) > 1):
+                warnings.warn('Domain sharding has been deprecated and will ' +
+                              'be removed in the next major version.\nAs a ' +
+                              'result, the \'domains\' argument will be ' +
+                              'deprecated in favor of \'domain\' instead.',
+                              DeprecationWarning, stacklevel=2)
+            elif (len(domains) == 0):
+                raise ValueError('Domains cannot take an empty array')
+        else:
+            if isinstance(domains, str):
+                domains = [domains]
+            elif isinstance(domain, str):
+                domains = [domain]
+            else:
+                raise ValueError('UrlBuilder must be passed a valid ' +
+                                 'string domain')
 
         self.validate_domain(domains)
         include_library_param = (
