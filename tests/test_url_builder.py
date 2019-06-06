@@ -374,3 +374,42 @@ def test_deprecate_shard_strategy_cycle():
         assert domains[0] == _get_domain(builder.create_url('/users/a.png'))
         assert domains[1] == _get_domain(builder.create_url('/users/b.png'))
         assert domains[2] == _get_domain(builder.create_url('/users/c.png'))
+
+
+def test_domains_is_prioritized_over_domain():
+    url = ('https://my-social-network-2.imgix.net/image.jpg?ixlib=python-'
+           + imgix.__version__)
+
+    with warnings.catch_warnings(record=True) as w:
+        ub = imgix.UrlBuilder(domains=['my-social-network-1.imgix.net',
+                                       'my-social-network-2.imgix.net'],
+                              domain='different-network.imgix.net')
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert url == ub.create_url('image.jpg')
+
+
+def test_domain_accepts_string():
+    url = ('https://my-social-network.imgix.net/image.jpg?ixlib=python-'
+           + imgix.__version__)
+    ub = imgix.UrlBuilder(domain='my-social-network.imgix.net')
+    assert url == ub.create_url('image.jpg')
+
+
+def test_error_on_nonstring_domain():
+    try:
+        imgix.UrlBuilder(domain=['my-social-network.imgix.net'])
+    except ValueError:
+        pass
+    else:
+        assert(False)
+
+
+def test_error_on_no_domain():
+    try:
+        imgix.UrlBuilder()
+    except ValueError:
+        pass
+    else:
+        assert(False)
