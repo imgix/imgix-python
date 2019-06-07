@@ -49,33 +49,6 @@ def test_create_url_with_params_kwarg():
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
-def test_create_url_with_opts_kwarg():
-    builder = _default_builder()
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        url = builder.create_url("/users/1.png", opts={"w": 400, "h": 300})
-        assert url == "https://my-social-network.imgix.net" \
-                      "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
-def test_create_url_with_opts_params_kwarg():
-    builder = _default_builder()
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        url = builder.create_url("/users/1.png",
-                                 params={"w": 400, "h": 300},
-                                 opts={"w": 500, "h": 400},
-                                 )
-        assert url == "https://my-social-network.imgix.net" \
-                      "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
 def test_create_url_with_splatted_falsy_parameter():
     builder = _default_builder()
     url = builder.create_url("/users/1.png", {"or": 0})
@@ -194,38 +167,6 @@ def test_signing_url_with_ixlib():
         imgix._version.__version__)
 
 
-def test_shard_strategy_crc_single_domain():
-    domain = 'my-social-network-1.imgix.net'
-
-    builder = imgix.UrlBuilder(domain, shard_strategy=imgix.SHARD_STRATEGY_CRC)
-    assert domain == _get_domain(builder.create_url('/users/1.png'))
-    assert domain == _get_domain(builder.create_url('/users/1.png'))
-    assert domain == _get_domain(builder.create_url('/users/2.png'))
-    assert domain == _get_domain(builder.create_url('/users/2.png'))
-
-
-def test_shard_strategy_cycle_single_domain():
-    domain = 'my-social-network-1.imgix.net'
-
-    builder = imgix.UrlBuilder(domain,
-                               shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
-    assert domain == _get_domain(builder.create_url('/users/1.png'))
-    assert domain == _get_domain(builder.create_url('/users/1.png'))
-    assert domain == _get_domain(builder.create_url('/users/1.png'))
-    assert domain == _get_domain(builder.create_url('/users/a.png'))
-    assert domain == _get_domain(builder.create_url('/users/b.png'))
-    assert domain == _get_domain(builder.create_url('/users/c.png'))
-
-
-def test_shard_strategy_invalid():
-    domain = 'my-social-network-1.imgix.net'
-
-    builder = imgix.UrlBuilder(domain, shard_strategy='invalid-shard-strategy')
-
-    # Should not throw an exception
-    assert builder.create_url('/users/1.png') is not None
-
-
 def test_invalid_domain_append_slash():
     url_append_slash = 'assets.imgix.net/products'
 
@@ -275,77 +216,3 @@ def test_include_library_param_false():
     ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=False)
 
     assert url == ub.create_url("image.jpg")
-
-
-def test_throw_warning_with_domains_list():
-    domains = [
-        'my-social-network-1.imgix.net',
-        'my-social-network-2.imgix.net'
-    ]
-
-    with warnings.catch_warnings(record=True) as w:
-        builder = imgix.UrlBuilder(domains,
-                                   shard_strategy=imgix.SHARD_STRATEGY_CRC)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
-
-
-def test_throw_warning_with_domains_tuple():
-    domains = (
-        'my-social-network-1.imgix.net',
-        'my-social-network-2.imgix.net'
-    )
-
-    with warnings.catch_warnings(record=True) as w:
-        builder = imgix.UrlBuilder(domains,
-                                   shard_strategy=imgix.SHARD_STRATEGY_CRC)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
-
-
-def test_deprecate_shard_strategy_crc():
-    domains = (
-        'my-social-network-1.imgix.net',
-        'my-social-network-2.imgix.net'
-    )
-
-    with warnings.catch_warnings(record=True) as w:
-        builder = imgix.UrlBuilder(domains,
-                                   shard_strategy=imgix.SHARD_STRATEGY_CRC)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[0] == _get_domain(builder.create_url('/users/2.png'))
-        assert domains[0] == _get_domain(builder.create_url('/users/2.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/a.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/b.png'))
-
-
-def test_deprecate_shard_strategy_cycle():
-    domains = (
-        'my-social-network-1.imgix.net',
-        'my-social-network-2.imgix.net',
-        'my-social-network-3.imgix.net',
-    )
-
-    with warnings.catch_warnings(record=True) as w:
-        builder = imgix.UrlBuilder(domains,
-                                   shard_strategy=imgix.SHARD_STRATEGY_CYCLE)
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-        assert domains[0] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[2] == _get_domain(builder.create_url('/users/1.png'))
-        assert domains[0] == _get_domain(builder.create_url('/users/a.png'))
-        assert domains[1] == _get_domain(builder.create_url('/users/b.png'))
-        assert domains[2] == _get_domain(builder.create_url('/users/c.png'))

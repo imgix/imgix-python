@@ -1,14 +1,24 @@
 Changelog
 =========
 
+`2.3.0`_ (2019-06-06)
+---------------------
+.. _2.3.0: https://github.com/imgix/imgix-python/compare/2.2.0...2.3.0
+
+*    feat: deprecate `domains` in favor of `domain` (`#45`_)
+
+.. _#45: https://github.com/imgix/imgix-python/pull/45
+
+
 `2.2.0`_ (2019-05-07)
-------------------
+---------------------
 .. _2.2.0: https://github.com/imgix/imgix-python/compare/2.1.0...2.2.0
 
 *   deprecate domain sharding (`#41`_)(`#42`_)
 
 .. _#41: https://github.com/imgix/imgix-python/pull/41
 .. _#42: https://github.com/imgix/imgix-python/pull/42
+
 
 2.1.0 (2019-02-13)
 ------------------

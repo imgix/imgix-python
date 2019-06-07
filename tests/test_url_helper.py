@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import imgix
-import warnings
 
 from imgix.compat import urlparse
 from imgix.urlhelper import UrlHelper
@@ -124,34 +123,6 @@ def test_base64_param_variants_are_base64_encoded():
 
     assert str(helper) == "https://my-social-network.imgix.net/~text?txt64=" \
         "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE"
-
-
-def test_create_with_opts_kwarg():
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                           include_library_param=False,
-                           opts={"w": 400, "h": 300})
-        assert str(helper) == "https://my-social-network.imgix.net" \
-                              "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
-def test_create_url_with_opts_params_kwarg():
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        helper = UrlHelper('my-social-network.imgix.net', '/users/1.png',
-                           include_library_param=False,
-                           opts={"w": 500, "h": 400},
-                           params={"w": 400, "h": 300},
-                           )
-        assert str(helper) == "https://my-social-network.imgix.net" \
-                              "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
 
 
 def test_signing_url_with_ixlib():
