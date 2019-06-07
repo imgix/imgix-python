@@ -1,6 +1,19 @@
 Changelog
 =========
 
+`3.0.0`_ (2019-06-07)
+---------------------
+.. _3.0.0: https://github.com/imgix/imgix-python/compare/2.3.0...3.0.0
+
+*    fix: remove deprecated domain sharding functionality (`#44`_)
+*    fix: remove deprecated `opts` parameter (`#46`_)
+*    fix: remove deprecated `sign_with_library_version` parameter (`#47`_)
+
+.. _#44: https://github.com/imgix/imgix-python/pull/44
+.. _#46: https://github.com/imgix/imgix-python/pull/46 
+.. _#47: https://github.com/imgix/imgix-python/pull/47
+
+
 `2.3.0`_ (2019-06-06)
 ---------------------
 .. _2.3.0: https://github.com/imgix/imgix-python/compare/2.2.0...2.3.0
