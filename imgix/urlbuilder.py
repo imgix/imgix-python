@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import warnings
-import zlib
 import re
 
 from .urlhelper import UrlHelper
 
-from .constants import SHARD_STRATEGY_CYCLE
-from .constants import SHARD_STRATEGY_CRC
 from .constants import DOMAIN_PATTERN
 
 
@@ -16,26 +13,18 @@ class UrlBuilder(object):
     Create imgix URLs
 
     The URL builder can be reused to create URLs for any images on the
-    provided domains.
+    provided domain.
 
     Parameters
     ----------
-    domains : str or array_like
-        Domain(s) to use while creating imgix URLs.
+    domain : str
+        Domain to use while creating imgix URLs.
     use_https : bool
         If `True`, create HTTPS imgix image URLs. (default `True`)
     sign_key : str or None
         When provided, this key will be used to sign the generated image URLs.
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
-    shard_strategy : {`SHARD_STRATEGY_CRC`, `SHARD_STRATEGY_CYCLE`}
-        If `SHARD_STRATEGY_CRC`, domain sharding performed using a checksum to
-        ensure image path always resolves to the same domain. If
-        `SHARD_STRATEGY_CYCLE`, domain sharding performed by sequentially
-        cycling through the domains list.  (default `SHARD_STRATEGY_CRC`)
-
-        Note: domain sharding is deprecated and will be removed in next major
-        version
     sign_with_library_version : bool
         Deprecated and to be removed in next major version
     include_library_param : bool
@@ -49,13 +38,11 @@ class UrlBuilder(object):
     """
     def __init__(
             self,
-            domains=None,
+            domain,
             use_https=True,
             sign_key=None,
-            shard_strategy=SHARD_STRATEGY_CRC,
             sign_with_library_version=None,
-            include_library_param=True,
-            domain=None):
+            include_library_param=True):
 
         if sign_with_library_version is not None:
             warnings.warn('`sign_with_library_version` has been deprecated ' +
@@ -63,45 +50,24 @@ class UrlBuilder(object):
                           'Use `include_library_param` instead.',
                           DeprecationWarning, stacklevel=2)
 
-        if isinstance(domains, (list, tuple)):
-            if (len(domains) > 1):
-                warnings.warn('Domain sharding has been deprecated and will ' +
-                              'be removed in the next major version.\nAs a ' +
-                              'result, the \'domains\' argument will be ' +
-                              'deprecated in favor of \'domain\' instead.',
-                              DeprecationWarning, stacklevel=2)
-            elif (len(domains) == 0):
-                raise ValueError('Domains cannot take an empty array')
-        else:
-            if isinstance(domains, str):
-                domains = [domains]
-            elif isinstance(domain, str):
-                domains = [domain]
-            else:
-                raise ValueError('UrlBuilder must be passed a valid ' +
-                                 'string domain')
-
-        self.validate_domain(domains)
+        self.validate_domain(domain)
         include_library_param = (
                                     sign_with_library_version
                                     if sign_with_library_version
                                     is not None else include_library_param)
-        self._domains = domains
+        self._domain = domain
         self._sign_key = sign_key
         self._use_https = use_https
-        self._shard_strategy = shard_strategy
-        self._shard_next_index = 0
         self._include_library_param = include_library_param
 
-    def validate_domain(self, domains):
+    def validate_domain(self, domain):
         err_str = str(
-            'Domains must be passed in as fully-qualified domain names and ' +
+            'Domain must be passed in as fully-qualified domain names and ' +
             'should not include a protocol or any path element, i.e. ' +
             '"example.imgix.net".')
 
-        for domain in domains:
-            if re.match(DOMAIN_PATTERN, domain) is None:
-                raise ValueError(err_str)
+        if re.match(DOMAIN_PATTERN, domain) is None:
+            raise ValueError(err_str)
 
     def create_url(self, path, params={}, opts={}):
         """
@@ -126,19 +92,7 @@ class UrlBuilder(object):
             warnings.warn('`opts` has been deprecated. Use `params` instead.',
                           DeprecationWarning, stacklevel=2)
         params = params or opts
-        if self._shard_strategy == SHARD_STRATEGY_CRC:
-            crc = zlib.crc32(path.encode('utf-8')) & 0xffffffff
-            index = crc % len(self._domains)  # Deterministically choose domain
-            domain = self._domains[index]
-
-        elif self._shard_strategy == SHARD_STRATEGY_CYCLE:
-            domain = self._domains[self._shard_next_index]
-            self._shard_next_index = (
-                self._shard_next_index + 1) % len(self._domains)
-
-        else:
-            domain = self._domains[0]
-
+        domain = self._domain
         scheme = "https" if self._use_https else "http"
 
         url_obj = UrlHelper(
