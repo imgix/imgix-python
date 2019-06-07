@@ -62,7 +62,7 @@ class UrlBuilder(object):
 
     def validate_domain(self, domain):
         err_str = str(
-            'domain must be passed in as fully-qualified domain names and ' +
+            'Domain must be passed in as fully-qualified domain names and ' +
             'should not include a protocol or any path element, i.e. ' +
             '"example.imgix.net".')
 
