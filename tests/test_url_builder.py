@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import imgix
-import warnings
 
 from imgix.compat import urlparse
 

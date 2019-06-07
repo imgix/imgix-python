@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import warnings
 import re
 
 from .urlhelper import UrlHelper
@@ -40,7 +39,9 @@ class UrlBuilder(object):
             use_https=True,
             sign_key=None,
             include_library_param=True):
-      
+
+        self.validate_domain(domain)
+
         self._domain = domain
         self._sign_key = sign_key
         self._use_https = use_https
