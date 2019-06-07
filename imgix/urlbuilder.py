@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import warnings
 import re
 
 from .urlhelper import UrlHelper
@@ -25,8 +24,6 @@ class UrlBuilder(object):
         When provided, this key will be used to sign the generated image URLs.
         You can read more about URL signing on our docs:
         https://docs.imgix.com/setup/securing-images
-    sign_with_library_version : bool
-        Deprecated and to be removed in next major version
     include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
@@ -41,20 +38,10 @@ class UrlBuilder(object):
             domain,
             use_https=True,
             sign_key=None,
-            sign_with_library_version=None,
             include_library_param=True):
 
-        if sign_with_library_version is not None:
-            warnings.warn('`sign_with_library_version` has been deprecated ' +
-                          'and will be removed in the next major version. ' +
-                          'Use `include_library_param` instead.',
-                          DeprecationWarning, stacklevel=2)
-
         self.validate_domain(domain)
-        include_library_param = (
-                                    sign_with_library_version
-                                    if sign_with_library_version
-                                    is not None else include_library_param)
+
         self._domain = domain
         self._sign_key = sign_key
         self._use_https = use_https
