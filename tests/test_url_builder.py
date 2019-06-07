@@ -49,33 +49,6 @@ def test_create_url_with_params_kwarg():
     assert url == "https://my-social-network.imgix.net/users/1.png?h=300&w=400"
 
 
-def test_create_url_with_opts_kwarg():
-    builder = _default_builder()
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        url = builder.create_url("/users/1.png", opts={"w": 400, "h": 300})
-        assert url == "https://my-social-network.imgix.net" \
-                      "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
-def test_create_url_with_opts_params_kwarg():
-    builder = _default_builder()
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter('always')
-        url = builder.create_url("/users/1.png",
-                                 params={"w": 400, "h": 300},
-                                 opts={"w": 500, "h": 400},
-                                 )
-        assert url == "https://my-social-network.imgix.net" \
-                      "/users/1.png?h=300&w=400"
-        assert len(w) == 1
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
-
-
 def test_create_url_with_splatted_falsy_parameter():
     builder = _default_builder()
     url = builder.create_url("/users/1.png", {"or": 0})

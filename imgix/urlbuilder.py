@@ -33,8 +33,8 @@ class UrlBuilder(object):
 
     Methods
     -------
-    create_url(path, opts={})
-        Create URL with the supplied path and `opts` parameters dict.
+    create_url(path, params={})
+        Create URL with the supplied path and `params` parameters dict.
     """
     def __init__(
             self,
@@ -69,14 +69,14 @@ class UrlBuilder(object):
         if re.match(DOMAIN_PATTERN, domain) is None:
             raise ValueError(err_str)
 
-    def create_url(self, path, params={}, opts={}):
+    def create_url(self, path, params={}):
         """
-        Create URL with supplied path and `opts` parameters dict.
+        Create URL with supplied path and `params` parameters dict.
 
         Parameters
         ----------
         path : str
-        opts : dict
+        params : dict
             Dictionary specifying URL parameters. Non-imgix parameters are
             added to the URL unprocessed. For a complete list of imgix
             supported parameters, visit https://docs.imgix.com/apis/url .
@@ -88,11 +88,8 @@ class UrlBuilder(object):
             imgix URL
         """
 
-        if opts:
-            warnings.warn('`opts` has been deprecated. Use `params` instead.',
-                          DeprecationWarning, stacklevel=2)
-        params = params or opts
         domain = self._domain
+
         scheme = "https" if self._use_https else "http"
 
         url_obj = UrlHelper(
