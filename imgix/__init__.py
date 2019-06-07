@@ -23,10 +23,6 @@ from ._version import __version__
 
 from .urlbuilder import UrlBuilder
 
-from .constants import SHARD_STRATEGY_CYCLE
-from .constants import SHARD_STRATEGY_CRC
-
-
 __all__ = [
-    'UrlBuilder', 'SHARD_STRATEGY_CRC', 'SHARD_STRATEGY_CYCLE',
+    'UrlBuilder',
     'SIGNATURE_MODE_QUERY', 'SIGNATURE_MODE_PATH', '__version__', ]
