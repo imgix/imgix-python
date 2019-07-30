@@ -4,7 +4,7 @@ import re
 
 from .urlhelper import UrlHelper
 
-from .constants import DOMAIN_PATTERN
+from .constants import DOMAIN_PATTERN, target_widths
 
 
 class UrlBuilder(object):
@@ -88,3 +88,37 @@ class UrlBuilder(object):
             params=params)
 
         return str(url_obj)
+
+    def create_srcset(self, path, params={}):
+        width = params['w']
+        height = params['h']
+        aspect_ratio = params['ar']
+
+        if (width or (height and aspect_ratio)):
+            return self.__build_srcset_DPR(path, params)
+        else:
+            return self.__build_srcset_pairs(path, params)
+
+    def __build_srcset_pairs(self, path, params={}):
+        srcset = ''
+        widths = target_widths()
+
+        for i in range(len(widths)):
+            current_width = widths[i]
+            current_params = params
+            current_params['w'] = current_width
+            srcset += self.create_url(path, current_params)
+            + ' ' + str(current_width) + 'w,\n'
+
+        return srcset[0:-2]
+
+    def __build_srcset_DPR(self, path, params={}):
+        srcset = ''
+        target_ratios = [1, 2, 3, 4, 5]
+        url = self.create_url(path, params)
+
+        for i in range(len(target_ratios)):
+            current_ratio = target_ratios[i]
+            srcset += url + ' ' + str(current_ratio) + 'x,\n'
+
+        return srcset[0:-2]
