@@ -28,7 +28,8 @@ def test_given_width_srcset_is_DPR():
 
     for src in srclist:
         ratio = src.split(' ')[1]
-        assert(f'{device_pixel_ratio}x' == ratio)
+        dpr_str = str(device_pixel_ratio) + 'x'
+        assert(dpr_str == ratio)
         device_pixel_ratio += 1
 
 
@@ -114,7 +115,8 @@ def test_given_width_and_height_DPR():
 
     for src in srclist:
         ratio = src.split(' ')[1]
-        assert(f'{device_pixel_ratio}x' == ratio)
+        dpr_str = str(device_pixel_ratio) + 'x'
+        assert(dpr_str == ratio)
         device_pixel_ratio += 1
 
 
@@ -192,7 +194,8 @@ def test_given_aspect_ratio_and_height_srcset_is_DPR():
 
     for src in srclist:
         ratio = src.split(' ')[1]
-        assert(f'{device_pixel_ratio}x' == ratio)
+        dpr_str = str(device_pixel_ratio) + 'x'
+        assert(dpr_str == ratio)
         device_pixel_ratio += 1
 
 
