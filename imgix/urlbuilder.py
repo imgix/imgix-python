@@ -90,9 +90,9 @@ class UrlBuilder(object):
         return str(url_obj)
 
     def create_srcset(self, path, params={}):
-        width = params['w']
-        height = params['h']
-        aspect_ratio = params['ar']
+        width = params['w'] if 'w' in params else None
+        height = params['h'] if 'h' in params else None
+        aspect_ratio = params['ar'] if 'ar' in params else None
 
         if (width or (height and aspect_ratio)):
             return self.__build_srcset_DPR(path, params)
@@ -105,10 +105,10 @@ class UrlBuilder(object):
 
         for i in range(len(widths)):
             current_width = widths[i]
-            current_params = params
+            current_params = params.copy()
             current_params['w'] = current_width
-            srcset += self.create_url(path, current_params)
-            + ' ' + str(current_width) + 'w,\n'
+            srcset += str(f'{self.create_url(path, current_params)} ' +
+                          f'{current_width}w,\n')
 
         return srcset[0:-2]
 
@@ -119,6 +119,6 @@ class UrlBuilder(object):
 
         for i in range(len(target_ratios)):
             current_ratio = target_ratios[i]
-            srcset += url + ' ' + str(current_ratio) + 'x,\n'
+            srcset += f'{url} {str(current_ratio)}x,\n'
 
         return srcset[0:-2]
