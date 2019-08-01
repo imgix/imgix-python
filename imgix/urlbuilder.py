@@ -30,8 +30,17 @@ class UrlBuilder(object):
 
     Methods
     -------
+    validate_domain(domain)
+        Returns true if the supplied string parameter pattern matches a valid
+        domain name accepted by imgix
     create_url(path, params={})
         Create URL with the supplied path and `params` parameters dict.
+    create_srcset(path, params={})
+        Create srcset attribute value with the supplied path and
+        `params` parameters dict.
+        Will generate a fixed-width DPR srcset if a width OR height and aspect
+        ratio are passed in as parameters. Otherwise will generate a srcset
+        with width-descriptor pairs.
     """
     def __init__(
             self,
@@ -48,6 +57,19 @@ class UrlBuilder(object):
         self._include_library_param = include_library_param
 
     def validate_domain(self, domain):
+        """
+        Returns true if the supplied string parameter pattern matches a valid
+        domain name accepted by imgix
+
+        Parameters
+        ----------
+        domain : str
+
+        Returns
+        -------
+        bool
+        """
+
         err_str = str(
             'Domain must be passed in as fully-qualified domain names and ' +
             'should not include a protocol or any path element, i.e. ' +
@@ -90,6 +112,28 @@ class UrlBuilder(object):
         return str(url_obj)
 
     def create_srcset(self, path, params={}):
+        """
+        Create srcset attribute value with the supplied path and
+        `params` parameters dict.
+        Will generate a fixed-width DPR srcset if a width OR height and aspect
+        ratio are passed in as parameters. Otherwise will generate a srcset
+        with width-descriptor pairs.
+
+        Parameters
+        ----------
+        path : str
+        params : dict
+            Dictionary specifying URL parameters. Non-imgix parameters are
+            added to the URL unprocessed. For a complete list of imgix
+            supported parameters, visit https://docs.imgix.com/apis/url .
+            (default {})
+
+        Returns
+        -------
+        str
+            srcset attribute value
+        """
+
         width = params['w'] if 'w' in params else None
         height = params['h'] if 'h' in params else None
         aspect_ratio = params['ar'] if 'ar' in params else None
