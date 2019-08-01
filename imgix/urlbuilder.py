@@ -107,8 +107,8 @@ class UrlBuilder(object):
             current_width = widths[i]
             current_params = params.copy()
             current_params['w'] = current_width
-            srcset += str(f'{self.create_url(path, current_params)} ' +
-                          f'{current_width}w,\n')
+            srcset += self.create_url(path, current_params) \
+                + ' ' + str(current_width) + 'w,\n'
 
         return srcset[0:-2]
 
@@ -119,6 +119,6 @@ class UrlBuilder(object):
 
         for i in range(len(target_ratios)):
             current_ratio = target_ratios[i]
-            srcset += f'{url} {str(current_ratio)}x,\n'
+            srcset += url + ' ' + str(current_ratio) + 'x,\n'
 
         return srcset[0:-2]
