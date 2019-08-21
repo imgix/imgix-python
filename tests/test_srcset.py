@@ -11,7 +11,7 @@ def _default_srcset(params={}):
     return ub.create_srcset('image.jpg', params)
 
 
-def parse_width(width):
+def _parse_width(width):
     return int(width[0:-1])
 
 
@@ -67,8 +67,8 @@ def test_given_height_srcset_pairs_within_bounds():
 
     min_parsed = srclist[0].split(' ')[1]
     max_parsed = srclist[-1].split(' ')[1]
-    min = parse_width(min_parsed)
-    max = parse_width(max_parsed)
+    min = _parse_width(min_parsed)
+    max = _parse_width(max_parsed)
 
     assert(min >= 100)
     assert(max <= 8192)
@@ -80,7 +80,7 @@ def test_given_height_srcset_iterates_18_percent():
     srcslist = srcset.split(',')
     widths_list = [src.split(' ')[1] for src in srcslist]
     # a list of all widths as integers
-    widths = [parse_width(width) for width in widths_list]
+    widths = [_parse_width(width) for width in widths_list]
 
     prev = widths[0]
     for i in range(1, len(widths)):
@@ -146,8 +146,8 @@ def test_given_aspect_ratio_srcset_pairs_within_bounds():
 
     min_parsed = srclist[0].split(' ')[1]
     max_parsed = srclist[-1].split(' ')[1]
-    min = parse_width(min_parsed)
-    max = parse_width(max_parsed)
+    min = _parse_width(min_parsed)
+    max = _parse_width(max_parsed)
 
     assert(min >= 100)
     assert(max <= 8192)
@@ -159,7 +159,7 @@ def test_given_aspect_ratio_srcset_iterates_18_percent():
     srcslist = srcset.split(',')
     widths_list = [src.split(' ')[1] for src in srcslist]
     # a list of all widths as int
-    widths = [parse_width(width) for width in widths_list]
+    widths = [_parse_width(width) for width in widths_list]
 
     prev = widths[0]
     for i in range(1, len(widths)):
