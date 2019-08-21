@@ -4,7 +4,11 @@ import re
 
 from .urlhelper import UrlHelper
 
-from .constants import DOMAIN_PATTERN, target_widths
+from .constants import DOMAIN_PATTERN
+
+
+SRCSET_INCREMENT_PERCENTAGE = 8
+SRCSET_MAX_SIZE = 8192
 
 
 class UrlBuilder(object):
@@ -143,10 +147,28 @@ class UrlBuilder(object):
         else:
             return self._build_srcset_pairs(path, params)
 
-    def _build_srcset_pairs(self, path, params={}):
+    def _target_widths(self):
+        resolutions = []
+        prev = 100
+
+        def ensureEven(n):
+            return 2 * round(n/2)
+
+        while prev <= SRCSET_MAX_SIZE:
+            resolutions.append(prev)
+            print(prev)
+            prev *= 1 + (SRCSET_INCREMENT_PERCENTAGE / 100.0) * 2
+            prev = int(ensureEven(prev))
+
+        resolutions.append(SRCSET_MAX_SIZE)
+        return resolutions
+
+    def _build_srcset_pairs(self, path, params=None):
+        if not params:
+            params = {}
         srcset = ''
-        # widths = target_widths()
-        widths = [100, 116, 134, 156, 182, 210, 244, 282, 328, 380, 442, 512, 594, 688, 798, 926, 1074, 1246, 1446, 1678, 1946, 2258, 2618, 3038, 3524, 4088, 4742, 5500, 6380, 7400, 8192]
+        widths = self._target_widths()
+
         for i in range(len(widths)):
             current_width = widths[i]
             current_params = params
