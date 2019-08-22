@@ -1,7 +1,11 @@
 [run]
+source =
+    imgix/
+    tests/
 omit =
     imgix/compat.py
 
 [report]
 exclude_lines =
+    assert\(False\)
     pass
