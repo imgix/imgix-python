@@ -173,7 +173,7 @@ def test_invalid_domain_append_slash():
     try:
         imgix.UrlBuilder(url_append_slash)
     except ValueError:
-        pass
+        assert(True)
     else:
         assert(False)
 
@@ -185,7 +185,7 @@ def test_invalid_domain_prepend_scheme():
     try:
         imgix.UrlBuilder(url_prepend_protocol)
     except ValueError:
-        pass
+        assert(True)
     else:
         assert(False)
 
@@ -197,7 +197,7 @@ def test_invalid_domain_append_dash():
     try:
         imgix.UrlBuilder(url_append_dash)
     except ValueError:
-        pass
+        assert(True)
     else:
         assert(False)
 
