@@ -151,14 +151,12 @@ class UrlBuilder(object):
         resolutions = []
         prev = 100
 
-        def ensureEven(n):
-            return 2 * round(n/2)
+        def ensure_even(n):
+            return 2 * round(n/2.0)
 
         while prev <= SRCSET_MAX_SIZE:
-            resolutions.append(prev)
-            print(prev)
+            resolutions.append(int(ensure_even(prev)))
             prev *= 1 + (SRCSET_INCREMENT_PERCENTAGE / 100.0) * 2
-            prev = int(ensureEven(prev))
 
         resolutions.append(SRCSET_MAX_SIZE)
         return resolutions
