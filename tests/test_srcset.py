@@ -2,6 +2,7 @@
 
 import imgix
 import hashlib
+import re
 
 
 def _default_srcset(params={}):
@@ -19,6 +20,25 @@ def test_no_parameters_generates_srcset_pairs():
     srcset = _default_srcset()
     expected_number_of_pairs = 31
     assert(expected_number_of_pairs == len(srcset.split(',')))
+
+
+def test_srcset_pair_values():
+    # array of expected resolutions to be generated
+    resolutions = [100, 116, 134, 156, 182, 210, 244, 282,
+                   328, 380, 442, 512, 594, 688, 798, 926,
+                   1074, 1246, 1446, 1678, 1946, 2258, 2618,
+                   3038, 3524, 4088, 4742, 5500, 6380, 7400, 8192]
+    srcset = _default_srcset()
+    srclist = srcset.split(',')
+    index = 0
+
+    for src in srclist:
+        width = src.split(' ')[1]
+
+        # extract width int values
+        value = re.search(re.compile(r'\d+'), width)
+        assert(int(value.group(0)) == resolutions[index])
+        index += 1
 
 
 def test_given_width_srcset_is_DPR():
