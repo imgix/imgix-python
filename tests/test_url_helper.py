@@ -6,10 +6,6 @@ from imgix.compat import urlparse
 from imgix.urlhelper import UrlHelper
 
 
-def _default_helper():
-    return UrlHelper('my-social-network.imgix.net', '/users/1.png')
-
-
 def test_create():
     helper = UrlHelper('my-social-network.imgix.net', '/users/1.png')
     assert type(helper) is UrlHelper
