@@ -9,6 +9,7 @@ from .constants import DOMAIN_PATTERN
 
 SRCSET_INCREMENT_PERCENTAGE = 8
 SRCSET_MAX_SIZE = 8192
+SRCSET_DPR_TARGET_RATIOS = range(1, 6)
 
 
 class UrlBuilder(object):
@@ -37,9 +38,9 @@ class UrlBuilder(object):
     validate_domain(domain)
         Returns true if the supplied string parameter pattern matches a valid
         domain name accepted by imgix
-    create_url(path, params={})
+    create_url(path, params=None)
         Create URL with the supplied path and `params` parameters dict.
-    create_srcset(path, params={})
+    create_srcset(path, params=None)
         Create srcset attribute value with the supplied path and
         `params` parameters dict.
         Will generate a fixed-width DPR srcset if a width OR height and aspect
@@ -82,7 +83,7 @@ class UrlBuilder(object):
         if re.match(DOMAIN_PATTERN, domain) is None:
             raise ValueError(err_str)
 
-    def create_url(self, path, params={}):
+    def create_url(self, path, params=None):
         """
         Create URL with supplied path and `params` parameters dict.
 
@@ -93,16 +94,17 @@ class UrlBuilder(object):
             Dictionary specifying URL parameters. Non-imgix parameters are
             added to the URL unprocessed. For a complete list of imgix
             supported parameters, visit https://docs.imgix.com/apis/url .
-            (default {})
+            (default None)
 
         Returns
         -------
         str
             imgix URL
         """
+        if not params:
+            params = {}
 
         domain = self._domain
-
         scheme = "https" if self._use_https else "http"
 
         url_obj = UrlHelper(
@@ -115,7 +117,7 @@ class UrlBuilder(object):
 
         return str(url_obj)
 
-    def create_srcset(self, path, params={}):
+    def create_srcset(self, path, params=None):
         """
         Create srcset attribute value with the supplied path and
         `params` parameters dict.
@@ -130,13 +132,15 @@ class UrlBuilder(object):
             Dictionary specifying URL parameters. Non-imgix parameters are
             added to the URL unprocessed. For a complete list of imgix
             supported parameters, visit https://docs.imgix.com/apis/url .
-            (default {})
+            (default None)
 
         Returns
         -------
         str
             srcset attribute value
         """
+        if not params:
+            params = {}
 
         width = params['w'] if 'w' in params else None
         height = params['h'] if 'h' in params else None
@@ -161,9 +165,7 @@ class UrlBuilder(object):
         resolutions.append(SRCSET_MAX_SIZE)
         return resolutions
 
-    def _build_srcset_pairs(self, path, params=None):
-        if not params:
-            params = {}
+    def _build_srcset_pairs(self, path, params):
         srcset = ''
         widths = self._target_widths()
 
@@ -176,15 +178,12 @@ class UrlBuilder(object):
 
         return srcset[0:-2]
 
-    def _build_srcset_DPR(self, path, params=None):
-        if not params:
-            params = {}
+    def _build_srcset_DPR(self, path, params):
         srcset = ''
-        target_ratios = [1, 2, 3, 4, 5]
         url = self.create_url(path, params)
 
-        for i in range(len(target_ratios)):
-            current_ratio = target_ratios[i]
+        for i in range(len(SRCSET_DPR_TARGET_RATIOS)):
+            current_ratio = SRCSET_DPR_TARGET_RATIOS[i]
             srcset += url + ' ' + str(current_ratio) + 'x,\n'
 
         return srcset[0:-2]
