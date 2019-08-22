@@ -176,7 +176,9 @@ class UrlBuilder(object):
 
         return srcset[0:-2]
 
-    def _build_srcset_DPR(self, path, params={}):
+    def _build_srcset_DPR(self, path, params=None):
+        if not params:
+            params = {}
         srcset = ''
         target_ratios = [1, 2, 3, 4, 5]
         url = self.create_url(path, params)
