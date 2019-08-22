@@ -1,6 +1,17 @@
 Changelog
 =========
 
+`3.1.0`_ (2019-08-22)
+---------------------
+.. _3.1.0: https://github.com/imgix/imgix-python/compare/3.0.0...3.1.0
+
+*    feat: add srcset generation (`#48`_) 
+*    build(tox): improve code coverage reporting; parallelize testing (`#49`_) 
+
+.. _#48: https://github.com/imgix/imgix-python/pull/48
+.. _#49: https://github.com/imgix/imgix-python/pull/49 
+
+
 `3.0.0`_ (2019-06-07)
 ---------------------
 .. _3.0.0: https://github.com/imgix/imgix-python/compare/2.3.0...3.0.0
