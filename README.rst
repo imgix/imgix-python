@@ -65,12 +65,12 @@ provide your signature key to the URL builder.
 Srcset Generation
 -----------------
 
-The imgix-python package allows for generation of custom srcset attributes, which can be invoked through create_srcset(). By default, the srcset generated will allow for responsive size switching by building a list of image-width mappings.
+The imgix-python package allows for generation of custom srcset attributes, which can be invoked through :code:`create_srcset()`. By default, the srcset generated will allow for responsive size switching by building a list of image-width mappings.
 
 .. code-block:: python
 
-    builder = imgix.UrlBuilder("demos.imgix.net", sign_key='my-token', include_library_param=False)
-    srcset = builder.create_srcset('image.png')
+    builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
+    srcset = builder.create_srcset("image.png")
     print srcset
 
 Will produce the following attribute value, which can then be served to the client:
@@ -84,12 +84,12 @@ Will produce the following attribute value, which can then be served to the clie
     https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7400w,
     https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 
-In cases where enough information is provided about an image's dimensions, create_srcset() will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are 'w', 'h', and 'ar'. By invoking create_srcset() with either a width **or** the height and aspect ratio (along with fit=crop, typically) provided, a different `srcset` will be generated for a fixed-size image instead.
+In cases where enough information is provided about an image's dimensions, :code:`create_srcset()` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are :code:`w`, :code:`h`, and :code:`ar`. By invoking :code:`create_srcset()` with either a width **or** the height and aspect ratio (along with fit=crop, typically) provided, a different srcset will be generated for a fixed-size image instead.
 
 .. code-block:: python
 
-    builder = imgix.UrlBuilder("demos.imgix.net", sign_key='my-token', include_library_param=False)
-    srcset = builder.create_srcset('image.png', {'h':800, 'ar':'3:2', 'fit':'crop'})
+    builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
+    srcset = builder.create_srcset("image.png", {'h':800, 'ar':'3:2', 'fit':'crop'})
     print srcset
 
 Will produce the following attribute value:
