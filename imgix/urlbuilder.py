@@ -4,11 +4,10 @@ import re
 
 from .urlhelper import UrlHelper
 
-from .constants import DOMAIN_PATTERN, _target_widths
+from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS
 
 
 SRCSET_DPR_TARGET_RATIOS = range(1, 6)
-SRCSET_TARGET_WIDTHS = _target_widths()
 
 
 class UrlBuilder(object):

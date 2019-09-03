@@ -1,12 +1,12 @@
 import re
 
-SRCSET_INCREMENT_PERCENTAGE = 8
-SRCSET_MAX_SIZE = 8192
 DOMAIN_PATTERN = re.compile(
             r'^(?:[a-z\d\-_]{1,62}\.){0,125}'
             r'(?:[a-z\d](?:\-(?=\-*[a-z\d])|[a-z]|\d){0,62}\.)'
             r'[a-z\d]{1,63}$'
         )
+SRCSET_INCREMENT_PERCENTAGE = 8
+SRCSET_MAX_SIZE = 8192
 
 
 def _target_widths():
@@ -22,3 +22,6 @@ def _target_widths():
 
     resolutions.append(SRCSET_MAX_SIZE)
     return resolutions
+
+
+SRCSET_TARGET_WIDTHS = _target_widths()
