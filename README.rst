@@ -84,7 +84,7 @@ Will produce the following attribute value, which can then be served to the clie
     https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7400w,
     https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 
-In cases where enough information is provided about an image's dimensions, :code:`create_srcset()` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are :code:`w`, :code:`h`, and :code:`ar`. By invoking :code:`create_srcset()` with either a width **or** the height and aspect ratio (along with fit=crop, typically) provided, a different srcset will be generated for a fixed-size image instead.
+In cases where enough information is provided about an image's dimensions, :code:`create_srcset()` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are :code:`w`, :code:`h`, and :code:`ar`. By invoking :code:`create_srcset()` with either a width **or** the height and aspect ratio (along with :code:`fit=crop`, typically) provided, a different srcset will be generated for a fixed-size image instead.
 
 .. code-block:: python
 
@@ -96,11 +96,11 @@ Will produce the following attribute value:
 
 .. code-block:: html
 
-    https://demos.imgix.net/image.png?ar=3%3A2&fit=crop&h=800&s=333a2140375016c2a6d2cf53e189ed90 1x,
-    https://demos.imgix.net/image.png?ar=3%3A2&fit=crop&h=800&s=333a2140375016c2a6d2cf53e189ed90 2x,
-    https://demos.imgix.net/image.png?ar=3%3A2&fit=crop&h=800&s=333a2140375016c2a6d2cf53e189ed90 3x,
-    https://demos.imgix.net/image.png?ar=3%3A2&fit=crop&h=800&s=333a2140375016c2a6d2cf53e189ed90 4x,
-    https://demos.imgix.net/image.png?ar=3%3A2&fit=crop&h=800&s=333a2140375016c2a6d2cf53e189ed90 5x
+    https://demos.imgix.net/image.png?ar=3%3A2&dpr=1&fit=crop&h=800&s=6cf5c443d1eb98bc3d96ea569fcef088 1x,
+    https://demos.imgix.net/image.png?ar=3%3A2&dpr=2&fit=crop&h=800&s=d60a61a5f34545922bd8dff4e53a0555 2x,
+    https://demos.imgix.net/image.png?ar=3%3A2&dpr=3&fit=crop&h=800&s=590f96aa426f8589eb7e449ebbeb66e7 3x,
+    https://demos.imgix.net/image.png?ar=3%3A2&dpr=4&fit=crop&h=800&s=c89c2fd3148957647e86cfc32ba20517 4x,
+    https://demos.imgix.net/image.png?ar=3%3A2&dpr=5&fit=crop&h=800&s=3d73af69d78d49eef0f81b4b5d718a2c 5x
 
 For more information to better understand srcset, we highly recommend `Eric Portis' "Srcset and sizes" article <https://ericportis.com/posts/2014/srcset-sizes/>`_ which goes into depth about the subject.
 
