@@ -64,7 +64,6 @@ def test_given_width_srcset_has_dpr_params():
 
 def test_given_width_signs_urls():
     srcset = _default_srcset({'w': 100})
-#     expected_signature = 'b95cfd915f4a198442bff4ce5befe5b8'
     srclist = srcset.split(',')
 
     for src in srclist:
@@ -109,6 +108,7 @@ def test_given_height_srcset_pairs_within_bounds():
     assert(max <= 8192)
 
 
+# a 17% testing threshold is used to account for rounding
 def test_given_height_srcset_iterates_17_percent():
     increment_allowed = 0.17
     srcset = _default_srcset({'h': 100})
@@ -202,6 +202,7 @@ def test_given_aspect_ratio_srcset_pairs_within_bounds():
     assert(max <= 8192)
 
 
+# a 17% testing threshold is used to account for rounding
 def test_given_aspect_ratio_srcset_iterates_17_percent():
     increment_allowed = 0.17
     srcset = _default_srcset({'ar': '3:2'})
