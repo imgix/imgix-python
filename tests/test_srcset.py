@@ -53,9 +53,18 @@ def test_given_width_srcset_is_DPR():
         device_pixel_ratio += 1
 
 
+def test_given_width_srcset_has_dpr_params():
+    srcset = _default_srcset({'w': 100})
+    srclist = srcset.split(',')
+
+    for i in range(len(srclist)):
+        src = srclist[i].split(' ')[0]
+        assert(src.index("dpr=" + str(i+1)))
+
+
 def test_given_width_signs_urls():
     srcset = _default_srcset({'w': 100})
-    expected_signature = 'b95cfd915f4a198442bff4ce5befe5b8'
+#     expected_signature = 'b95cfd915f4a198442bff4ce5befe5b8'
     srclist = srcset.split(',')
 
     for src in srclist:
@@ -64,6 +73,12 @@ def test_given_width_signs_urls():
 
         # extract the sign parameter
         generated_signature = url[url.index('s=')+2:len(url)]
+
+        params = url[url.index('?'):url.index('s=')-1]
+        signature_base = 'MYT0KEN' + '/image.jpg' + params
+        expected_signature = hashlib.md5(signature_base
+                                         .encode('utf-8')).hexdigest()
+
         assert(expected_signature == generated_signature)
 
 
@@ -94,8 +109,8 @@ def test_given_height_srcset_pairs_within_bounds():
     assert(max <= 8192)
 
 
-def test_given_height_srcset_iterates_18_percent():
-    increment_allowed = 0.18
+def test_given_height_srcset_iterates_17_percent():
+    increment_allowed = 0.17
     srcset = _default_srcset({'h': 100})
     srcslist = srcset.split(',')
     widths_list = [src.split(' ')[1] for src in srcslist]
@@ -128,7 +143,7 @@ def test_given_height_srcset_signs_urls():
         assert(expected_signature == generated_signature)
 
 
-def test_given_width_and_height_DPR():
+def test_given_width_and_height_is_DPR():
     srcset = _default_srcset({'w': 100, 'h': 100})
     device_pixel_ratio = 1
     srclist = srcset.split(',')
@@ -140,9 +155,17 @@ def test_given_width_and_height_DPR():
         device_pixel_ratio += 1
 
 
+def test_given_width_and_height_srcset_has_dpr_params():
+    srcset = _default_srcset({'w': 100, 'h': 100})
+    srclist = srcset.split(',')
+
+    for i in range(len(srclist)):
+        src = srclist[i].split(' ')[0]
+        assert(src.index("dpr=" + str(i+1)))
+
+
 def test_given_width_and_height_signs_urls():
     srcset = _default_srcset({'w': 100, 'h': 100})
-    expected_signature = '1bd495fdddc25957838a8f844b84d3a3'
     srclist = srcset.split(',')
 
     for src in srclist:
@@ -151,6 +174,12 @@ def test_given_width_and_height_signs_urls():
 
         # extract the sign parameter
         generated_signature = url[url.index('s=')+2:len(url)]
+
+        params = url[url.index('?'):url.index('s=')-1]
+        signature_base = 'MYT0KEN' + '/image.jpg' + params
+        expected_signature = hashlib.md5(signature_base
+                                         .encode('utf-8')).hexdigest()
+
         assert(expected_signature == generated_signature)
 
 
@@ -173,8 +202,8 @@ def test_given_aspect_ratio_srcset_pairs_within_bounds():
     assert(max <= 8192)
 
 
-def test_given_aspect_ratio_srcset_iterates_18_percent():
-    increment_allowed = 0.18
+def test_given_aspect_ratio_srcset_iterates_17_percent():
+    increment_allowed = 0.17
     srcset = _default_srcset({'ar': '3:2'})
     srcslist = srcset.split(',')
     widths_list = [src.split(' ')[1] for src in srcslist]
@@ -208,7 +237,7 @@ def test_given_aspect_ratio_srcset_signs_urls():
 
 
 def test_given_aspect_ratio_and_height_srcset_is_DPR():
-    srcset = _default_srcset({'w': 100})
+    srcset = _default_srcset({'ar': '3:2', 'h': 500})
     device_pixel_ratio = 1
     srclist = srcset.split(',')
 
@@ -219,9 +248,17 @@ def test_given_aspect_ratio_and_height_srcset_is_DPR():
         device_pixel_ratio += 1
 
 
-def test_given_ratio_and_height_srcset_signs_urls():
-    srcset = _default_srcset({'w': 100})
-    expected_signature = 'b95cfd915f4a198442bff4ce5befe5b8'
+def test_given_aspect_ratio_and_height_srcset_has_dpr_params():
+    srcset = _default_srcset({'ar': '3:2', 'h': 500})
+    srclist = srcset.split(',')
+
+    for i in range(len(srclist)):
+        src = srclist[i].split(' ')[0]
+        assert(src.index("dpr=" + str(i+1)))
+
+
+def test_given_aspect_ratio_and_height_srcset_signs_urls():
+    srcset = _default_srcset({'ar': '3:2', 'h': 500})
     srclist = srcset.split(',')
 
     for src in srclist:
@@ -230,4 +267,10 @@ def test_given_ratio_and_height_srcset_signs_urls():
 
         # extract the sign parameter
         generated_signature = url[url.index('s=')+2:len(url)]
+
+        params = url[url.index('?'):url.index('s=')-1]
+        signature_base = 'MYT0KEN' + '/image.jpg' + params
+        expected_signature = hashlib.md5(signature_base
+                                         .encode('utf-8')).hexdigest()
+
         assert(expected_signature == generated_signature)
