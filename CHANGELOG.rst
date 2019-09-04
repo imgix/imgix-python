@@ -1,6 +1,15 @@
 Changelog
 =========
 
+`3.1.1`_ (2019-08-22)
+---------------------
+.. _3.1.1: https://github.com/imgix/imgix-python/compare/3.1.0...3.1.1
+
+*    fix: include dpr parameter when generating fixed-width srcset  (`#50`_)
+
+.. _#50: https://github.com/imgix/imgix-python/pull/50
+
+
 `3.1.0`_ (2019-08-22)
 ---------------------
 .. _3.1.0: https://github.com/imgix/imgix-python/compare/3.0.0...3.1.0
