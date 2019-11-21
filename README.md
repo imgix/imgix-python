@@ -9,7 +9,7 @@ can be found at <http://www.imgix.com>.
 Installation
 ============
 
-``` {.bash}
+``` bash
 $ pip install imgix
 ```
 
@@ -20,7 +20,7 @@ To begin creating imgix URLs programmatically, simply import the imgix
 library and create a URL builder. The URL builder can be reused to
 create URLs for any images on the domains it is provided.
 
-``` {.python}
+``` python
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net")
@@ -32,7 +32,7 @@ print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 
 For HTTPS support, simply specify the HTTPS flag like so:
 
-``` {.python}
+``` python
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net", use_https=True)
@@ -48,7 +48,7 @@ Signed URLs
 To produce a signed URL, you must enable secure URLs on your source and
 then provide your signature key to the URL builder.
 
-``` {.python}
+``` python
 import imgix
 
 builder = imgix.UrlBuilder("demos.imgix.net", sign_key="test1234")
@@ -66,7 +66,7 @@ attributes, which can be invoked through `create_srcset()`. By default,
 the srcset generated will allow for responsive size switching by
 building a list of image-width mappings.
 
-``` {.python}
+``` python
 builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
 srcset = builder.create_srcset("image.png")
 print srcset
@@ -75,7 +75,7 @@ print srcset
 Will produce the following attribute value, which can then be served to
 the client:
 
-``` {.html}
+``` html
 https://demos.imgix.net/image.png?w=100&s=e415797545a77a9d2842dedcfe539c9a 100w,
 https://demos.imgix.net/image.png?w=116&s=b2da46f5c23ef13d5da30f0a4545f33f 116w,
 https://demos.imgix.net/image.png?w=134&s=b61422dead929f893c04b8ff839bb088 134w,
@@ -93,7 +93,7 @@ taken into consideration when determining if an image is fixed-width are
 provided, a different srcset will be generated for a fixed-size image
 instead.
 
-``` {.python}
+``` python
 builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
 srcset = builder.create_srcset("image.png", {'h':800, 'ar':'3:2', 'fit':'crop'})
 print srcset
@@ -101,7 +101,7 @@ print srcset
 
 Will produce the following attribute value:
 
-``` {.html}
+``` html
 https://demos.imgix.net/image.png?ar=3%3A2&dpr=1&fit=crop&h=800&s=6cf5c443d1eb98bc3d96ea569fcef088 1x,
 https://demos.imgix.net/image.png?ar=3%3A2&dpr=2&fit=crop&h=800&s=d60a61a5f34545922bd8dff4e53a0555 2x,
 https://demos.imgix.net/image.png?ar=3%3A2&dpr=3&fit=crop&h=800&s=590f96aa426f8589eb7e449ebbeb66e7 3x,
@@ -120,7 +120,7 @@ Usage with UTF-8
 For usage with non-ASCII characters, please be sure to that your
 project's source files specify UTF-8 encoding:
 
-``` {.python}
+``` python
 # -*- coding: utf-8 -*-
 ```
 
@@ -128,7 +128,7 @@ If you don\'t add this encoding, and you have an image with name for
 example \'tiburón.jpeg\', you will get the following error trying to run
 your script:
 
-``` {.python}
+``` python
 SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
 ```
 
@@ -137,6 +137,6 @@ Running Tests
 
 To run the tests and format the code, simply:
 
-``` {.bash}
+``` bash
 tox
 ```
