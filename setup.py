@@ -6,9 +6,9 @@ import codecs
 from imgix._version import __version__
 from setuptools import setup
 
-with codecs.open('README.rst', encoding='utf-8') as fp:
+with codecs.open('README.md', encoding='utf-8') as fp:
     readme = fp.read()
-with codecs.open('CHANGELOG.rst', encoding='utf-8') as fp:
+with codecs.open('CHANGELOG.md', encoding='utf-8') as fp:
     changelog = fp.read()
 
 
@@ -22,7 +22,7 @@ setup(
     license='BSD-2-Clause',
     description='Python client library for imgix.',
     long_description=u'\n\n'.join([readme, changelog]),
-    long_description_content_type=u'text/x-rst',
+    long_description_content_type=u'text/markdown',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

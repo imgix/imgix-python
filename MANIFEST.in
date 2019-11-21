@@ -1,2 +1,2 @@
-include setup.cfg README.rst CHANGELOG.rst LICENSE AUTHORS.txt
+include setup.cfg README.md CHANGELOG.md LICENSE AUTHORS.txt
 recursive-include tests *.py
