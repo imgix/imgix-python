@@ -6,14 +6,16 @@ python:
     - 3.4
     - 3.5
     - 3.6
+    - 3.7
+    - 3.8
     - pypy
 
 env:
-  - TOX_ENV=core
-  - TOX_ENV=flake8
+    - TOX_ENV=core
+    - TOX_ENV=flake8
 
 install:
     - pip install tox
 
 script:
-  - tox -e $TOX_ENV
+    - tox -e $TOX_ENV
