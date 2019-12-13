@@ -1,10 +1,23 @@
-![imgix logo](https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200)
+<!-- ix-docs-ignore -->
+![imgix logo](https://assets.imgix.net/sdk-imgix-logo.svg)
 
-[![Build Status](https://travis-ci.org/imgix/imgix-python.png?branch=master)](https://travis-ci.org/imgix/imgix-python)
+`imgix-python` is a client library for generating image URLs with [imgix](https://www.imgix.com/).
 
-A Python client library for generating URLs with imgix. imgix is a
-high-performance distributed image processing service. More information
-can be found at <http://www.imgix.com>.
+[![Version](https://badge.fury.io/py/imgix.svg)](https://pypi.org/project/imgix/)
+[![Build Status](https://travis-ci.org/imgix/imgix-python.svg?branch=master)](https://travis-ci.org/imgix/imgix-python)
+![Downloads](https://img.shields.io/pypi/dm/imgix)
+![Python Versions](https://img.shields.io/pypi/pyversions/imgix)
+[![License](https://img.shields.io/github/license/imgix/imgix-python)](https://github.com/imgix/imgix-python/blob/master/LICENSE)
+
+---
+<!-- /ix-docs-ignore -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Signed URLs](#signed-urls)
+- [Srcset Generation](#srcset-generation)
+- [Usage with UTF-8](#usage-with-utf-8)
+- [Testing](#testing)
 
 Installation
 ============
@@ -13,10 +26,10 @@ Installation
 $ pip install imgix
 ```
 
-Basic Usage
-===========
+Usage
+=====
 
-To begin creating imgix URLs programmatically, simply import the imgix
+To begin creating imgix URLs programmatically, import the imgix
 library and create a URL builder. The URL builder can be reused to
 create URLs for any images on the domains it is provided.
 
@@ -30,7 +43,7 @@ print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 # http://demos.imgix.net/bridge.png?h=100&w=100
 ```
 
-For HTTPS support, simply specify the HTTPS flag like so:
+For HTTPS support, specify the HTTPS flag like so:
 
 ``` python
 import imgix
@@ -132,10 +145,10 @@ your script:
 SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
 ```
 
-Running Tests
-=============
+Testing
+=======
 
-To run the tests and format the code, simply:
+Run the following to execute the project's tests and code linter:
 
 ``` bash
 tox
