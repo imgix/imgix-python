@@ -3,7 +3,7 @@
 
 `imgix-python` is a client library for generating image URLs with [imgix](https://www.imgix.com/).
 
-[![Version](https://badge.fury.io/py/imgix.svg)](https://pypi.org/project/imgix/)
+[![Version](https://img.shields.io/pypi/v/imgix.svg)](https://pypi.org/project/imgix/)
 [![Build Status](https://travis-ci.org/imgix/imgix-python.svg?branch=master)](https://travis-ci.org/imgix/imgix-python)
 ![Downloads](https://img.shields.io/pypi/dm/imgix)
 ![Python Versions](https://img.shields.io/pypi/pyversions/imgix)
@@ -23,7 +23,7 @@ Installation
 ============
 
 ``` bash
-$ pip install imgix
+pip install imgix
 ```
 
 Usage
