@@ -14,20 +14,18 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Signed URLs](#signed-urls)
-- [Srcset Generation](#srcset-generation)
-- [Usage with UTF-8](#usage-with-utf-8)
+  - [Signed URLs](#signed-urls)
+  - [Srcset Generation](#srcset-generation)
+  - [Usage with UTF-8](#usage-with-utf-8)
 - [Testing](#testing)
 
-Installation
-============
+## Installation
 
 ``` bash
 pip install imgix
 ```
 
-Usage
-=====
+## Usage
 
 To begin creating imgix URLs programmatically, import the imgix
 library and create a URL builder. The URL builder can be reused to
@@ -55,8 +53,7 @@ print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 # https://demos.imgix.net/bridge.png?h=100&w=100
 ```
 
-Signed URLs
-===========
+### Signed URLs
 
 To produce a signed URL, you must enable secure URLs on your source and
 then provide your signature key to the URL builder.
@@ -71,8 +68,7 @@ print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
 # http://demos.imgix.net/bridge.png?h=100&w=100&s=7370d6e36bb2262e73b19578739af1af
 ```
 
-Srcset Generation
-=================
+### Srcset Generation
 
 The imgix-python package allows for generation of custom srcset
 attributes, which can be invoked through `create_srcset()`. By default,
@@ -127,8 +123,7 @@ For more information to better understand srcset, we highly recommend
 article](https://ericportis.com/posts/2014/srcset-sizes/) which goes
 into depth about the subject.
 
-Usage with UTF-8
-================
+### Usage with UTF-8
 
 For usage with non-ASCII characters, please be sure to that your
 project's source files specify UTF-8 encoding:
@@ -145,8 +140,7 @@ your script:
 SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
 ```
 
-Testing
-=======
+## Testing
 
 Run the following to execute the project's tests and code linter:
 
