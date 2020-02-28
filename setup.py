@@ -1,20 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import codecs
+import io
+import re
 
-from imgix._version import __version__
 from setuptools import setup
+
+with io.open("imgix/_version.py", "rt", encoding="utf8") as f:
+    version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 with codecs.open('README.md', encoding='utf-8') as fp:
     readme = fp.read()
 with codecs.open('CHANGELOG.md', encoding='utf-8') as fp:
     changelog = fp.read()
 
+test_require = [
+    'pytest',
+    'pytest-cov',
+    'flake8',
+]
 
 setup(
     name='imgix',
-    version=__version__,
+    version=version,
     author='imgix',
     author_email='support@imgix.com',
     packages=['imgix'],
@@ -36,9 +44,13 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    setup_requires=['pytest-runner'],
-    tests_require=[
-        'pytest',
-        'pytest-cov',
+    install_requires=[
+        'future',
     ],
-    )
+    setup_requires=['pytest-runner'],
+    extras_require={
+        'dev': ['tox'],
+        'test': test_require,
+    },
+    tests_require=test_require,
+)

@@ -9,13 +9,13 @@ python:
     - 3.7
     - 3.8
     - pypy
-
 env:
     - TOX_ENV=core
-    - TOX_ENV=flake8
+    - TOX_ENV=compat
+jobs:
+  include:
+    - python: 3.8
+      env: TOX_ENV=flake8
 
-install:
-    - pip install tox
-
-script:
-    - tox -e $TOX_ENV
+install: pip install .[dev]
+script: tox -e $TOX_ENV

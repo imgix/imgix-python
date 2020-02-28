@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-
 import imgix
 
-from imgix.compat import urlparse
+from future.moves.urllib.parse import urlparse
 
 
 def _get_domain(url):
-    return urlparse.urlparse(url).hostname
+    return urlparse(url).hostname
 
 
 def _default_builder():
@@ -101,19 +100,19 @@ def test_use_https():
     # Defaults to https
     builder = imgix.UrlBuilder('my-social-network.imgix.net')
     url = builder.create_url("/users/1.png")
-    assert urlparse.urlparse(url).scheme == "https"
+    assert urlparse(url).scheme == "https"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', use_https=False)
     url = builder.create_url("/users/1.png")
-    assert urlparse.urlparse(url).scheme == "http"
+    assert urlparse(url).scheme == "http"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', True)
     url = builder.create_url("/users/1.png")
-    assert urlparse.urlparse(url).scheme == "https"
+    assert urlparse(url).scheme == "https"
 
     builder = imgix.UrlBuilder('my-social-network.imgix.net', use_https=True)
     url = builder.create_url("/users/1.png")
-    assert urlparse.urlparse(url).scheme == "https"
+    assert urlparse(url).scheme == "https"
 
 
 def test_utf_8_characters():

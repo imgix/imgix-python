@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-
-import hashlib
 from base64 import urlsafe_b64encode
+from future.moves.urllib.parse import quote, urlunparse
+from future.utils import iteritems
+import hashlib
 
-from .compat import iteritems
-from .compat import urlparse
-from .compat import quote
 from .compat import b
-
 from ._version import __version__
 
 
@@ -152,7 +149,7 @@ class UrlHelper(object):
             else:
                 query = "s=" + signature
 
-        return urlparse.urlunparse([
+        return urlunparse([
             self._scheme,
             self._host,
             path,

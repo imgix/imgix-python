@@ -17,7 +17,18 @@ If you wish to add a new feature or fix a bug:
 Running the tests
 -----------------
 
-To run the tests, simply:
+First, it's recommended you create a virtual environment:
+```
+python -m venv env/imgix
+source env/imgix/bin/activate
+```
+
+Then install the dev dependencies:
+```
+pip install .[dev]
+```
+
+To run the tests:
 ```
 tox
 ```
@@ -25,6 +36,13 @@ This will run all tests and check PEP8 compliance. Our test suite runs
 continuously on [Travis CI](https://travis-ci.org/imgix/imgix-python) with
 every pull request.
 
+To run tests in a specific environment:
+```
+tox -e p27  # Python 2.7
+tox -e core  # Your local Python version
+tox -e flake8  # To run the linter
+tox -e p27-compat  # Python 2.7 with future compatibility aliases
+```
 
 Publishing to PyPI
 ------------------
