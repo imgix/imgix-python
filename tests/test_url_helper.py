@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import imgix
 
-from imgix.compat import urlparse
+from future.moves.urllib.parse import urlparse
 from imgix.urlhelper import UrlHelper
 
 
@@ -67,14 +66,25 @@ def test_create_with_fully_qualified_url_with_special_chars():
                           "?s=8e04a5dd9a659a6a540d7c817d3df1d3"
 
 
+def test_create_with_mixed_strings_and_unicodes():
+    helper = UrlHelper("my-social-network.imgix.net",
+                       u"http://avatars.com/でのパ.png",
+                       sign_key="FOO123bar",
+                       params={"w": '400', u"h": u'300'},
+                       include_library_param=False)
+    assert str(helper) == "https://my-social-network.imgix.net/http%3A%2F%2F" \
+                          "avatars.com%2F%E3%81%A7%E3%81%AE%E3%83%91.png" \
+                          "?h=300&w=400&s=8b97a8fffdfa639af4bae846a9661c50"
+
+
 def test_use_https():
     # Defaults to https
     helper = UrlHelper("my-social-network.imgix.net", "/users/1.png")
-    assert urlparse.urlparse(str(helper)).scheme == "https"
+    assert urlparse(str(helper)).scheme == "https"
 
     helper = UrlHelper('my-social-network.imgix.net', "/users/1.png",
                        scheme="http")
-    assert urlparse.urlparse(str(helper)).scheme == "http"
+    assert urlparse(str(helper)).scheme == "http"
 
 
 def test_utf_8_characters():

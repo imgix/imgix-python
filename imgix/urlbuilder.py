@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-
 import re
 
-from .urlhelper import UrlHelper
-
 from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS
+from .urlhelper import UrlHelper
 
 
 SRCSET_DPR_TARGET_RATIOS = range(1, 6)
