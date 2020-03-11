@@ -1,6 +1,12 @@
 Changelog
 =========
 
+[3.1.2](https://github.com/imgix/imgix-python/compare/3.1.1...3.1.2) (2019-03-11)
+---------------------------------------------------------------------------------
+
+- Fix Python 2/3 compatibility issues
+    ([\#57](https://github.com/imgix/imgix-python/pull/57))
+
 [3.1.1](https://github.com/imgix/imgix-python/compare/3.1.0...3.1.1) (2019-08-22)
 ---------------------------------------------------------------------------------
 
