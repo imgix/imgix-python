@@ -93,7 +93,7 @@ https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7400
 https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 ```
 
-In cases where enough information is provided about an image\'s
+In cases where enough information is provided about an image's
 dimensions, `create_srcset()` will instead build a srcset that will
 allow for an image to be served at different resolutions. The parameters
 taken into consideration when determining if an image is fixed-width are
@@ -119,9 +119,7 @@ https://demos.imgix.net/image.png?ar=3%3A2&dpr=5&fit=crop&h=800&s=3d73af69d78d49
 ```
 
 For more information to better understand srcset, we highly recommend
-[Eric Portis\' \"Srcset and sizes\"
-article](https://ericportis.com/posts/2014/srcset-sizes/) which goes
-into depth about the subject.
+[Eric Portis' "Srcset and sizes" article](https://ericportis.com/posts/2014/srcset-sizes/) which goes into depth about the subject.
 
 ### Usage with UTF-8
 
@@ -132,8 +130,8 @@ project's source files specify UTF-8 encoding:
 # -*- coding: utf-8 -*-
 ```
 
-If you don\'t add this encoding, and you have an image with name for
-example \'tiburón.jpeg\', you will get the following error trying to run
+If you don't add this encoding, and you have an image with name for
+example 'tiburón.jpeg', you will get the following error trying to run
 your script:
 
 ``` python
