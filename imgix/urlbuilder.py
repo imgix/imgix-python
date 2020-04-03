@@ -150,15 +150,25 @@ class UrlBuilder(object):
             return self._build_srcset_pairs(path, params)
 
     def _build_srcset_pairs(self, path, params):
-        srcset_parts = [
-            self.create_url(path, dict(params, w=w)) + " " + str(w) + "w"
-            for w in SRCSET_TARGET_WIDTHS
-        ]
-        return ",\n".join(srcset_parts)
+        # prevents mutating the params dict
+        srcset_params = dict(params)
+        srcset_entries = []
+
+        for w in SRCSET_TARGET_WIDTHS:
+            srcset_params['w'] = w
+            srcset_entries.append(self.create_url(path, srcset_params) +
+                                  " " + str(w) + "w")
+
+        return ",\n".join(srcset_entries)
 
     def _build_srcset_DPR(self, path, params):
-        srcset_parts = [
-            self.create_url(path, dict(params, dpr=dpr)) + " " + str(dpr) + "x"
-            for dpr in SRCSET_DPR_TARGET_RATIOS
-        ]
-        return ",\n".join(srcset_parts)
+        # prevents mutating the params dict
+        srcset_params = dict(params)
+        srcset_entries = []
+
+        for dpr in SRCSET_DPR_TARGET_RATIOS:
+            srcset_params['dpr'] = dpr
+            srcset_entries.append(self.create_url(path, srcset_params) +
+                                  " " + str(dpr) + "x")
+
+        return ",\n".join(srcset_entries)
