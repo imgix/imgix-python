@@ -275,3 +275,16 @@ def test_given_aspect_ratio_and_height_srcset_signs_urls():
                                          .encode('utf-8')).hexdigest()
 
         assert(expected_signature == generated_signature)
+
+
+def test_given_fit_params_not_altered():
+    params = {'fit': 'max'}
+    _default_srcset(params)
+    assert params == {'fit': 'max'}
+
+
+def test_given_width_params_not_altered():
+    params = {'w': 100}
+    _default_srcset(params)
+
+    assert params == {'w': 100}

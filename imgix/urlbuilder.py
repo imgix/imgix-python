@@ -138,35 +138,35 @@ class UrlBuilder(object):
         if not params:
             params = {}
 
-        width = params['w'] if 'w' in params else None
-        height = params['h'] if 'h' in params else None
-        aspect_ratio = params['ar'] if 'ar' in params else None
+        has_width = 'w' in params
+        has_height = 'h' in params
+        has_aspect_ratio = 'ar' in params
 
-        if (width or (height and aspect_ratio)):
+        if (has_width or (has_height and has_aspect_ratio)):
             return self._build_srcset_DPR(path, params)
         else:
             return self._build_srcset_pairs(path, params)
 
     def _build_srcset_pairs(self, path, params):
-        srcset = ''
+        # prevents mutating the params dict
+        srcset_params = dict(params)
+        srcset_entries = []
 
-        for i in range(len(SRCSET_TARGET_WIDTHS)):
-            current_width = SRCSET_TARGET_WIDTHS[i]
-            current_params = params
-            current_params['w'] = current_width
-            srcset += self.create_url(path, current_params) \
-                + ' ' + str(current_width) + 'w,\n'
+        for w in SRCSET_TARGET_WIDTHS:
+            srcset_params['w'] = w
+            srcset_entries.append(self.create_url(path, srcset_params) +
+                                  " " + str(w) + "w")
 
-        return srcset[0:-2]
+        return ",\n".join(srcset_entries)
 
     def _build_srcset_DPR(self, path, params):
-        srcset = ''
+        # prevents mutating the params dict
+        srcset_params = dict(params)
+        srcset_entries = []
 
-        for i in range(len(SRCSET_DPR_TARGET_RATIOS)):
-            current_ratio = SRCSET_DPR_TARGET_RATIOS[i]
-            current_params = params
-            current_params['dpr'] = i+1
-            srcset += self.create_url(path, current_params) \
-                + ' ' + str(current_ratio) + 'x,\n'
+        for dpr in SRCSET_DPR_TARGET_RATIOS:
+            srcset_params['dpr'] = dpr
+            srcset_entries.append(self.create_url(path, srcset_params) +
+                                  " " + str(dpr) + "x")
 
-        return srcset[0:-2]
+        return ",\n".join(srcset_entries)
