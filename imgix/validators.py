@@ -1,7 +1,6 @@
-from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_ZERO_WIDTH as ZERO_WIDTH
-from .constants import INCREMENT_PERCENTAGE
+
 
 def validate_min_width(value):
     """
@@ -21,22 +20,24 @@ def validate_min_width(value):
     AssertionError
         This function is designed to fail upon invalid input to
         prevent the propagation of invalid state.
-    
+
     Parameters
     ----------
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = 'error: `min_width` must be a positive `float` or `int`'
+    invalid_width_error = 'error: `min_width` must be a positive ' \
+        '`float` or `int`'
     assert isinstance(value, (float, int)), invalid_width_error
 
     invalid_min_error = 'error: `min_width` must be greater than zero'
     assert value > ZERO_WIDTH, invalid_min_error
 
+
 def validate_max_width(value):
     """
     Validate the maximum width value.
-    
+
     This function ensures that the `value`:
     * is of type `int`, or
     * is of type `float`, and
@@ -53,18 +54,19 @@ def validate_max_width(value):
     AssertionError
         This function is designed to fail upon invalid input to
         prevent the propagation of invalid state.
-    
+
     Parameters
     ----------
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = 'error: `max_width` must be a positive `float` or `int`'
+    invalid_width_error = 'error: `max_width` must be a positive ' \
+        '`float` or `int`'
     assert isinstance(value, (float, int)), invalid_width_error
 
     invalid_max_error = 'error: `max_width` must be <= 8192.0'
     assert ZERO_WIDTH < value <= MAX_WIDTH, invalid_max_error
-        
+
 
 def validate_range(min_width, max_width):
     """

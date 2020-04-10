@@ -6,6 +6,7 @@ from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH, \
 from imgix.validators import validate_min_width, validate_max_width, \
     validate_range
 
+
 class TestValidators(unittest.TestCase):
 
     def test_validate_min_raises(self):
@@ -44,7 +45,6 @@ class TestValidators(unittest.TestCase):
             with self.assertRaises(AssertionError):
                 validate_range(x, y)
 
-        
         with self.assertRaises(AssertionError):
             validate_range(IMAGE_ZERO_WIDTH, IMAGE_ZERO_WIDTH)
 

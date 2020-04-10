@@ -24,6 +24,7 @@ IMAGE_MIN_WIDTH = 100.0
 # The maximum width of a default generate image-width.
 IMAGE_MAX_WIDTH = 8192.0
 
+
 def _target_widths():
     resolutions = []
     prev = 100
