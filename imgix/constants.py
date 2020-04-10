@@ -8,6 +8,21 @@ DOMAIN_PATTERN = re.compile(
 SRCSET_INCREMENT_PERCENTAGE = 8
 SRCSET_MAX_SIZE = 8192
 
+# The percentage by which image width-values are incremented by for
+# use in generating the default set of image widths, i.e.
+# `[IMAGE_MIN_WIDTH, .., IMAGE_MAX_WIDTH]`.
+INCREMENT_PERCENTAGE = 0.08
+
+# Representation of an image with a width of zero. This value is used
+# in validation contexts, i.e. "is the width of the passed or requested
+# image greater than or equal to the 'zero width image'."
+IMAGE_ZERO_WIDTH = 0.0
+
+# The minimum width of a default generated image-width.
+IMAGE_MIN_WIDTH = 100.0
+
+# The maximum width of a default generate image-width.
+IMAGE_MAX_WIDTH = 8192.0
 
 def _target_widths():
     resolutions = []
