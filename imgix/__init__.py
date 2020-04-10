@@ -25,4 +25,4 @@ from .urlbuilder import UrlBuilder
 
 __all__ = [
     'UrlBuilder',
-    'SIGNATURE_MODE_QUERY', 'SIGNATURE_MODE_PATH', '__version__', ]
+    '__version__']
