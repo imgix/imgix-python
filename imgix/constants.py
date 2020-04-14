@@ -16,13 +16,13 @@ SRCSET_MAX_SIZE = 8192
 # Representation of an image with a width of zero. This value is used
 # in validation contexts, i.e. "is the width of the passed or requested
 # image greater than or equal to the 'zero width image'."
-IMAGE_ZERO_WIDTH = 0.0
+IMAGE_ZERO_WIDTH = 0
 
 # The minimum width of a default generated image-width.
-IMAGE_MIN_WIDTH = 100.0
+IMAGE_MIN_WIDTH = 100
 
 # The maximum width of a default generate image-width.
-IMAGE_MAX_WIDTH = 8192.0
+IMAGE_MAX_WIDTH = 8192
 
 
 def _target_widths():
