@@ -1,7 +1,7 @@
 import unittest
 
 from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH, \
-    IMAGE_ZERO_WIDTH
+    IMAGE_ZERO_WIDTH, SRCSET_MIN_WIDTH_TOLERANCE
 
 from imgix.validators import validate_min_width, validate_max_width, \
     validate_range, validate_min_max_tol
@@ -63,6 +63,14 @@ class TestValidators(unittest.TestCase):
             # `IMAGE_ZERO_WIDTH` is being used to
             # simulate a `tol` < ONE_PERCENT.
             validate_min_max_tol(
-                IMAGE_ZERO_WIDTH,
-                IMAGE_ZERO_WIDTH,
+                IMAGE_MIN_WIDTH,
+                IMAGE_MAX_WIDTH,
                 IMAGE_ZERO_WIDTH)
+
+    def test_validate_min_max_tol(self):
+        # Due to the assertive nature of this validator
+        # if this test does not raise, it passes.
+        validate_min_max_tol(
+            IMAGE_MIN_WIDTH,
+            IMAGE_MAX_WIDTH,
+            SRCSET_MIN_WIDTH_TOLERANCE)
