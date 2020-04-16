@@ -2,6 +2,9 @@
 import imgix
 
 from future.moves.urllib.parse import urlparse
+from imgix import constants
+from imgix import urlbuilder
+from imgix.constants import IMAGE_MAX_WIDTH, IMAGE_MIN_WIDTH
 
 
 def _get_domain(url):
@@ -214,3 +217,36 @@ def test_include_library_param_false():
     ub = imgix.UrlBuilder("assets.imgix.net", include_library_param=False)
 
     assert url == ub.create_url("image.jpg")
+
+
+def test_target_widths_default():
+    expected = constants.SRCSET_TARGET_WIDTHS
+    actual = urlbuilder.target_widths()
+    assert len(actual) == len(expected)
+    assert actual == expected
+
+
+def test_target_widths_100_7400():
+    idx_of_7400 = -1
+    expected = constants.SRCSET_TARGET_WIDTHS[:idx_of_7400]
+    actual = urlbuilder.target_widths(start=100, stop=7400)
+    assert actual == expected
+
+
+def test_target_widths_380_4088():
+    idx_of_328, idx_of_4088 = 8, -5
+    expected = constants.SRCSET_TARGET_WIDTHS[idx_of_328: idx_of_4088]
+    actual = urlbuilder.target_widths(start=328, stop=4088)
+    assert len(actual) == len(expected)
+    assert actual[0] == expected[0]
+    assert actual[-1] == expected[-1]
+
+
+def test_target_widths_100_max():
+    idx_of_100 = constants.SRCSET_TARGET_WIDTHS[0]
+    idx_of_8192 = constants.SRCSET_TARGET_WIDTHS[-1]
+    expected = [idx_of_100, idx_of_8192]
+    actual = urlbuilder.target_widths(tol=10000000000)
+    assert actual == expected
+    assert actual[0] == IMAGE_MIN_WIDTH
+    assert actual[-1] == IMAGE_MAX_WIDTH

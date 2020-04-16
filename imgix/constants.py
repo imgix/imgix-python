@@ -15,6 +15,9 @@ SRCSET_WIDTH_TOLERANCE = 8
 # The minimum srcset width tolerance.
 SRCSET_MIN_WIDTH_TOLERANCE = 1
 
+# The default srcset target ratios.
+SRCSET_DPR_TARGET_RATIOS = range(1, 6)
+
 SRCSET_MAX_SIZE = 8192
 
 # Representation of an image with a width of zero. This value is used
