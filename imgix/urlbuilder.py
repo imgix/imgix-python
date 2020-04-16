@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
 
-from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS
+from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS as TARGET_WIDTHS
+from .constants import SRCSET_DPR_TARGET_RATIOS as TARGET_RATIOS
+from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
+from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
+from .constants import SRCSET_WIDTH_TOLERANCE as TOLERANCE
+from .validators import validate_min_max_tol
 from .urlhelper import UrlHelper
-
-
-SRCSET_DPR_TARGET_RATIOS = range(1, 6)
 
 
 class UrlBuilder(object):
@@ -152,7 +154,7 @@ class UrlBuilder(object):
         srcset_params = dict(params)
         srcset_entries = []
 
-        for w in SRCSET_TARGET_WIDTHS:
+        for w in TARGET_WIDTHS:
             srcset_params['w'] = w
             srcset_entries.append(self.create_url(path, srcset_params) +
                                   " " + str(w) + "w")
@@ -164,9 +166,67 @@ class UrlBuilder(object):
         srcset_params = dict(params)
         srcset_entries = []
 
-        for dpr in SRCSET_DPR_TARGET_RATIOS:
+        for dpr in TARGET_RATIOS:
             srcset_params['dpr'] = dpr
             srcset_entries.append(self.create_url(path, srcset_params) +
                                   " " + str(dpr) + "x")
 
         return ",\n".join(srcset_entries)
+
+
+def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
+    """
+    Generate a list of target widths.
+
+    This function generates a list of target widths used to width-describe
+    image candidate strings (URLs) within a srcset attribute.
+
+    For example, if the target widths are [100, 200, 300], they would become:
+
+    'https://example.test.com/image/path.png?w=100 100w
+    https://example.test.com/image/path.png?w=200 200w
+    https://example.test.com/image/path.png?w=300 300w'
+
+    in the srcset attribute string. Read more about image candidate strings
+    and width descriptors here:
+
+    https://html.spec.whatwg.org/multipage/images.html#image-candidate-string
+
+    Parameters
+    ----------
+    start : int, optional
+        Starting minimum width value, MIN_WIDTH by default.
+    stop : int, optional
+        Stopping maximum width value, MAX_WIDTH by default.
+    tol : int, optional
+        Tolerable amount of image width-variation, TOLERANCE by default.
+
+    Returns
+    -------
+    list
+        A list of even integer values.
+    """
+    validate_min_max_tol(start, stop, tol)
+    # If any value differs from the default, we're constructing a custom
+    # target widths list.
+    CUSTOM = any([tol != TOLERANCE, start != MIN_WIDTH, stop != MAX_WIDTH])
+
+    if not CUSTOM:
+        return TARGET_WIDTHS
+
+    resolutions = []
+
+    def make_even_integer(n):
+        return int(2 * round(n/2.0))
+
+    while start < stop and start < MAX_WIDTH:
+        resolutions.append(make_even_integer(start))
+        start *= 1 + (tol / 100.0) * 2
+
+    # The most recently appended value may, or may not, be
+    # the `stop` value. In order to be inclusive of the
+    # stop value, check for this case and add it, if necessary.
+    if resolutions[-1] < stop:
+        resolutions.append(stop)
+
+    return resolutions
