@@ -11,6 +11,10 @@ DOMAIN_PATTERN = re.compile(
 # For example, setting this value to 0.1 means that an image will not
 # render more than 10% larger or smaller than its native size.
 SRCSET_WIDTH_TOLERANCE = 8
+
+# The minimum srcset width tolerance.
+SRCSET_MIN_WIDTH_TOLERANCE = 1
+
 SRCSET_MAX_SIZE = 8192
 
 # Representation of an image with a width of zero. This value is used

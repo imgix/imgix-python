@@ -1,5 +1,6 @@
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_ZERO_WIDTH as ZERO_WIDTH
+from .constants import SRCSET_MIN_WIDTH_TOLERANCE as ONE_PERCENT
 
 
 def validate_min_width(value):
@@ -98,3 +99,45 @@ def validate_range(min_width, max_width):
 
     invalid_range_error = 'error: `min_width` must be less than `max_width`'
     assert min_width < max_width, invalid_range_error
+
+
+def validate_width_tol(value):
+    """
+    Validate the width tolerance.
+
+    This function ensures that the width tolerance `value` is  greater than or
+    equal to 1, where 1 represents a width tolerance of 1%.
+
+    Note: `value` can be either a float or an int, but this is only to yield
+    flexibility to the caller.
+
+    Parameters
+    ----------
+    value : float, int
+        Numerical value, typically within the range of [1, 100]. It can be
+        greater than 100, but no less than 1.
+    """
+    invalid_tol_error = 'tolerance `value` must be a positive numerical value'
+    assert isinstance(value, (float, int)), invalid_tol_error
+    assert ONE_PERCENT <= value, invalid_tol_error
+
+
+def validate_min_max_tol(min_width, max_width, tol):
+    """
+    Validate the minimum, maximum, and tolerance values.
+
+    This function is composed of two other validators and exists to provide
+    convenience at the call site, i.e. instead of calling three functions to
+    validate this triplet, one function can be called.
+
+    Parameters
+    ----------
+    min_width : float, int
+        Minimum renderable image width requested, by default.
+    max_width : float, int
+        Maximum renderable image width requested, by default.
+    tol : float, int
+        Tolerable amount of image width variation requested, by default.
+    """
+    validate_range(min_width, max_width)
+    validate_width_tol(tol)
