@@ -115,30 +115,58 @@ class UrlBuilder(object):
 
         return str(url_obj)
 
-    def create_srcset(self, path, params=None):
+    def create_srcset(
+            self, path, params={},
+            start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
         """
-        Create srcset attribute value with the supplied path and
-        `params` parameters dict.
-        Will generate a fixed-width DPR srcset if a width OR height and aspect
-        ratio are passed in as parameters. Otherwise will generate a srcset
-        with width-descriptor pairs.
+        Create a srcset attribute.
+
+        A srcset attribute consists of one or more non-empty URL. Each URL
+        represents an image candidate string and each candidate string is
+        separated by a comma (U+002C) character (,). Read more about the
+        srcset attribute here:
+
+        https://html.spec.whatwg.org/multipage/images.html#srcset-attributes
+
+        This function produces two types of image candidate strings,
+
+        * pixel density descriptors (x) and
+        * width descriptors (w)
+
+        Pixel density-described strings are produced when
+
+        * a height (h) and an aspect (ar) ratio are present in `params`, or
+        * only a width (w) is present in the `params`
+
+        Example, a width (or a height _and_ aspect ratio):
+        'https://example.test.com/image/path.png?dpr=1&w=320 1x'
+
+        Width-described strings are produced if neither a width nor a
+        height-aspect-ratio pair are present in `params`.
+
+        Example, no width, no height, no aspect ratio:
+        'https://example.test.com/image/path.png?w=100 100w'
 
         Parameters
         ----------
         path : str
-        params : dict
-            Dictionary specifying URL parameters. Non-imgix parameters are
-            added to the URL unprocessed. For a complete list of imgix
-            supported parameters, visit https://docs.imgix.com/apis/url .
-            (default None)
+            Path to the image file, e.g. 'image/path.png'.
+        params : dict, optional
+            Parameters that will be transformed into query parameters,
+            including 'w' or 'ar' and 'h'; {} by default.
+        start : int, optional
+            Starting minimum width value, MIN_WIDTH by default.
+        stop : int, optional
+            Stopping maximum width value, MAX_WIDTH by default.
+        tol : int, optional
+            Tolerable amount of width value variation, TOLERANCE by default.
 
         Returns
         -------
         str
-            srcset attribute value
+            Srcset attribute string.
         """
-        if not params:
-            params = {}
+        validate_min_max_tol(start, stop, tol)
 
         has_width = 'w' in params
         has_height = 'h' in params
@@ -147,26 +175,29 @@ class UrlBuilder(object):
         if (has_width or (has_height and has_aspect_ratio)):
             return self._build_srcset_DPR(path, params)
         else:
-            return self._build_srcset_pairs(path, params)
+            targets = target_widths(start, stop, tol)
+            return self._build_srcset_pairs(path, params, targets)
 
-    def _build_srcset_pairs(self, path, params):
+    def _build_srcset_pairs(
+            self, path, params, targets=TARGET_WIDTHS):
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
 
-        for w in TARGET_WIDTHS:
+        for w in targets:
             srcset_params['w'] = w
             srcset_entries.append(self.create_url(path, srcset_params) +
                                   " " + str(w) + "w")
 
         return ",\n".join(srcset_entries)
 
-    def _build_srcset_DPR(self, path, params):
+    def _build_srcset_DPR(
+            self, path, params, targets=TARGET_RATIOS):
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
 
-        for dpr in TARGET_RATIOS:
+        for dpr in targets:
             srcset_params['dpr'] = dpr
             srcset_entries.append(self.create_url(path, srcset_params) +
                                   " " + str(dpr) + "x")
