@@ -153,7 +153,8 @@ class UrlBuilder(object):
             Path to the image file, e.g. 'image/path.png'.
         params : dict, optional
             Parameters that will be transformed into query parameters,
-            including 'w' or 'ar' and 'h'; {} by default.
+            including 'w' or 'ar' and 'h' if generating a pixel density
+            described srcset, {} by default.
         start : int, optional
             Starting minimum width value, MIN_WIDTH by default.
         stop : int, optional
