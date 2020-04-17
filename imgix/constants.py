@@ -8,7 +8,7 @@ DOMAIN_PATTERN = re.compile(
 
 # The srcset width tolerance dictates the _maximum tolerated size_
 # difference between an image's downloaded size and its rendered size.
-# For example, setting this value to 0.1 means that an image will not
+# For example, setting this value to 10 means that an image will not
 # render more than 10% larger or smaller than its native size.
 SRCSET_WIDTH_TOLERANCE = 8
 
@@ -28,7 +28,7 @@ IMAGE_ZERO_WIDTH = 0
 # The minimum width of a default generated image-width.
 IMAGE_MIN_WIDTH = 100
 
-# The maximum width of a default generate image-width.
+# The maximum width of a default generated image-width.
 IMAGE_MAX_WIDTH = 8192
 
 
