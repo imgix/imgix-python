@@ -3,8 +3,11 @@ import unittest
 from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH, \
     IMAGE_ZERO_WIDTH, SRCSET_MIN_WIDTH_TOLERANCE
 
+from imgix.constants import OUTPUT_QUALITY_MIN, \
+    OUTPUT_QUALITY_DEFAULT, OUTPUT_QUALITY_MAX
+
 from imgix.validators import validate_min_width, validate_max_width, \
-    validate_range, validate_min_max_tol
+    validate_range, validate_min_max_tol, validate_output_quality
 
 
 class TestValidators(unittest.TestCase):
@@ -74,3 +77,21 @@ class TestValidators(unittest.TestCase):
             IMAGE_MIN_WIDTH,
             IMAGE_MAX_WIDTH,
             SRCSET_MIN_WIDTH_TOLERANCE)
+
+    def test_validate_min_output_quality(self):
+        validate_output_quality(OUTPUT_QUALITY_MIN)
+
+    def test_validate_max_output_quality(self):
+        validate_output_quality(OUTPUT_QUALITY_MAX)
+
+    def test_validate_default_output_quality(self):
+        validate_output_quality(OUTPUT_QUALITY_DEFAULT)
+
+    def test_validate_output_quality_raises(self):
+        # Assert values below the minimum raise.
+        with self.assertRaises(AssertionError):
+            validate_output_quality(-1)
+
+        # Assert values above the maximum raise.
+        with self.assertRaises(AssertionError):
+            validate_output_quality(101)
