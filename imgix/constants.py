@@ -31,6 +31,16 @@ IMAGE_MIN_WIDTH = 100
 # The maximum width of a default generated image-width.
 IMAGE_MAX_WIDTH = 8192
 
+# The minimum output quality.
+OUTPUT_QUALITY_MIN = 0
+
+# The default output quality. Valid output quality values range between
+# [0, 100], 75 by default.
+OUTPUT_QUALITY_DEFAULT = 75
+
+# The maximum output quality.
+OUTPUT_QUALITY_MAX = 100
+
 
 def _target_widths():
     resolutions = []

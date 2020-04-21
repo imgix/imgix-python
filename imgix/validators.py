@@ -1,6 +1,8 @@
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_ZERO_WIDTH as ZERO_WIDTH
 from .constants import SRCSET_MIN_WIDTH_TOLERANCE as ONE_PERCENT
+from .constants import OUTPUT_QUALITY_MIN as MIN_QUALITY
+from .constants import OUTPUT_QUALITY_MAX as MAX_QUALITY
 
 
 def validate_min_width(value):
@@ -141,3 +143,18 @@ def validate_min_max_tol(min_width, max_width, tol):
     """
     validate_range(min_width, max_width)
     validate_width_tol(tol)
+
+
+def validate_output_quality(value):
+    """
+    Validate the output quality value.
+
+    This function ensures that the provided output quality value is within the
+    range [0, 100], inclusive.
+
+    Parameters
+    ----------
+    value : float, int
+        Numerical value specifying the image output quality.
+    """
+    assert MIN_QUALITY <= value <= MAX_QUALITY
