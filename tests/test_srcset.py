@@ -70,7 +70,7 @@ def test_variable_output_quality_default():
 
     # Accumulate the values of the `DPR_QUALITIES` dictionary
     # as a `dpr_qualities` list.
-    dpr_qualities = [q for q in DPR_QUALITIES.values()]
+    dpr_qualities = sorted([q for q in DPR_QUALITIES.values()], reverse=True)
 
     # Zip the `srclist` and `dpr_qualities` into the pairs
     # we expect them to occur in.
