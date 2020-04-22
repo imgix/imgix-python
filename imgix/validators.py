@@ -157,4 +157,5 @@ def validate_output_quality(value):
     value : float, int
         Numerical value specifying the image output quality.
     """
+    assert isinstance(value, (float, int))
     assert MIN_QUALITY <= value <= MAX_QUALITY
