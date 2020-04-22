@@ -4,6 +4,8 @@ import imgix
 import hashlib
 import re
 
+from imgix.constants import DPR_QUALITIES
+
 
 def _default_srcset(params={}):
     ub = imgix.UrlBuilder('testing.imgix.net',
@@ -60,6 +62,21 @@ def test_given_width_srcset_has_dpr_params():
     for i in range(len(srclist)):
         src = srclist[i].split(' ')[0]
         assert(src.index("dpr=" + str(i+1)))
+
+
+def test_variable_output_quality_default():
+    srcset = _default_srcset({'w': 100})
+    srclist = srcset.split(',')
+
+    # Accumulate the values of the `DPR_QUALITIES` dictionary
+    # as a `dpr_qualities` list.
+    dpr_qualities = [q for q in DPR_QUALITIES.values()]
+
+    # Zip the `srclist` and `dpr_qualities` into the pairs
+    # we expect them to occur in.
+    for src, dpr_quality in zip(srclist, dpr_qualities):
+        quality = "q=" + str(dpr_quality)
+        assert(quality in src)
 
 
 def test_given_width_signs_urls():

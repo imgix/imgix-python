@@ -6,7 +6,8 @@ from .constants import SRCSET_DPR_TARGET_RATIOS as TARGET_RATIOS
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
 from .constants import SRCSET_WIDTH_TOLERANCE as TOLERANCE
-from .validators import validate_min_max_tol
+from .constants import DPR_QUALITIES
+from .validators import validate_min_max_tol, validate_output_quality
 from .urlhelper import UrlHelper
 
 
@@ -50,7 +51,8 @@ class UrlBuilder(object):
             domain,
             use_https=True,
             sign_key=None,
-            include_library_param=True):
+            include_library_param=True,
+            disable_variable_quality=False):
 
         self.validate_domain(domain)
 
@@ -58,6 +60,7 @@ class UrlBuilder(object):
         self._sign_key = sign_key
         self._use_https = use_https
         self._include_library_param = include_library_param
+        self._disable_variable_quality = disable_variable_quality
 
     def validate_domain(self, domain):
         """
@@ -200,6 +203,17 @@ class UrlBuilder(object):
 
         for dpr in targets:
             srcset_params['dpr'] = dpr
+            # If variable quality output is _not disabled_, then...
+            if not self._disable_variable_quality:
+                # Other implementations will use the 'q' or quality value,
+                # so will this one, but let's validate the input (if any).
+                quality = params.get('q', DPR_QUALITIES[dpr])
+                validate_output_quality(quality)
+
+                # Mutate the copy of params; associate the quality value
+                # with the key 'q'.
+                srcset_params['q'] = quality
+
             srcset_entries.append(self.create_url(path, srcset_params) +
                                   " " + str(dpr) + "x")
 
