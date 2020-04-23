@@ -7,7 +7,7 @@ from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
 from .constants import SRCSET_WIDTH_TOLERANCE as TOLERANCE
 from .constants import DPR_QUALITIES
-from .validators import validate_min_max_tol, validate_output_quality
+from .validators import validate_min_max_tol
 from .urlhelper import UrlHelper
 
 
@@ -208,7 +208,6 @@ class UrlBuilder(object):
                 # Other implementations will use the 'q' or quality value,
                 # so will this one, but let's validate the input (if any).
                 quality = params.get('q', DPR_QUALITIES[dpr])
-                validate_output_quality(quality)
 
                 # Mutate the copy of params; associate the quality value
                 # with the key 'q'.
