@@ -51,8 +51,7 @@ class UrlBuilder(object):
             domain,
             use_https=True,
             sign_key=None,
-            include_library_param=True,
-            disable_variable_quality=False):
+            include_library_param=True):
 
         self.validate_domain(domain)
 
@@ -60,7 +59,6 @@ class UrlBuilder(object):
         self._sign_key = sign_key
         self._use_https = use_https
         self._include_library_param = include_library_param
-        self._disable_variable_quality = disable_variable_quality
 
     def validate_domain(self, domain):
         """
@@ -120,7 +118,8 @@ class UrlBuilder(object):
 
     def create_srcset(
             self, path, params={},
-            start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
+            start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE,
+            disable_variable_quality=False):
         """
         Create a srcset attribute.
 
@@ -196,7 +195,8 @@ class UrlBuilder(object):
         return ",\n".join(srcset_entries)
 
     def _build_srcset_DPR(
-            self, path, params, targets=TARGET_RATIOS):
+            self, path, params, targets=TARGET_RATIOS,
+            disable_variable_quality=False):
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
@@ -204,7 +204,7 @@ class UrlBuilder(object):
         for dpr in targets:
             srcset_params['dpr'] = dpr
             # If variable quality output is _not disabled_, then...
-            if not self._disable_variable_quality:
+            if not disable_variable_quality:
                 # Other implementations will use the 'q' or quality value,
                 # so will this one, but let's validate the input (if any).
                 quality = params.get('q', DPR_QUALITIES[dpr])
