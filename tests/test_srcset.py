@@ -79,6 +79,19 @@ def test_variable_output_quality_default():
         assert(quality in src)
 
 
+def test_disable_variable_output_quality():
+    ub = imgix.UrlBuilder('testing.imgix.net', include_library_param=False)
+    srcset = ub.create_srcset('image.jpg', disable_variable_quality=True)
+    srclist = srcset.split(',')
+
+    dpr_qualities = sorted([q for q in DPR_QUALITIES.values()], reverse=True)
+
+    for src, dpr_quality in zip(srclist, dpr_qualities):
+        quality = "q=" + str(dpr_quality)
+        # Ensure we _do not_ find variable qualities in each src.
+        assert(not (quality in src))
+
+
 def test_given_width_signs_urls():
     srcset = _default_srcset({'w': 100})
     srclist = srcset.split(',')

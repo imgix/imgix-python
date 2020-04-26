@@ -176,7 +176,10 @@ class UrlBuilder(object):
         has_aspect_ratio = 'ar' in params
 
         if (has_width or (has_height and has_aspect_ratio)):
-            return self._build_srcset_DPR(path, params)
+            return self._build_srcset_DPR(
+                path,
+                params,
+                disable_variable_quality=disable_variable_quality)
         else:
             targets = target_widths(start, stop, tol)
             return self._build_srcset_pairs(path, params, targets)
