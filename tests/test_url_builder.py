@@ -233,7 +233,7 @@ def test_target_widths_100_7400():
     assert actual == expected
 
 
-def test_target_widths_380_4088():
+def test_target_widths_328_4088():
     idx_of_328, idx_of_4088 = 8, -5
     expected = constants.SRCSET_TARGET_WIDTHS[idx_of_328: idx_of_4088]
     actual = urlbuilder.target_widths(start=328, stop=4088)
