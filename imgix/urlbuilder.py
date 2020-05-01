@@ -208,8 +208,6 @@ class UrlBuilder(object):
             srcset_params['dpr'] = dpr
             # If variable quality output is _not disabled_, then...
             if not disable_variable_quality:
-                # Other implementations will use the 'q' or quality value,
-                # so will this one, but let's validate the input (if any).
                 quality = params.get('q', DPR_QUALITIES[dpr])
 
                 # Mutate the copy of params; associate the quality value
