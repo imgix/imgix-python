@@ -200,18 +200,28 @@ class UrlBuilder(object):
     def _build_srcset_DPR(
             self, path, params, targets=TARGET_RATIOS,
             disable_variable_quality=False):
+        # If variable quality output is _not disabled_, then output
+        # quality values, 'q', will vary in accordance with the
+        # default `DPR_QUALITIES` [1x => q=75, ... 5x => 20].
+        #
+        # If 'q' is explicitly passed, it takes precendence over
+        # the default `DPR_QUALITIES`. Right now, this means that
+        # if 'q' is passed, it's value will be used for the output
+        # quality of each dpr image (i.e. for 1x through 5x).
+        #
+        # Note: if `q` is passed with `params`, then it will be
+        # present in the URL's query params whether or not
+        # `disabled_variable_quality` is `True` or `False`.
+
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
 
         for dpr in targets:
             srcset_params['dpr'] = dpr
-            # If variable quality output is _not disabled_, then...
+
             if not disable_variable_quality:
                 quality = params.get('q', DPR_QUALITIES[dpr])
-
-                # Mutate the copy of params; associate the quality value
-                # with the key 'q'.
                 srcset_params['q'] = quality
 
             srcset_entries.append(self.create_url(path, srcset_params) +
