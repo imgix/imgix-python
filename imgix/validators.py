@@ -27,11 +27,11 @@ def validate_min_width(value):
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = 'error: `min_width` must be a positive ' \
+    invalid_width_error = '`min_width` must be a positive ' \
         '`float` or `int`'
     assert isinstance(value, (float, int)), invalid_width_error
 
-    invalid_min_error = 'error: `min_width` must be greater than zero'
+    invalid_min_error = '`min_width` must be greater than zero'
     assert value > ZERO_WIDTH, invalid_min_error
 
 
@@ -61,11 +61,11 @@ def validate_max_width(value):
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = 'error: `max_width` must be a positive ' \
+    invalid_width_error = '`max_width` must be a positive ' \
         '`float` or `int`'
     assert isinstance(value, (float, int)), invalid_width_error
 
-    invalid_max_error = 'error: `max_width` must be <= 8192.0'
+    invalid_max_error = '`max_width` must be <= 8192.0'
     assert ZERO_WIDTH < value <= MAX_WIDTH, invalid_max_error
 
 
@@ -97,7 +97,7 @@ def validate_range(min_width, max_width):
     validate_min_width(min_width)
     validate_max_width(max_width)
 
-    invalid_range_error = 'error: `min_width` must be less than `max_width`'
+    invalid_range_error = '`min_width` must be less than `max_width`'
     assert min_width < max_width, invalid_range_error
 
 
