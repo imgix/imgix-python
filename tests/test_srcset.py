@@ -5,17 +5,42 @@ import hashlib
 import re
 
 from imgix.constants import DPR_QUALITIES
+from imgix.constants import SRCSET_TARGET_WIDTHS as TARGET_WIDTHS
+from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH
+
+
+DOMAIN = 'testing.imgix.net'
+TOKEN = 'MYT0KEN'
+JPG_PATH = 'image.jpg'
 
 
 def _default_srcset(params={}):
-    ub = imgix.UrlBuilder('testing.imgix.net',
-                          sign_key='MYT0KEN',
+    ub = imgix.UrlBuilder(domain=DOMAIN,
+                          sign_key=TOKEN,
                           include_library_param=False)
-    return ub.create_srcset('image.jpg', params)
+    return ub.create_srcset(JPG_PATH, params)
 
 
 def _parse_width(width):
     return int(width[0:-1])
+
+
+def get_params(url):
+    return url[url.index('?'): url.index('s=') - 1]
+
+
+def make_signature_base(params):
+    return TOKEN + '/' + JPG_PATH + params
+
+
+def make_expected_signature(url):
+    params = get_params(url)
+    base = make_signature_base(params)
+    return hashlib.md5(base.encode('utf-8')).hexdigest()
+
+
+def get_actual_signature(url):
+    return url[url.index('s=') + 2: len(url)]
 
 
 def test_no_parameters_generates_srcset_pairs():
@@ -26,10 +51,7 @@ def test_no_parameters_generates_srcset_pairs():
 
 def test_srcset_pair_values():
     # array of expected resolutions to be generated
-    resolutions = [100, 116, 134, 156, 182, 210, 244, 282,
-                   328, 380, 442, 512, 594, 688, 798, 926,
-                   1074, 1246, 1446, 1678, 1946, 2258, 2618,
-                   3038, 3524, 4088, 4742, 5500, 6380, 7400, 8192]
+    resolutions = TARGET_WIDTHS
     srcset = _default_srcset()
     srclist = srcset.split(',')
     index = 0
@@ -80,8 +102,8 @@ def test_variable_output_quality_default():
 
 
 def test_disable_variable_output_quality():
-    ub = imgix.UrlBuilder('testing.imgix.net', include_library_param=False)
-    srcset = ub.create_srcset('image.jpg', disable_variable_quality=True)
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    srcset = ub.create_srcset(JPG_PATH, disable_variable_quality=True)
     srclist = srcset.split(',')
 
     dpr_qualities = sorted([q for q in DPR_QUALITIES.values()], reverse=True)
@@ -100,15 +122,10 @@ def test_given_width_signs_urls():
         url = src.split(' ')[0]
         assert('s=' in url)
 
-        # extract the sign parameter
-        generated_signature = url[url.index('s=')+2:len(url)]
+        actual_signature = get_actual_signature(url)
+        expected_signature = make_expected_signature(url)
 
-        params = url[url.index('?'):url.index('s=')-1]
-        signature_base = 'MYT0KEN' + '/image.jpg' + params
-        expected_signature = hashlib.md5(signature_base
-                                         .encode('utf-8')).hexdigest()
-
-        assert(expected_signature == generated_signature)
+        assert(expected_signature == actual_signature)
 
 
 def test_given_height_srcset_generates_pairs():
@@ -131,11 +148,11 @@ def test_given_height_srcset_pairs_within_bounds():
 
     min_parsed = srclist[0].split(' ')[1]
     max_parsed = srclist[-1].split(' ')[1]
-    min = _parse_width(min_parsed)
-    max = _parse_width(max_parsed)
+    min_width = _parse_width(min_parsed)
+    max_width = _parse_width(max_parsed)
 
-    assert(min >= 100)
-    assert(max <= 8192)
+    assert(min_width >= IMAGE_MIN_WIDTH)
+    assert(max_width <= IMAGE_MAX_WIDTH)
 
 
 # a 17% testing threshold is used to account for rounding
@@ -161,16 +178,11 @@ def test_given_height_srcset_signs_urls():
 
     for src in srcs:
         assert(src.index('s='))
-        params = src[src.index('?'):len(src)]
-        params = params[0:params.index('s=')-1]
-        # extract the sign parameter
-        generated_signature = src[src.index('s=')+2:len(src)]
 
-        signature_base = 'MYT0KEN' + '/image.jpg' + params
-        expected_signature = hashlib.md5(signature_base
-                                         .encode('utf-8')).hexdigest()
+        actual_signature = get_actual_signature(src)
+        expected_signature = make_expected_signature(src)
 
-        assert(expected_signature == generated_signature)
+        assert(expected_signature == actual_signature)
 
 
 def test_given_width_and_height_is_DPR():
@@ -202,15 +214,10 @@ def test_given_width_and_height_signs_urls():
         url = src.split(' ')[0]
         assert('s=' in url)
 
-        # extract the sign parameter
-        generated_signature = url[url.index('s=')+2:len(url)]
+        actual_signature = get_actual_signature(url)
+        expected_signature = make_expected_signature(url)
 
-        params = url[url.index('?'):url.index('s=')-1]
-        signature_base = 'MYT0KEN' + '/image.jpg' + params
-        expected_signature = hashlib.md5(signature_base
-                                         .encode('utf-8')).hexdigest()
-
-        assert(expected_signature == generated_signature)
+        assert(expected_signature == actual_signature)
 
 
 def test_given_aspect_ratio_srcset_generates_pairs():
@@ -225,11 +232,11 @@ def test_given_aspect_ratio_srcset_pairs_within_bounds():
 
     min_parsed = srclist[0].split(' ')[1]
     max_parsed = srclist[-1].split(' ')[1]
-    min = _parse_width(min_parsed)
-    max = _parse_width(max_parsed)
+    min_size = _parse_width(min_parsed)
+    max_size = _parse_width(max_parsed)
 
-    assert(min >= 100)
-    assert(max <= 8192)
+    assert(min_size >= IMAGE_MIN_WIDTH)
+    assert(max_size <= IMAGE_MAX_WIDTH)
 
 
 # a 17% testing threshold is used to account for rounding
@@ -255,16 +262,11 @@ def test_given_aspect_ratio_srcset_signs_urls():
 
     for src in srcs:
         assert(src.index('s='))
-        params = src[src.index('?'):len(src)]
-        params = params[0:params.index('s=')-1]
-        # extract the sign parameter
-        generated_signature = src[src.index('s=')+2:len(src)]
 
-        signature_base = 'MYT0KEN' + '/image.jpg' + params
-        expected_signature = hashlib.md5(signature_base
-                                         .encode('utf-8')).hexdigest()
+        actual_signature = get_actual_signature(src)
+        expected_signature = make_expected_signature(src)
 
-        assert(expected_signature == generated_signature)
+        assert(expected_signature == actual_signature)
 
 
 def test_given_aspect_ratio_and_height_srcset_is_DPR():
@@ -296,15 +298,10 @@ def test_given_aspect_ratio_and_height_srcset_signs_urls():
         url = src.split(' ')[0]
         assert('s=' in url)
 
-        # extract the sign parameter
-        generated_signature = url[url.index('s=')+2:len(url)]
+        actual_signature = get_actual_signature(url)
+        expected_signature = make_expected_signature(url)
 
-        params = url[url.index('?'):url.index('s=')-1]
-        signature_base = 'MYT0KEN' + '/image.jpg' + params
-        expected_signature = hashlib.md5(signature_base
-                                         .encode('utf-8')).hexdigest()
-
-        assert(expected_signature == generated_signature)
+        assert(expected_signature == actual_signature)
 
 
 def test_given_fit_params_not_altered():
