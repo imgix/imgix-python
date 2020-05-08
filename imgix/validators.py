@@ -98,7 +98,7 @@ def validate_range(min_width, max_width):
     validate_max_width(max_width)
 
     invalid_range_error = '`min_width` must be less than `max_width`'
-    assert min_width < max_width, invalid_range_error
+    assert min_width <= max_width, invalid_range_error
 
 
 def validate_width_tol(value):
