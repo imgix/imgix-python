@@ -39,23 +39,15 @@ class TestValidators(unittest.TestCase):
             validate_max_width(IMAGE_MAX_WIDTH+1)
 
     def test_validate_range_raises(self):
-        # Each x, y or <min, max> pair should fail in
-        # because they are equal in every case.
-        for x, y in enumerate([x for x in range(10)]):
-            with self.assertRaises(AssertionError):
-                validate_range(x, y)
 
         with self.assertRaises(AssertionError):
             validate_range(IMAGE_ZERO_WIDTH, IMAGE_ZERO_WIDTH)
 
         with self.assertRaises(AssertionError):
-            validate_range(IMAGE_MIN_WIDTH, IMAGE_MIN_WIDTH)
-
-        with self.assertRaises(AssertionError):
             validate_range(IMAGE_ZERO_WIDTH, IMAGE_MAX_WIDTH)
 
         with self.assertRaises(AssertionError):
-            validate_range(IMAGE_MAX_WIDTH, IMAGE_MAX_WIDTH)
+            validate_range(IMAGE_MAX_WIDTH, IMAGE_MIN_WIDTH)
 
     def test_validate_min_max_tol_raises(self):
 
@@ -74,3 +66,10 @@ class TestValidators(unittest.TestCase):
             IMAGE_MIN_WIDTH,
             IMAGE_MAX_WIDTH,
             SRCSET_MIN_WIDTH_TOLERANCE)
+
+    def test_start_equals_stop(self):
+        # Due to the assertive nature of this validator
+        # if this test does not raise, it passes.
+        for x, y in enumerate([x for x in range(1, 10)], start=1):
+            assert x == y
+            validate_range(x, y)

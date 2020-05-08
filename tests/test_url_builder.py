@@ -250,3 +250,9 @@ def test_target_widths_100_max():
     assert actual == expected
     assert actual[0] == IMAGE_MIN_WIDTH
     assert actual[-1] == IMAGE_MAX_WIDTH
+
+
+def test_target_widths_328_to_328():
+    expected = [328]
+    actual = urlbuilder.target_widths(start=328, stop=328)
+    assert actual == expected
