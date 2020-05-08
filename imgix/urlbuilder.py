@@ -286,6 +286,6 @@ def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
     # the `stop` value. In order to be inclusive of the
     # stop value, check for this case and add it, if necessary.
     if resolutions[-1] < stop:
-        resolutions.append(stop)
+        resolutions.append(make_even_integer(stop))
 
     return resolutions
