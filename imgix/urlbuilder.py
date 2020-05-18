@@ -270,22 +270,19 @@ def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
     if not CUSTOM:
         return TARGET_WIDTHS
 
-    def make_even_integer(n):
-        return int(2 * round(n/2.0))
-
     if start == stop:
-        return [make_even_integer(start)]
+        return [start]
 
     resolutions = []
 
     while start < stop and start < MAX_WIDTH:
-        resolutions.append(make_even_integer(start))
+        resolutions.append(round(start))
         start *= 1 + (tol / 100.0) * 2
 
     # The most recently appended value may, or may not, be
     # the `stop` value. In order to be inclusive of the
     # stop value, check for this case and add it, if necessary.
     if resolutions[-1] < stop:
-        resolutions.append(make_even_integer(stop))
+        resolutions.append(stop)
 
     return resolutions
