@@ -226,17 +226,17 @@ def test_target_widths_default():
     assert actual == expected
 
 
-def test_target_widths_100_7400():
-    idx_of_7400 = -1
-    expected = constants.SRCSET_TARGET_WIDTHS[:idx_of_7400]
-    actual = urlbuilder.target_widths(start=100, stop=7400)
+def test_target_widths_100_7401():
+    idx_of_7401 = -1
+    expected = constants.SRCSET_TARGET_WIDTHS[:idx_of_7401]
+    actual = urlbuilder.target_widths(start=100, stop=7401)
     assert actual == expected
 
 
-def test_target_widths_328_4088():
-    idx_of_328, idx_of_4088 = 8, -5
-    expected = constants.SRCSET_TARGET_WIDTHS[idx_of_328: idx_of_4088]
-    actual = urlbuilder.target_widths(start=328, stop=4088)
+def test_target_widths_328_4087():
+    idx_of_328, idx_of_4087 = 8, -5
+    expected = constants.SRCSET_TARGET_WIDTHS[idx_of_328: idx_of_4087]
+    actual = urlbuilder.target_widths(start=328, stop=4087)
     assert len(actual) == len(expected)
     assert actual[0] == expected[0]
     assert actual[-1] == expected[-1]

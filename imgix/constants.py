@@ -35,19 +35,8 @@ IMAGE_MAX_WIDTH = 8192
 DPR_QUALITIES = {1: 75, 2: 50, 3: 35, 4: 23, 5: 20}
 
 
-def _target_widths():
-    resolutions = []
-    prev = 100
-
-    def ensure_even(n):
-        return 2 * round(n/2.0)
-
-    while prev <= SRCSET_MAX_SIZE:
-        resolutions.append(int(ensure_even(prev)))
-        prev *= 1 + (SRCSET_WIDTH_TOLERANCE / 100.0) * 2
-
-    resolutions.append(SRCSET_MAX_SIZE)
-    return resolutions
-
-
-SRCSET_TARGET_WIDTHS = _target_widths()
+SRCSET_TARGET_WIDTHS = [
+    100, 116, 135, 156, 181, 210, 244, 283,
+    328, 380, 441, 512, 594, 689, 799, 927,
+    1075, 1247, 1446, 1678, 1946, 2257, 2619,
+    3038, 3524, 4087, 4741, 5500, 6380, 7401, 8192]
