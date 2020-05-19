@@ -65,6 +65,51 @@ def test_srcset_pair_values():
         index += 1
 
 
+def test_create_srcset_with_widths():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(JPG_PATH, targets=[100, 200, 300, 400, 500])
+    expected = "https://testing.imgix.net/image.jpg?w=100 100w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=200 200w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=300 300w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=400 400w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=500 500w"
+
+    assert(expected == actual)
+
+
+def test_create_srcset_start_equals_stop():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(JPG_PATH, start=713, stop=713)
+    expected = "https://testing.imgix.net/image.jpg?w=713 713w"
+
+    assert(expected == actual)
+
+
+def test_create_srcset_2257_to_4087():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(JPG_PATH, start=2257, stop=4087)
+    expected = "https://testing.imgix.net/image.jpg?w=2257 2257w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=2618 2618w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=3037 3037w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=3523 3523w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=4087 4087w"
+
+    assert(expected == actual)
+
+
+def test_create_srcset_100_to_108():
+    # Test that `tol=1` produces the correct spread.
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(JPG_PATH, start=100, stop=108, tol=1)
+    expected = "https://testing.imgix.net/image.jpg?w=100 100w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=102 102w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=104 104w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=106 106w,\n" + \
+        "https://testing.imgix.net/image.jpg?w=108 108w"
+
+    assert(expected == actual)
+
+
 def test_given_width_srcset_is_DPR():
     srcset = _default_srcset({'w': 100})
     device_pixel_ratio = 1

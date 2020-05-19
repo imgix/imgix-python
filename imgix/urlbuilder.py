@@ -116,10 +116,7 @@ class UrlBuilder(object):
 
         return str(url_obj)
 
-    def create_srcset(
-            self, path, params={},
-            start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE,
-            disable_variable_quality=False):
+    def create_srcset(self, path, params={}, **kwargs):
         """
         Create a srcset attribute.
 
@@ -163,25 +160,52 @@ class UrlBuilder(object):
             Stopping maximum width value, MAX_WIDTH by default.
         tol : int, optional
             Tolerable amount of width value variation, TOLERANCE by default.
-
+        targets: list, optional
+            List of target widths, `TARGET_WIDTHS` by default.
         Returns
         -------
         str
             Srcset attribute string.
         """
-        validate_min_max_tol(start, stop, tol)
+        # Review: 'targets' or 'widths'?
+        targets_list = kwargs.get('targets', None)
+        if targets_list:
+            return self._build_srcset_pairs(path, params, targets=targets_list)
 
-        has_width = 'w' in params
-        has_height = 'h' in params
-        has_aspect_ratio = 'ar' in params
+        # Attempt to assign `start`, `stop`, and `tol` from `kwargs`.
+        # If the key does not exist, assign `None`.
+        start = kwargs.get('start', None)
+        stop = kwargs.get('stop', None)
+        tol = kwargs.get('tol', None)
 
-        if (has_width or (has_height and has_aspect_ratio)):
+        # Attempt to generated the target widths specified.
+        # Assign defaults where appropriate, then validate
+        # this group. If validation succeeds, generate the
+        # target widths.
+        generated_targets = None
+        if start or stop or tol:
+            _start = start if start else MIN_WIDTH
+            _stop = stop if stop else MAX_WIDTH
+            _tol = tol if tol else TOLERANCE
+
+            validate_min_max_tol(_start, _stop, _tol)
+
+            generated_targets = \
+                target_widths(start=_start, stop=_stop, tol=_tol)
+
+        # If `generated_targets` have been assigned, use these
+        # targets. Otherwise, no target widths have been generated
+        # and we must assign the default target widths.
+        targets = generated_targets or TARGET_WIDTHS
+
+        if (self._is_dpr(params)):
+            disable_variable_quality = \
+                kwargs.get('disable_variable_quality', False)
             return self._build_srcset_DPR(
                 path,
                 params,
                 disable_variable_quality=disable_variable_quality)
         else:
-            targets = target_widths(start, stop, tol)
             return self._build_srcset_pairs(path, params, targets)
 
     def _build_srcset_pairs(
@@ -229,6 +253,13 @@ class UrlBuilder(object):
 
         return ",\n".join(srcset_entries)
 
+    def _is_dpr(self, params):
+        has_width = 'w' in params
+        has_height = 'h' in params
+        has_aspect_ratio = 'ar' in params
+
+        return has_width or (has_height and has_aspect_ratio)
+
 
 def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
     """
@@ -271,18 +302,18 @@ def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
         return TARGET_WIDTHS
 
     if start == stop:
-        return [start]
+        return [int(start)]
 
     resolutions = []
 
     while start < stop and start < MAX_WIDTH:
-        resolutions.append(round(start))
+        resolutions.append(int(round(start)))
         start *= 1 + (tol / 100.0) * 2
 
     # The most recently appended value may, or may not, be
     # the `stop` value. In order to be inclusive of the
     # stop value, check for this case and add it, if necessary.
     if resolutions[-1] < stop:
-        resolutions.append(stop)
+        resolutions.append(int(stop))
 
     return resolutions
