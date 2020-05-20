@@ -67,7 +67,7 @@ def test_srcset_pair_values():
 
 def test_create_srcset_with_widths():
     ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
-    actual = ub.create_srcset(JPG_PATH, targets=[100, 200, 300, 400, 500])
+    actual = ub.create_srcset(JPG_PATH, widths=[100, 200, 300, 400, 500])
     expected = "https://testing.imgix.net/image.jpg?w=100 100w,\n" + \
         "https://testing.imgix.net/image.jpg?w=200 200w,\n" + \
         "https://testing.imgix.net/image.jpg?w=300 300w,\n" + \
