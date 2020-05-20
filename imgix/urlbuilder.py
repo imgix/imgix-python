@@ -160,15 +160,14 @@ class UrlBuilder(object):
             Stopping maximum width value, MAX_WIDTH by default.
         tol : int, optional
             Tolerable amount of width value variation, TOLERANCE by default.
-        targets: list, optional
+        widths: list, optional
             List of target widths, `TARGET_WIDTHS` by default.
         Returns
         -------
         str
             Srcset attribute string.
         """
-        # Review: 'targets' or 'widths'?
-        targets_list = kwargs.get('targets', None)
+        targets_list = kwargs.get('widths', None)
         if targets_list:
             return self._build_srcset_pairs(path, params, targets=targets_list)
 
@@ -184,9 +183,9 @@ class UrlBuilder(object):
         # target widths.
         generated_targets = None
         if start or stop or tol:
-            _start = start if start else MIN_WIDTH
-            _stop = stop if stop else MAX_WIDTH
-            _tol = tol if tol else TOLERANCE
+            _start = start or MIN_WIDTH
+            _stop = stop or MAX_WIDTH
+            _tol = tol or TOLERANCE
 
             validate_min_max_tol(_start, _stop, _tol)
 
