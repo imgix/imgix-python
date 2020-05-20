@@ -184,9 +184,9 @@ class UrlBuilder(object):
         # target widths.
         generated_targets = None
         if start or stop or tol:
-            _start = start if start else MIN_WIDTH
-            _stop = stop if stop else MAX_WIDTH
-            _tol = tol if tol else TOLERANCE
+            _start = start or MIN_WIDTH
+            _stop = stop or MAX_WIDTH
+            _tol = tol or TOLERANCE
 
             validate_min_max_tol(_start, _stop, _tol)
 
