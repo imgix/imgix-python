@@ -21,8 +21,9 @@ Refer to `imgix.UrlBuilder` class documentation for all the supported options.
 
 from ._version import __version__
 
-from .urlbuilder import UrlBuilder
+from .urlbuilder import UrlBuilder, target_widths
 
 __all__ = [
     'UrlBuilder',
+    'target_widths',
     '__version__']
