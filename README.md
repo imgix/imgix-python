@@ -14,9 +14,17 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Signed URLs](#signed-urls)
-  - [Srcset Generation](#srcset-generation)
+- [Signed URLs](#signed-urls)
+- [Srcset Generation](#srcset-generation)
+  - [Fixed Width Images](#fixed-width-images)
+    - [Variable Quality](#variable-quality)
+  - [Variable Size Images](#variable-size-images)
+    - [Custom Widths](#custom-widths)
+    - [Minimum and Maximum Width Ranges](#minimum-and-maximum-width-ranges)
+    - [Width Tolerance](#width-tolerance)
+    - [Explore Target Widths](#explore-target-widths)
   - [Usage with UTF-8](#usage-with-utf-8)
+- [The `ixlib` Parameter](#the-ixlib-parameter)
 - [Testing](#testing)
 
 ## Installation
@@ -27,85 +35,71 @@ pip install imgix
 
 ## Usage
 
-To begin creating imgix URLs programmatically, import the imgix
-library and create a URL builder. The URL builder can be reused to
-create URLs for any images on the domains it is provided.
+To begin creating imgix URLs, import the imgix library and create a URL builder. The URL builder can be reused to create URLs for any images on the domains it is provided.
 
 ``` python
-import imgix
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder("demo.imgix.net")
+>>> ub.create_url("bridge.png", {'w': 100, 'h': 100})
+'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.1.2&w=100'
 
-builder = imgix.UrlBuilder("demos.imgix.net")
-print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
-
-# Prints out:
-# http://demos.imgix.net/bridge.png?h=100&w=100
 ```
 
-For HTTPS support, specify the HTTPS flag like so:
+_HTTPS_ support is enabled by default. _HTTP_ is also supported and can be had by setting `use_https` to `False`:
 
 ``` python
-import imgix
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder("demo.imgix.net", use_https=False, include_library_param=False)
+>>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
+'http://demo.imgix.net/bridge.png?h=100&w=100'
 
-builder = imgix.UrlBuilder("demos.imgix.net", use_https=True)
-print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
-
-# Prints out:
-# https://demos.imgix.net/bridge.png?h=100&w=100
 ```
 
-### Signed URLs
+## Signed URLs
 
-To produce a signed URL, you must enable secure URLs on your source and
-then provide your signature key to the URL builder.
+To produce a signed URL, you must enable secure URLs on your source and then provide your signature key to the URL builder.
 
 ``` python
-import imgix
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234")
+>>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
+'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.1.2&w=100&s=734a86bd4b1353e1d033e0892fcdad3d'
 
-builder = imgix.UrlBuilder("demos.imgix.net", sign_key="test1234")
-print builder.create_url("/bridge.png", {'w': 100, 'h': 100})
-
-# Prints out:
-# http://demos.imgix.net/bridge.png?h=100&w=100&s=7370d6e36bb2262e73b19578739af1af
 ```
 
-### Srcset Generation
+## Srcset Generation
 
-The imgix-python package allows for generation of custom srcset
-attributes, which can be invoked through `create_srcset()`. By default,
-the srcset generated will allow for responsive size switching by
-building a list of image-width mappings.
+The imgix-python package allows for generation of custom srcset attributes, which can be invoked through the `create_srcset` method. By default, the generated srcset will allow for responsive size switching by building a list of image-width mappings.
 
 ``` python
-builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
-srcset = builder.create_srcset("image.png")
-print srcset
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
+>>> srcset = ub.create_srcset("image.png")
+
 ```
 
-Will produce the following attribute value, which can then be served to
-the client:
+The above will produce the following srcset attribute value which can then be served to the client: 
 
 ``` html
 https://demos.imgix.net/image.png?w=100&s=e415797545a77a9d2842dedcfe539c9a 100w,
 https://demos.imgix.net/image.png?w=116&s=b2da46f5c23ef13d5da30f0a4545f33f 116w,
-https://demos.imgix.net/image.png?w=134&s=b61422dead929f893c04b8ff839bb088 134w,
+https://demos.imgix.net/image.png?w=134&s=b61422dead929f893c04b8ff839bb088 135w,
                                         ...
-https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7400w,
+https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7401w,
 https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 ```
 
-In cases where enough information is provided about an image's
-dimensions, `create_srcset()` will instead build a srcset that will
-allow for an image to be served at different resolutions. The parameters
-taken into consideration when determining if an image is fixed-width are
-`w`, `h`, and `ar`. By invoking `create_srcset()` with either a width
-**or** the height and aspect ratio (along with `fit=crop`, typically)
-provided, a different srcset will be generated for a fixed-size image
-instead.
+### Fixed Width Images
+
+In cases where enough information is provided about an image's dimensions, `create_srcset` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are `w`, `h`, and `ar`.
+
+By invoking `create_srcset` with either a width **or** the height and aspect ratio (along with `fit=crop`, typically) provided, a different srcset will be generated for a fixed-size image instead.
 
 ``` python
-builder = imgix.UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
-srcset = builder.create_srcset("image.png", {'h':800, 'ar':'3:2', 'fit':'crop'})
-print srcset
+from imgix import UrlBuilder
+>>> ub = UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
+>>> srcset = ub.create_srcset("image.png", {'h':800, 'ar':'3:2', 'fit':'crop'})
+
 ```
 
 Will produce the following attribute value:
@@ -121,21 +115,148 @@ https://demos.imgix.net/image.png?ar=3%3A2&dpr=5&fit=crop&h=800&s=3d73af69d78d49
 For more information to better understand srcset, we highly recommend
 [Eric Portis' "Srcset and sizes" article](https://ericportis.com/posts/2014/srcset-sizes/) which goes into depth about the subject.
 
+#### Variable Quality
+
+This library will automatically append a variable `q` parameter mapped to each `dpr` parameter when generating a [fixed-width image](#fixed-width-images) srcset. This technique is commonly used to compensate for the increased file size of high-DPR images.
+
+Since high-DPR images are displayed at a higher pixel density on devices, image quality can be lowered to reduce overall file size without sacrificing perceived visual quality. For more information and examples of this technique in action, see [this blog post](https://blog.imgix.com/2016/03/30/dpr-quality).
+
+This behavior will respect any overriding `q` value passed in as a parameter. Additionally, it can be disabled altogether by passing `disable_variable_quality = true` to `create_srcset`.
+
+This behavior specifically occurs when a [fixed-width image](#fixed-width-images) is rendered, for example:
+
+```python
+# Note that `params={"w": 100}` allows `create_srcset` to _infer_ the creation
+# of a DPR based srcset attribute for fixed width images.
+ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
+srcset = ub.create_srcset('image.jpg', params={"w": 100}, disable_variable_quality=False)
+```
+
+The above will generate a srcset with the following `q` to `dpr` query `params`:
+
+```html
+https://demo.imgix.net/image.jpg?w=100&dpr=1&q=75 1x,
+https://demo.imgix.net/image.jpg?w=100&dpr=2&q=50 2x,
+https://demo.imgix.net/image.jpg?w=100&dpr=3&q=35 3x,
+https://demo.imgix.net/image.jpg?w=100&dpr=4&q=23 4x,
+https://demo.imgix.net/image.jpg?w=100&dpr=5&q=20 5x
+```
+
+### Variable Size Images
+
+#### Custom Widths
+In situations where specific widths are desired when generating `srcset` pairs, a user can specify them by passing an array of positive integers as `widths`:
+
+``` python
+>>> from imgix import UrlBuilder
+>>> builder = UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> builder.create_srcset('image.jpg', widths=[144, 240, 320, 446, 640])
+'https://demo.imgix.net/image.jpg?w=144 144w,\nhttps://demo.imgix.net/image.jpg?w=240 240w,\nhttps://demo.imgix.net/image.jpg?w=320 320w,\nhttps://demo.imgix.net/image.jpg?w=446 446w,\nhttps://demo.imgix.net/image.jpg?w=640 640w'
+
+```
+
+```html
+https://demo.imgix.net/image.jpg?w=144 144w,
+https://demo.imgix.net/image.jpg?w=240 240w,
+https://demo.imgix.net/image.jpg?w=320 320w,
+https://demo.imgix.net/image.jpg?w=446 446w,
+https://demo.imgix.net/image.jpg?w=640 640w
+```
+
+**Note**: in situations where a `srcset` is being rendered as a [fixed image](#fixed-image-rendering), any custom `widths` passed in will be ignored.
+
+Additionally, if both `widths` and a width `tol`erance are passed to the `create_srcset` method, the custom widths list will take precedence.
+
+#### Minimum and Maximum Width Ranges
+
+In certain circumstances, you may want to limit the minimum or maximum value of the non-fixed `srcset` generated by the `create_srcset` method. To do this, you can specify the widths at which a srcset should `start` and `stop`:
+
+```python
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> ub.create_srcset('image.jpg', start=500, stop=2000)
+'https://demo.imgix.net/image.jpg?w=500 500w,\nhttps://demo.imgix.net/image.jpg?w=580 580w,\nhttps://demo.imgix.net/image.jpg?w=673 673w,\nhttps://demo.imgix.net/image.jpg?w=780 780w,\nhttps://demo.imgix.net/image.jpg?w=905 905w,\nhttps://demo.imgix.net/image.jpg?w=1050 1050w,\nhttps://demo.imgix.net/image.jpg?w=1218 1218w,\nhttps://demo.imgix.net/image.jpg?w=1413 1413w,\nhttps://demo.imgix.net/image.jpg?w=1639 1639w,\nhttps://demo.imgix.net/image.jpg?w=1901 1901w,\nhttps://demo.imgix.net/image.jpg?w=2000 2000w'
+
+```
+
+Formatted version of the above srcset attribute:
+
+``` html
+https://demo.imgix.net/image.jpg?w=500 500w,
+https://demo.imgix.net/image.jpg?w=580 580w,
+https://demo.imgix.net/image.jpg?w=673 673w,
+https://demo.imgix.net/image.jpg?w=780 780w,
+https://demo.imgix.net/image.jpg?w=905 905w,
+https://demo.imgix.net/image.jpg?w=1050 1050w,
+https://demo.imgix.net/image.jpg?w=1218 1218w,
+https://demo.imgix.net/image.jpg?w=1413 1413w,
+https://demo.imgix.net/image.jpg?w=1639 1639w,
+https://demo.imgix.net/image.jpg?w=1901 1901w,
+https://demo.imgix.net/image.jpg?w=2000 2000w'
+```
+
+#### Width Tolerance
+
+The `srcset` width `tol`erance dictates the maximum `tol`erated difference between an image's downloaded size and its rendered size.
+
+For example, setting this value to 0.1 means that an image will not render more than 10% larger or smaller than its native size. In practice, the image URLs generated for a width-based srcset attribute will grow by twice this rate.
+
+A lower tolerance means images will render closer to their native size (thereby increasing perceived image quality), but a large srcset list will be generated and consequently users may experience lower rates of cache-hit for pre-rendered images on your site.
+
+By default, srcset width `tol`erance is set to 8 percent, which we consider to be the ideal rate for maximizing cache hits without sacrificing visual quality. Users can specify their own width tolerance by providing a positive scalar value as width `tol`erance:
+
+```python
+import imgix
+ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
+srcset = ub.create_srcset('image.jpg', start=100, stop=384, tol=20)
+```
+
+In this case, the `width_tolerance` is set to 20 percent, which will be reflected in the difference between subsequent widths in a srcset pair:
+
+```html
+https://demo.imgix.net/image.jpg?w=100 100w,
+https://demo.imgix.net/image.jpg?w=140 140w,
+https://demo.imgix.net/image.jpg?w=196 196w,
+https://demo.imgix.net/image.jpg?w=274 274w,
+https://demo.imgix.net/image.jpg?w=384 384w
+```
+
+#### Explore Target Widths
+
+Explore which set of target widths work for your use case:
+
+```python
+>>> from imgix import UrlBuilder, target_widths
+>>> start, stop, tol = 167, 467, 20
+>>> target_widths(start, stop, tol)
+[167, 234, 327, 458, 467]
+>>> target_widths(300, 3000, 13)
+[300, 378, 476, 600, 756, 953, 1200, 1513, 1906, 2401, 3000]
+
+```
+
 ### Usage with UTF-8
 
-For usage with non-ASCII characters, please be sure to that your
-project's source files specify UTF-8 encoding:
+For usage with non-ASCII characters, please be sure that your project's source files specify UTF-8 encoding:
 
 ``` python
 # -*- coding: utf-8 -*-
 ```
 
-If you don't add this encoding, and you have an image with name for
-example 'tiburón.jpeg', you will get the following error trying to run
-your script:
+If you don't add this encoding, and you have an image with name for example 'tiburón.jpeg', you will get the following error trying to run your script:
 
 ``` python
 SyntaxError: Non-ASCII character '***' in file test.py on line 6, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+```
+
+## The `ixlib` Parameter
+
+For security and diagnostic purposes, we sign all requests with the language and version of library used to generate the URL.
+
+This can be disabled by setting `include_library_param` to `False` like so:
+
+``` python
+UrlBuilder('demo.imgix.net', include_library_param=False)
 ```
 
 ## Testing
