@@ -38,9 +38,9 @@ pip install imgix
 To begin creating imgix URLs, import the imgix library and create a URL builder. The URL builder can be reused to create URLs for any images on the domains it is provided.
 
 ``` python
->>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net")
->>> ub.create_url("bridge.png", {'w': 100, 'h': 100})
+from imgix import UrlBuilder
+ub = UrlBuilder("demo.imgix.net")
+ub.create_url("bridge.png", {'w': 100, 'h': 100})
 'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.1.2&w=100'
 
 ```
