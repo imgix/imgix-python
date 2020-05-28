@@ -16,9 +16,9 @@
 - [Usage](#usage)
 - [Signed URLs](#signed-urls)
 - [Srcset Generation](#srcset-generation)
-  - [Fixed Width Images](#fixed-width-images)
+  - [Fixed-Width Images](#fixed-width-images)
     - [Variable Quality](#variable-quality)
-  - [Fluid Width Images](#fluid-width-images)
+  - [Fluid-Width Images](#fluid-width-images)
     - [Custom Widths](#custom-widths)
     - [Width Ranges](#width-ranges)
     - [Width Tolerance](#width-tolerance)
@@ -92,11 +92,11 @@ https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7401
 https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 ```
 
-### Fixed Width Images
+### Fixed-Width Images
 
-In cases where enough information is provided about an image's dimensions, `create_srcset` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed width are `w`, `h`, and `ar`.
+In cases where enough information is provided about an image's dimensions, `create_srcset` will instead build a srcset that will allow for an image to be served at different resolutions. The parameters taken into consideration when determining if an image is fixed-width are `w`, `h`, and `ar`.
 
-By invoking `create_srcset` with either a width **or** the height and aspect ratio (along with `fit=crop`, typically) provided, a different srcset will be generated for a fixed size image instead.
+By invoking `create_srcset` with either a width **or** the height and aspect ratio (along with `fit=crop`, typically) provided, a different srcset will be generated for a fixed-width image instead.
 
 ``` python
 from imgix import UrlBuilder
@@ -120,17 +120,17 @@ For more information to better understand srcset, we highly recommend
 
 #### Variable Quality
 
-This library will automatically append a variable `q` parameter mapped to each `dpr` parameter when generating a [fixed width image](#fixed-width-images) srcset. This technique is commonly used to compensate for the increased file size of high-DPR images.
+This library will automatically append a variable `q` parameter mapped to each `dpr` parameter when generating a [fixed-width image](#fixed-width-images) srcset. This technique is commonly used to compensate for the increased file size of high-DPR images.
 
 Since high-DPR images are displayed at a higher pixel density on devices, image quality can be lowered to reduce overall file size––without sacrificing perceived visual quality. For more information and examples of this technique in action, see [this blog post](https://blog.imgix.com/2016/03/30/dpr-quality).
 
 This behavior will respect any overriding `q` value passed in as a parameter. Additionally, it can be disabled altogether by passing `disable_variable_quality = true` to `create_srcset`.
 
-This behavior specifically occurs when a [fixed width image](#fixed-width-images) is rendered, for example:
+This behavior specifically occurs when a [fixed-width image](#fixed-width-images) is rendered, for example:
 
 ```python
 # Note that `params={"w": 100}` allows `create_srcset` to _infer_ the creation
-# of a DPR based srcset attribute for fixed width images.
+# of a DPR based srcset attribute for fixed-width images.
 ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
 srcset = ub.create_srcset('image.jpg', params={"w": 100}, disable_variable_quality=False)
 ```
@@ -145,7 +145,7 @@ https://demo.imgix.net/image.jpg?w=100&dpr=4&q=23 4x,
 https://demo.imgix.net/image.jpg?w=100&dpr=5&q=20 5x
 ```
 
-### Fluid Width Images
+### Fluid-Width Images
 
 #### Custom Widths
 
@@ -167,7 +167,7 @@ https://demo.imgix.net/image.jpg?w=446 446w,
 https://demo.imgix.net/image.jpg?w=640 640w
 ```
 
-**Note**: in situations where a `srcset` is being rendered as a [fixed width](#fixed-width-images) srcset, any custom `widths` passed in will be ignored.
+**Note**: in situations where a `srcset` is being rendered as a [fixed-width](#fixed-width-images) srcset, any custom `widths` passed in will be ignored.
 
 Additionally, if both `widths` and a width `tol`erance are passed to the `create_srcset` method, the custom widths list will take precedence.
 
