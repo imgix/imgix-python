@@ -203,11 +203,11 @@ https://demo.imgix.net/image.jpg?w=2000 2000w'
 
 The `srcset` width `tol`erance dictates the maximum `tol`erated difference between an image's downloaded size and its rendered size.
 
-For example, setting this value to `10` means that an image will not render more than 10% larger or smaller than its native size. In practice, the image URLs generated for a width-based srcset attribute will grow by twice this rate.
+For example, setting this value to `0.10` means that an image will not render more than 10% larger or smaller than its native size. In practice, the image URLs generated for a width-based srcset attribute will grow by twice this rate.
 
 A lower tolerance means images will render closer to their native size (thereby increasing perceived image quality), but a large srcset list will be generated and consequently users may experience lower rates of cache-hit for pre-rendered images on your site.
 
-By default, srcset width `tol`erance is set to 8 percent, which we consider to be the ideal rate for maximizing cache hits without sacrificing visual quality. Users can specify their own width tolerance by providing a positive scalar value as width `tol`erance:
+By default, srcset width `tol`erance is set to 0.08 (8 percent), which we consider to be the ideal rate for maximizing cache hits without sacrificing visual quality. Users can specify their own width tolerance by providing a positive scalar value as width `tol`erance:
 
 ```python
 >>> import imgix
