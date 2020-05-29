@@ -86,9 +86,9 @@ The above will produce the following srcset attribute value which can then be se
 ``` html
 https://demos.imgix.net/image.png?w=100&s=e415797545a77a9d2842dedcfe539c9a 100w,
 https://demos.imgix.net/image.png?w=116&s=b2da46f5c23ef13d5da30f0a4545f33f 116w,
-https://demos.imgix.net/image.png?w=134&s=b61422dead929f893c04b8ff839bb088 135w,
+https://demos.imgix.net/image.png?w=135&s=b61422dead929f893c04b8ff839bb088 135w,
                                         ...
-https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7401w,
+https://demos.imgix.net/image.png?w=7401&s=ad671301ed4663c3ce6e84cb646acb96 7401w,
 https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 ```
 
