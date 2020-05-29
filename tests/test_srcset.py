@@ -100,7 +100,7 @@ def test_create_srcset_2257_to_4087():
 def test_create_srcset_100_to_108():
     # Test that `tol=1` produces the correct spread.
     ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
-    actual = ub.create_srcset(JPG_PATH, start=100, stop=108, tol=1)
+    actual = ub.create_srcset(JPG_PATH, start=100, stop=108, tol=0.01)
     expected = "https://testing.imgix.net/image.jpg?w=100 100w,\n" + \
         "https://testing.imgix.net/image.jpg?w=102 102w,\n" + \
         "https://testing.imgix.net/image.jpg?w=104 104w,\n" + \

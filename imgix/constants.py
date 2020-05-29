@@ -10,10 +10,10 @@ DOMAIN_PATTERN = re.compile(
 # difference between an image's downloaded size and its rendered size.
 # For example, setting this value to 10 means that an image will not
 # render more than 10% larger or smaller than its native size.
-SRCSET_WIDTH_TOLERANCE = 8
+SRCSET_WIDTH_TOLERANCE = 0.08
 
 # The minimum srcset width tolerance.
-SRCSET_MIN_WIDTH_TOLERANCE = 1
+SRCSET_MIN_WIDTH_TOLERANCE = 0.01
 
 # The default srcset target ratios.
 SRCSET_DPR_TARGET_RATIOS = range(1, 6)

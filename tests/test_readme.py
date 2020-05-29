@@ -26,7 +26,7 @@ def test_readme_500_to_2000():
 
 def test_readme_100_to_384_at_20():
     ub = UrlBuilder(DOMAIN, include_library_param=False)
-    actual = ub.create_srcset(JPG_PATH, start=100, stop=384, tol=20)
+    actual = ub.create_srcset(JPG_PATH, start=100, stop=384, tol=0.20)
     expected = "https://testing.imgix.net/image.jpg?w=100 100w,\n" + \
         "https://testing.imgix.net/image.jpg?w=140 140w,\n" + \
         "https://testing.imgix.net/image.jpg?w=196 196w,\n" + \

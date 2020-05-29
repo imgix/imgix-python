@@ -158,7 +158,7 @@ class UrlBuilder(object):
             Starting minimum width value, MIN_WIDTH by default.
         stop : int, optional
             Stopping maximum width value, MAX_WIDTH by default.
-        tol : int, optional
+        tol : float, optional
             Tolerable amount of width value variation, TOLERANCE by default.
         widths: list, optional
             List of target widths, `TARGET_WIDTHS` by default.
@@ -284,7 +284,7 @@ def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
         Starting minimum width value, MIN_WIDTH by default.
     stop : int, optional
         Stopping maximum width value, MAX_WIDTH by default.
-    tol : int, optional
+    tol : float, optional
         Tolerable amount of image width-variation, TOLERANCE by default.
 
     Returns
@@ -307,7 +307,7 @@ def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
 
     while start < stop and start < MAX_WIDTH:
         resolutions.append(int(round(start)))
-        start *= 1 + (tol / 100.0) * 2
+        start *= 1 + tol * 2
 
     # The most recently appended value may, or may not, be
     # the `stop` value. In order to be inclusive of the
