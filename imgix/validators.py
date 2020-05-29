@@ -106,18 +106,18 @@ def validate_width_tol(value):
     Validate the width tolerance.
 
     This function ensures that the width tolerance `value` is  greater than or
-    equal to 1, where 1 represents a width tolerance of 1%.
+    equal to 0.01, where 0.01 represents a width tolerance of 1%.
 
-    Note: `value` can be either a float or an int, but this is only to yield
-    flexibility to the caller.
+    Note: `value` can be either a float or an int (in the case of 1.0 or 100%),
+    but this is only to yield flexibility to the caller.
 
     Parameters
     ----------
     value : float, int
-        Numerical value, typically within the range of [1, 100]. It can be
-        greater than 100, but no less than 1.
+        Numerical value, typically within the range of [0.01, 1]. It can be
+        greater than 1, but no less than 0.01.
     """
-    invalid_tol_error = 'tolerance `value` must be a positive numerical value'
+    invalid_tol_error = 'tolerance `value` must be >= 0.01'
     assert isinstance(value, (float, int)), invalid_tol_error
     assert ONE_PERCENT <= value, invalid_tol_error
 

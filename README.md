@@ -212,7 +212,7 @@ By default, srcset width `tol`erance is set to 8 percent, which we consider to b
 ```python
 >>> import imgix
 >>> ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
->>> srcset = ub.create_srcset('image.jpg', start=100, stop=384, tol=20)
+>>> srcset = ub.create_srcset('image.jpg', start=100, stop=384, tol=0.20)
 
 ```
 
@@ -233,7 +233,7 @@ The `target_widths` function is used internally to generate lists of target widt
 It is a way to generate, play with, and explore different target widths separately from srcset attributes. One way of generating a srcset attribute is:
 
 ```python
-srcset = ub.create_srcset('image.jpg', start=300, stop=3000, tol=13)
+srcset = ub.create_srcset('image.jpg', start=300, stop=3000, tol=0.13)
 ```
 
 The above is convenient if `start`, `stop`, and `tol`erance are known in advance. Another approach is to use `target_widths` to determine which combination of values for `start`, `stop`, and `tol`erance work best.
@@ -241,7 +241,7 @@ The above is convenient if `start`, `stop`, and `tol`erance are known in advance
 ```python
 >>> from imgix import UrlBuilder, target_widths
 >>> # Create
->>> widths = target_widths(300, 3000, 13)
+>>> widths = target_widths(300, 3000, 0.13)
 >>> widths
 [300, 378, 476, 600, 756, 953, 1200, 1513, 1906, 2401, 3000]
 >>> # Explore
