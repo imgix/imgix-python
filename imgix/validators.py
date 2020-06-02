@@ -152,3 +152,33 @@ def validate_min_max_tol(min_width, max_width, tol):
     """
     validate_range(min_width, max_width)
     validate_width_tol(tol)
+
+
+def validate_widths(width_values):
+    """Validate a list of `width_values`.
+
+    This function checks that a list of `width_values` is non-empty and that
+    no width value is negative.
+
+
+    Parameters
+    ----------
+    values : list
+        A list of width values, typically target width values.
+
+    Raises
+    ------
+    WidthRangeError
+        If the list of `width_values` is empty or `None`, raise.
+    WidthRangeError
+        If any width value within the list is negative, raise.
+    """
+    if not isinstance(width_values, list):
+        raise WidthRangeError('`width_values` must be a `list`')
+
+    if not width_values:
+        raise WidthRangeError('`width_values` cannot be `None` or `[]`')
+
+    any_width_is_negative = any([w for w in width_values if w < 0])
+    if any_width_is_negative:
+        raise WidthRangeError('`width_values` cannot be negative')

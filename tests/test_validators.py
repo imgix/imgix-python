@@ -4,7 +4,7 @@ from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH, \
     IMAGE_ZERO_WIDTH, SRCSET_MIN_WIDTH_TOLERANCE
 
 from imgix.validators import validate_min_width, validate_max_width, \
-    validate_range, validate_min_max_tol
+    validate_range, validate_min_max_tol, validate_widths
 
 from imgix.errors import WidthRangeError, WidthToleranceError
 
@@ -75,3 +75,7 @@ class TestValidators(unittest.TestCase):
         for x, y in enumerate([x for x in range(1, 10)], start=1):
             assert x == y
             validate_range(x, y)
+
+    def test_validate_widths_raise(self):
+        with self.assertRaises(WidthRangeError):
+            validate_widths([2, 3, 4, 5, 6, -7])
