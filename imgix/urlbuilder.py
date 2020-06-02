@@ -223,7 +223,7 @@ class UrlBuilder(object):
         # quality values, 'q', will vary in accordance with the
         # default `DPR_QUALITIES` [1x => q=75, ... 5x => 20].
         #
-        # If 'q' is explicitly passed, it takes precendence over
+        # If 'q' is explicitly passed, it takes precedence over
         # the default `DPR_QUALITIES`. Right now, this means that
         # if 'q' is passed, it's value will be used for the output
         # quality of each dpr image (i.e. for 1x through 5x).
