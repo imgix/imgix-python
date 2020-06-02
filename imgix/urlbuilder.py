@@ -177,25 +177,21 @@ class UrlBuilder(object):
         stop = kwargs.get('stop', None)
         tol = kwargs.get('tol', None)
 
-        # Attempt to generated the target widths specified.
+        # Attempt to generate the specified target widths.
         # Assign defaults where appropriate, then validate
         # this group. If validation succeeds, generate the
         # target widths.
-        generated_targets = None
-        if start or stop or tol:
-            _start = start or MIN_WIDTH
-            _stop = stop or MAX_WIDTH
-            _tol = tol or TOLERANCE
+        if start is None:
+            start = MIN_WIDTH
+        if stop is None:
+            stop = MAX_WIDTH
+        if tol is None:
+            tol = TOLERANCE
 
-            validate_min_max_tol(_start, _stop, _tol)
+        validate_min_max_tol(start, stop, tol)
 
-            generated_targets = \
-                target_widths(start=_start, stop=_stop, tol=_tol)
-
-        # If `generated_targets` have been assigned, use these
-        # targets. Otherwise, no target widths have been generated
-        # and we must assign the default target widths.
-        targets = generated_targets or TARGET_WIDTHS
+        targets = \
+            target_widths(start=start, stop=stop, tol=tol)
 
         if (self._is_dpr(params)):
             disable_variable_quality = \

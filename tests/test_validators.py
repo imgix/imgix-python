@@ -6,52 +6,54 @@ from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH, \
 from imgix.validators import validate_min_width, validate_max_width, \
     validate_range, validate_min_max_tol
 
+from imgix.errors import WidthRangeError, WidthToleranceError
+
 
 class TestValidators(unittest.TestCase):
 
     def test_validate_min_raises(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_min_width(-1)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_min_width("1")
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_min_width(IMAGE_ZERO_WIDTH)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_min_width([-1])
 
     def test_validate_max_raises(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_max_width(-1)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_max_width("1")
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_max_width(IMAGE_ZERO_WIDTH)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_max_width([-1])
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_max_width(IMAGE_MAX_WIDTH+1)
 
     def test_validate_range_raises(self):
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_range(IMAGE_ZERO_WIDTH, IMAGE_ZERO_WIDTH)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_range(IMAGE_ZERO_WIDTH, IMAGE_MAX_WIDTH)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthRangeError):
             validate_range(IMAGE_MAX_WIDTH, IMAGE_MIN_WIDTH)
 
     def test_validate_min_max_tol_raises(self):
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(WidthToleranceError):
             # `IMAGE_ZERO_WIDTH` is being used to
             # simulate a `tol` < ONE_PERCENT.
             validate_min_max_tol(

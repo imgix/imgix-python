@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import imgix
+import unittest
 import hashlib
 import re
 
+from imgix.errors import WidthRangeError, WidthToleranceError
 from imgix.constants import DPR_QUALITIES
 from imgix.constants import SRCSET_TARGET_WIDTHS as TARGET_WIDTHS
 from imgix.constants import IMAGE_MIN_WIDTH, IMAGE_MAX_WIDTH
@@ -360,3 +362,15 @@ def test_given_width_params_not_altered():
     _default_srcset(params)
 
     assert params == {'w': 100}
+
+
+class TestSrcsetRaises(unittest.TestCase):
+    def test_start_0_raises(self):
+        ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+        with self.assertRaises(WidthRangeError):
+            ub.create_srcset(JPG_PATH, start=0)
+
+    def test_tol_0_raises(self):
+        ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+        with self.assertRaises(WidthToleranceError):
+            ub.create_srcset(JPG_PATH, tol=0)

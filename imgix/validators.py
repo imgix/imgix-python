@@ -1,3 +1,4 @@
+from .errors import WidthRangeError, WidthToleranceError
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_ZERO_WIDTH as ZERO_WIDTH
 from .constants import SRCSET_MIN_WIDTH_TOLERANCE as ONE_PERCENT
@@ -27,12 +28,14 @@ def validate_min_width(value):
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = '`min_width` must be a positive ' \
+    invalid_width_type_error = '`start` width must be a positive ' \
         '`float` or `int`'
-    assert isinstance(value, (float, int)), invalid_width_error
+    if not isinstance(value, (float, int)):
+        raise WidthRangeError(invalid_width_type_error)
 
-    invalid_min_error = '`min_width` must be greater than zero'
-    assert value > ZERO_WIDTH, invalid_min_error
+    invalid_min_error = '`start` width must be greater than zero'
+    if not value > ZERO_WIDTH:
+        raise WidthRangeError(invalid_min_error)
 
 
 def validate_max_width(value):
@@ -61,12 +64,16 @@ def validate_max_width(value):
     value : float, int
         A valid `value` must be a positive numerical value.
     """
-    invalid_width_error = '`max_width` must be a positive ' \
+    invalid_width_error = '`stop` width value must be a positive ' \
         '`float` or `int`'
-    assert isinstance(value, (float, int)), invalid_width_error
+    if not isinstance(value, (float, int)):
+        raise WidthRangeError(invalid_width_error)
 
-    invalid_max_error = '`max_width` must be <= 8192.0'
-    assert ZERO_WIDTH < value <= MAX_WIDTH, invalid_max_error
+    invalid_max_error = \
+        '`stop` width value must be > 0 && <= `constants.IMAGE_MAX_WIDTH`'
+
+    if not ZERO_WIDTH < value <= MAX_WIDTH:
+        raise WidthRangeError(invalid_max_error)
 
 
 def validate_range(min_width, max_width):
@@ -97,8 +104,9 @@ def validate_range(min_width, max_width):
     validate_min_width(min_width)
     validate_max_width(max_width)
 
-    invalid_range_error = '`min_width` must be less than `max_width`'
-    assert min_width <= max_width, invalid_range_error
+    invalid_range_error = '`start` width must be less than `stop` width'
+    if not min_width <= max_width:
+        raise WidthRangeError(invalid_range_error)
 
 
 def validate_width_tol(value):
@@ -117,9 +125,12 @@ def validate_width_tol(value):
         Numerical value, typically within the range of [0.01, 1]. It can be
         greater than 1, but no less than 0.01.
     """
-    invalid_tol_error = 'tolerance `value` must be >= 0.01'
-    assert isinstance(value, (float, int)), invalid_tol_error
-    assert ONE_PERCENT <= value, invalid_tol_error
+    invalid_tol_error = '`tol`erance value must be >= 0.01'
+    if not isinstance(value, (float, int)):
+        raise WidthToleranceError(invalid_tol_error)
+
+    if not ONE_PERCENT <= value:
+        raise WidthToleranceError(invalid_tol_error)
 
 
 def validate_min_max_tol(min_width, max_width, tol):
