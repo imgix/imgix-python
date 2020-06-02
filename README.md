@@ -86,9 +86,9 @@ The above will produce the following srcset attribute value which can then be se
 ``` html
 https://demos.imgix.net/image.png?w=100&s=e415797545a77a9d2842dedcfe539c9a 100w,
 https://demos.imgix.net/image.png?w=116&s=b2da46f5c23ef13d5da30f0a4545f33f 116w,
-https://demos.imgix.net/image.png?w=134&s=b61422dead929f893c04b8ff839bb088 135w,
+https://demos.imgix.net/image.png?w=135&s=b61422dead929f893c04b8ff839bb088 135w,
                                         ...
-https://demos.imgix.net/image.png?w=7400&s=ad671301ed4663c3ce6e84cb646acb96 7401w,
+https://demos.imgix.net/image.png?w=7401&s=ad671301ed4663c3ce6e84cb646acb96 7401w,
 https://demos.imgix.net/image.png?w=8192&s=a0fed46e2bbcc70ded13dc629aee5398 8192w
 ```
 
@@ -203,11 +203,11 @@ https://demo.imgix.net/image.jpg?w=2000 2000w'
 
 The `srcset` width `tol`erance dictates the maximum `tol`erated difference between an image's downloaded size and its rendered size.
 
-For example, setting this value to `10` means that an image will not render more than 10% larger or smaller than its native size. In practice, the image URLs generated for a width-based srcset attribute will grow by twice this rate.
+For example, setting this value to `0.10` means that an image will not render more than 10% larger or smaller than its native size. In practice, the image URLs generated for a width-based srcset attribute will grow by twice this rate.
 
 A lower tolerance means images will render closer to their native size (thereby increasing perceived image quality), but a large srcset list will be generated and consequently users may experience lower rates of cache-hit for pre-rendered images on your site.
 
-By default, srcset width `tol`erance is set to 8 percent, which we consider to be the ideal rate for maximizing cache hits without sacrificing visual quality. Users can specify their own width tolerance by providing a positive scalar value as width `tol`erance:
+By default, srcset width `tol`erance is set to 0.08 (8 percent), which we consider to be the ideal rate for maximizing cache hits without sacrificing visual quality. Users can specify their own width tolerance by providing a positive scalar value as width `tol`erance:
 
 ```python
 >>> import imgix
