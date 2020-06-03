@@ -7,7 +7,7 @@ from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
 from .constants import SRCSET_WIDTH_TOLERANCE as TOLERANCE
 from .constants import DPR_QUALITIES
-from .validators import validate_min_max_tol
+from .validators import validate_min_max_tol, validate_widths
 from .urlhelper import UrlHelper
 
 
@@ -167,9 +167,10 @@ class UrlBuilder(object):
         str
             Srcset attribute string.
         """
-        targets_list = kwargs.get('widths', None)
-        if targets_list:
-            return self._build_srcset_pairs(path, params, targets=targets_list)
+        widths_list = kwargs.get('widths', None)
+        if widths_list:
+            validate_widths(widths_list)
+            return self._build_srcset_pairs(path, params, targets=widths_list)
 
         # Attempt to assign `start`, `stop`, and `tol` from `kwargs`.
         # If the key does not exist, assign `None`.
@@ -177,25 +178,21 @@ class UrlBuilder(object):
         stop = kwargs.get('stop', None)
         tol = kwargs.get('tol', None)
 
-        # Attempt to generated the target widths specified.
+        # Attempt to generate the specified target widths.
         # Assign defaults where appropriate, then validate
         # this group. If validation succeeds, generate the
         # target widths.
-        generated_targets = None
-        if start or stop or tol:
-            _start = start or MIN_WIDTH
-            _stop = stop or MAX_WIDTH
-            _tol = tol or TOLERANCE
+        if start is None:
+            start = MIN_WIDTH
+        if stop is None:
+            stop = MAX_WIDTH
+        if tol is None:
+            tol = TOLERANCE
 
-            validate_min_max_tol(_start, _stop, _tol)
+        validate_min_max_tol(start, stop, tol)
 
-            generated_targets = \
-                target_widths(start=_start, stop=_stop, tol=_tol)
-
-        # If `generated_targets` have been assigned, use these
-        # targets. Otherwise, no target widths have been generated
-        # and we must assign the default target widths.
-        targets = generated_targets or TARGET_WIDTHS
+        targets = \
+            target_widths(start=start, stop=stop, tol=tol)
 
         if (self._is_dpr(params)):
             disable_variable_quality = \
@@ -227,7 +224,7 @@ class UrlBuilder(object):
         # quality values, 'q', will vary in accordance with the
         # default `DPR_QUALITIES` [1x => q=75, ... 5x => 20].
         #
-        # If 'q' is explicitly passed, it takes precendence over
+        # If 'q' is explicitly passed, it takes precedence over
         # the default `DPR_QUALITIES`. Right now, this means that
         # if 'q' is passed, it's value will be used for the output
         # quality of each dpr image (i.e. for 1x through 5x).
