@@ -1,7 +1,15 @@
 Changelog
 =========
+ 
+[3.2.0](https://github.com/imgix/imgix-python/compare/3.1.2...3.2.0) (2020-06-05)
+---------------------------------------------------------------------------------
+- feat: create custom srcset ([#63](https://github.com/imgix/imgix-python/pull/63))
+- feat: introduce variable image output quality ([#65](https://github.com/imgix/imgix-python/pull/65))
+- fix: remove ensure even ([#72](https://github.com/imgix/imgix-python/pull/72))
+- feat: throw exceptions from validators ([#77](https://github.com/imgix/imgix-python/pull/77))
+- fix: convert tol to float ([#75](https://github.com/imgix/imgix-python/pull/75))
 
-[3.1.2](https://github.com/imgix/imgix-python/compare/3.1.1...3.1.2) (2019-03-11)
+[3.1.2](https://github.com/imgix/imgix-python/compare/3.1.1...3.1.2) (2020-03-11)
 ---------------------------------------------------------------------------------
 
 - Fix Python 2/3 compatibility issues
