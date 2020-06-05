@@ -41,7 +41,7 @@ To begin creating imgix URLs, import the imgix library and create a URL builder.
 >>> from imgix import UrlBuilder
 >>> ub = UrlBuilder("demo.imgix.net")
 >>> ub.create_url("bridge.png", {'w': 100, 'h': 100})
-'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.1.2&w=100'
+'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.2.0&w=100'
 
 ```
 
@@ -63,7 +63,7 @@ To produce a signed URL, you must enable secure URLs on your source and then pro
 >>> from imgix import UrlBuilder
 >>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234")
 >>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
-'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.1.2&w=100&s=734a86bd4b1353e1d033e0892fcdad3d'
+'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.2.0&w=100&s=734a86bd4b1353e1d033e0892fcdad3d'
 
 ```
 
