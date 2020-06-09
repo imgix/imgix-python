@@ -39,9 +39,9 @@ To begin creating imgix URLs, import the imgix library and create a URL builder.
 
 ``` python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net")
+>>> ub = UrlBuilder("demo.imgix.net", include_library_param=False)
 >>> ub.create_url("bridge.png", {'w': 100, 'h': 100})
-'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.2.0&w=100'
+'https://demo.imgix.net/bridge.png?h=100&w=100'
 
 ```
 
@@ -61,9 +61,9 @@ To produce a signed URL, you must enable secure URLs on your source and then pro
 
 ``` python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234")
+>>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234", include_library_param=False)
 >>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
-'https://demo.imgix.net/bridge.png?h=100&ixlib=python-3.2.0&w=100&s=734a86bd4b1353e1d033e0892fcdad3d'
+'https://demo.imgix.net/bridge.png?h=100&w=100&s=bb8f3a2ab832e35997456823272103a4'
 
 ```
 
@@ -132,6 +132,7 @@ This behavior specifically occurs when a [fixed-width image](#fixed-width-images
 # Note that `params={"w": 100}` allows `create_srcset` to _infer_ the creation
 # of a DPR based srcset attribute for fixed-width images.
 ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
+# Set `disable_variable_quality` to True to disable variable quality.
 srcset = ub.create_srcset('image.jpg', params={"w": 100}, disable_variable_quality=False)
 ```
 
