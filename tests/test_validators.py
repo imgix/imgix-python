@@ -8,9 +8,10 @@ from imgix.validators import validate_min_width, validate_max_width, \
 
 from imgix.errors import WidthRangeError, WidthToleranceError
 
+LESS_THAN_ZERO = IMAGE_ZERO_WIDTH - 1
+
 
 class TestValidators(unittest.TestCase):
-
     def test_validate_min_raises(self):
         with self.assertRaises(WidthRangeError):
             validate_min_width(-1)
@@ -19,7 +20,7 @@ class TestValidators(unittest.TestCase):
             validate_min_width("1")
 
         with self.assertRaises(WidthRangeError):
-            validate_min_width(IMAGE_ZERO_WIDTH)
+            validate_min_width(LESS_THAN_ZERO)
 
         with self.assertRaises(WidthRangeError):
             validate_min_width([-1])
@@ -32,13 +33,10 @@ class TestValidators(unittest.TestCase):
             validate_max_width("1")
 
         with self.assertRaises(WidthRangeError):
-            validate_max_width(IMAGE_ZERO_WIDTH)
+            validate_max_width(LESS_THAN_ZERO)
 
         with self.assertRaises(WidthRangeError):
             validate_max_width([-1])
-
-        with self.assertRaises(WidthRangeError):
-            validate_max_width(IMAGE_MAX_WIDTH+1)
 
     def test_validate_range_raises(self):
 
