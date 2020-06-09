@@ -1,5 +1,4 @@
 from .errors import WidthRangeError, WidthToleranceError
-from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_ZERO_WIDTH as ZERO_WIDTH
 from .constants import SRCSET_MIN_WIDTH_TOLERANCE as ONE_PERCENT
 
@@ -33,7 +32,8 @@ def validate_min_width(value):
     if not isinstance(value, (float, int)):
         raise WidthRangeError(invalid_width_type_error)
 
-    invalid_min_error = '`start` width must be greater than zero'
+    invalid_min_error = \
+        '`start` width must be greater than, or equal to, zero'
     if not value > ZERO_WIDTH:
         raise WidthRangeError(invalid_min_error)
 
@@ -70,9 +70,9 @@ def validate_max_width(value):
         raise WidthRangeError(invalid_width_error)
 
     invalid_max_error = \
-        '`stop` width value must be > 0 && <= `constants.IMAGE_MAX_WIDTH`'
+        '`stop` width value must be greater than, or equal to, zero'
 
-    if not ZERO_WIDTH < value <= MAX_WIDTH:
+    if not ZERO_WIDTH <= value:
         raise WidthRangeError(invalid_max_error)
 
 
