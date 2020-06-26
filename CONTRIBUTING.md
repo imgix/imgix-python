@@ -47,7 +47,7 @@ tox -e p27-compat  # Python 2.7 with future compatibility aliases
 Publishing to PyPI
 ------------------
 
-To publish a new version of the package to PyPI, increment the version in [imgix/__init__.py](https://github.com/imgix/imgix-python/blob/master/imgix/__init__.py) run the following:
+To publish a new version of the package to PyPI, increment the version in [imgix/__init__.py](https://github.com/imgix/imgix-python/blob/main/imgix/__init__.py) run the following:
 
 ```bash
 pip install wheel
