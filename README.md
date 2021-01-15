@@ -8,6 +8,7 @@
 ![Downloads](https://img.shields.io/pypi/dm/imgix)
 ![Python Versions](https://img.shields.io/pypi/pyversions/imgix)
 [![License](https://img.shields.io/github/license/imgix/imgix-python)](https://github.com/imgix/imgix-python/blob/main/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fimgix-python.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fimgix-python?ref=badge_shield)
 
 ---
 <!-- /ix-docs-ignore -->
@@ -16,16 +17,17 @@
 - [Usage](#usage)
 - [Signed URLs](#signed-urls)
 - [Srcset Generation](#srcset-generation)
-  - [Fixed-Width Images](#fixed-width-images)
-    - [Variable Quality](#variable-quality)
-  - [Fluid-Width Images](#fluid-width-images)
-    - [Custom Widths](#custom-widths)
-    - [Width Ranges](#width-ranges)
-    - [Width Tolerance](#width-tolerance)
-    - [Explore Target Widths](#explore-target-widths)
-  - [Usage with UTF-8](#usage-with-utf-8)
+    * [Fixed-Width Images](#fixed-width-images)
+        + [Variable Quality](#variable-quality)
+    * [Fluid-Width Images](#fluid-width-images)
+        + [Custom Widths](#custom-widths)
+        + [Width Ranges](#width-ranges)
+        + [Width Tolerance](#width-tolerance)
+        + [Explore Target Widths](#explore-target-widths)
+    * [Usage with UTF-8](#usage-with-utf-8)
 - [The `ixlib` Parameter](#the-ixlib-parameter)
 - [Testing](#testing)
+- [License](#license)
 
 ## Installation
 
@@ -291,3 +293,6 @@ tox
 ```
 
 If you have cloned this repo or downloaded it locally, you can also run `python -m doctest -v README.md` to test the examples in this readme.
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fimgix-python.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fimgix-python?ref=badge_large)
