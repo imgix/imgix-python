@@ -16,6 +16,19 @@ TOKEN = 'MYT0KEN'
 JPG_PATH = 'image.jpg'
 
 
+def extract_descriptors(srcset=""):
+    def extract_descriptor(url=""):
+        # Split on space
+        split_url = url.split(" ")
+        if len(split_url) == 2:
+            # Remember to remove the commas.
+            return split_url[1].replace(",", "")
+        else:
+            return ""
+    split_srcset = srcset.split("\n")
+    return [extract_descriptor(u) for u in split_srcset]
+
+
 def _default_srcset(params={}):
     ub = imgix.UrlBuilder(domain=DOMAIN,
                           sign_key=TOKEN,
@@ -177,8 +190,8 @@ def test_given_width_signs_urls():
 
 def test_given_height_srcset_generates_pairs():
     srcset = _default_srcset({'h': 100})
-    expected_number_of_pairs = 31
-    assert(expected_number_of_pairs == len(srcset.split(',')))
+    expected_dpr_urls = 5
+    assert(expected_dpr_urls == len(srcset.split(',')))
 
 
 def test_given_height_respects_parameter():
@@ -189,33 +202,10 @@ def test_given_height_respects_parameter():
         assert('h=100' in src)
 
 
-def test_given_height_srcset_pairs_within_bounds():
+def test_height_based_srcset_has_dpr_values():
     srcset = _default_srcset({'h': 100})
-    srclist = srcset.split(',')
-
-    min_parsed = srclist[0].split(' ')[1]
-    max_parsed = srclist[-1].split(' ')[1]
-    min_width = _parse_width(min_parsed)
-    max_width = _parse_width(max_parsed)
-
-    assert(min_width >= IMAGE_MIN_WIDTH)
-    assert(max_width <= IMAGE_MAX_WIDTH)
-
-
-# a 17% testing threshold is used to account for rounding
-def test_given_height_srcset_iterates_17_percent():
-    increment_allowed = 0.17
-    srcset = _default_srcset({'h': 100})
-    srcslist = srcset.split(',')
-    widths_list = [src.split(' ')[1] for src in srcslist]
-    # a list of all widths as integers
-    widths = [_parse_width(width) for width in widths_list]
-
-    prev = widths[0]
-    for i in range(1, len(widths)):
-        width = widths[i]
-        assert((width / prev) < (1 + increment_allowed))
-        prev = width
+    descriptors = extract_descriptors(srcset)
+    assert(descriptors == ["1x", "2x", "3x", "4x", "5x"])
 
 
 def test_given_height_srcset_signs_urls():

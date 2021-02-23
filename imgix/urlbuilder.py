@@ -46,6 +46,7 @@ class UrlBuilder(object):
         ratio are passed in as parameters. Otherwise will generate a srcset
         with width-descriptor pairs.
     """
+
     def __init__(
             self,
             domain,
@@ -194,7 +195,7 @@ class UrlBuilder(object):
         targets = \
             target_widths(start=start, stop=stop, tol=tol)
 
-        if (self._is_dpr(params)):
+        if 'w' in params or 'h' in params:
             disable_variable_quality = \
                 kwargs.get('disable_variable_quality', False)
             return self._build_srcset_DPR(
@@ -248,13 +249,6 @@ class UrlBuilder(object):
                                   " " + str(dpr) + "x")
 
         return ",\n".join(srcset_entries)
-
-    def _is_dpr(self, params):
-        has_width = 'w' in params
-        has_height = 'h' in params
-        has_aspect_ratio = 'ar' in params
-
-        return has_width or (has_height and has_aspect_ratio)
 
 
 def target_widths(start=MIN_WIDTH, stop=MAX_WIDTH, tol=TOLERANCE):
