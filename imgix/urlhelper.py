@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from base64 import urlsafe_b64encode
-from future.moves.urllib.parse import quote, urlunparse
-from future.utils import iteritems
 import hashlib
+from urllib.parse import quote, urlunparse
+from base64 import urlsafe_b64encode
 
-from .compat import b
 from ._version import __version__
 
 
@@ -38,6 +36,7 @@ class UrlHelper(object):
     set_parameter(key, value)
     delete_parameter(key)
     """
+
     def __init__(
             self,
             domain,
@@ -54,7 +53,7 @@ class UrlHelper(object):
         self._include_library_param = include_library_param
         self._parameters = {}
 
-        for key, value in iteritems(params):
+        for key, value in params.items():
             self.set_parameter(key, value)
 
     @classmethod
@@ -76,7 +75,7 @@ class UrlHelper(object):
 
         if key.endswith('64'):
             value = urlsafe_b64encode(value.encode('utf-8'))
-            value = value.replace(b('='), b(''))
+            value = value.replace(b'=', b'')
 
         self._parameters[key] = value
 
@@ -98,7 +97,7 @@ class UrlHelper(object):
 
     def _str_is_ascii(self, s):
         try:
-            b(s).decode('ascii')
+            s.decode('ascii')
             return True
         except Exception:
             return False
