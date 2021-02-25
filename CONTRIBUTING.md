@@ -38,10 +38,8 @@ every pull request.
 
 To run tests in a specific environment:
 ```
-tox -e p27  # Python 2.7
 tox -e core  # Your local Python version
 tox -e flake8  # To run the linter
-tox -e p27-compat  # Python 2.7 with future compatibility aliases
 ```
 
 Publishing to PyPI
