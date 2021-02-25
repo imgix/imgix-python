@@ -38,6 +38,24 @@ def test_create_url_with_path():
     assert url == "https://my-social-network.imgix.net/users/1.png"
 
 
+def test_create_url_with_empty_path():
+    builder = _default_builder()
+    url = builder.create_url("")
+    assert url == "https://my-social-network.imgix.net"
+
+
+def test_create_url_with_default_args():
+    builder = _default_builder()
+    url = builder.create_url()
+    assert url == "https://my-social-network.imgix.net"
+
+
+def test_create_url_with_params_without_path():
+    builder = _default_builder()
+    url = builder.create_url(params={"w": 100, "h": 200})
+    assert url == "https://my-social-network.imgix.net?h=200&w=100"
+
+
 def test_create_url_with_path_and_parameters():
     builder = _default_builder()
     url = builder.create_url("/users/1.png", {"w": 400, "h": 300})
