@@ -127,8 +127,8 @@ class UrlBuilder(object):
         _path = path[:]
         # If the path is prefixed with a forward slash,
         # remove it.
-        if path[0] == "/":
-            _path = path[1:]
+        if _path[0] == "/":
+            _path = _path[1:]
 
         # Encode the path without a leading forward slash,
         # then add it back before returning.
