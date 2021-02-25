@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import imgix
 
-from future.moves.urllib.parse import urlparse
 from imgix import constants
 from imgix import urlbuilder
+from urllib.parse import urlparse
 from imgix.constants import IMAGE_MAX_WIDTH, IMAGE_MIN_WIDTH
 
 
