@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import imgix
 
-from future.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 from imgix.urlhelper import UrlHelper
 
 

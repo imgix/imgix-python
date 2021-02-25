@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 import re
+import hashlib
 
-from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS as TARGET_WIDTHS
-from .constants import SRCSET_DPR_TARGET_RATIOS as TARGET_RATIOS
+from ._version import __version__
+
+
+from base64 import urlsafe_b64encode
+from urllib.parse import quote_plus, quote
+from .validators import validate_min_max_tol, validate_widths
+
+from .constants import DPR_QUALITIES
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
 from .constants import IMAGE_MIN_WIDTH as MIN_WIDTH
 from .constants import SRCSET_WIDTH_TOLERANCE as TOLERANCE
-from .constants import DPR_QUALITIES
-from .validators import validate_min_max_tol, validate_widths
-from .urlhelper import UrlHelper
+from .constants import SRCSET_DPR_TARGET_RATIOS as TARGET_RATIOS
+from .constants import DOMAIN_PATTERN, SRCSET_TARGET_WIDTHS as TARGET_WIDTHS
 
 
 class UrlBuilder(object):
@@ -83,7 +89,7 @@ class UrlBuilder(object):
         if re.match(DOMAIN_PATTERN, domain) is None:
             raise ValueError(err_str)
 
-    def create_url(self, path, params=None):
+    def create_url(self, path="", params={}):
         """
         Create URL with supplied path and `params` parameters dict.
 
@@ -101,21 +107,76 @@ class UrlBuilder(object):
         str
             imgix URL
         """
-        if not params:
-            params = {}
+        sanitized_path = self._sanitize_path(path)
 
-        domain = self._domain
+        query_string = self._build_params(params)
+        if self._sign_key:
+            query_string = self._sign_url(sanitized_path, query_string)
+
         scheme = "https" if self._use_https else "http"
 
-        url_obj = UrlHelper(
-            domain,
-            path,
-            scheme,
-            sign_key=self._sign_key,
-            include_library_param=self._include_library_param,
-            params=params)
+        return scheme + "://" \
+            + self._domain \
+            + sanitized_path \
+            + query_string
 
-        return str(url_obj)
+    def _sanitize_path(self, path):
+        if not path:
+            return ""
+
+        _path = path[:]
+        # If the path is prefixed with a forward slash,
+        # remove it.
+        if path[0] == "/":
+            _path = path[1:]
+
+        # Encode the path without a leading forward slash,
+        # then add it back before returning.
+        if _path.startswith("http"):
+            return "/" + self._encode_proxy_path(_path)
+        else:
+            return "/" + self._encode_file_path(_path)
+
+    def _encode_file_path(self, path):
+        # WIP
+        return quote(path)
+
+    def _encode_proxy_path(self, path):
+        # WIP
+        return quote_plus(path)
+
+    def _build_params(self, params):
+        # Stringify all param values.
+        _params = {quote(k): str(v) for k, v in params.items()}
+
+        if self._include_library_param:
+            _params["ixlib"] = "python-" + __version__
+
+        for k, v in _params.items():
+            # Base64 encode any params whose keys end with '64'.
+            # The encoding function uses '=' as padding so we replace
+            # those with ''.
+            if k.endswith("64"):
+                # First we call encode on v to get a bytes-like object,
+                # then after replacing any padding characters that may
+                # be present, we call decode to get back a string object.
+                _params[k] = urlsafe_b64encode(
+                    v.encode('utf-8')).replace(b"=", b'').decode("utf-8")
+            else:
+                # quote_plus will encode SPACE (' ') as PLUS (+). If a
+                # PLUS (+) is present, e.g. "Futura+Condensed Medium",
+                # it will be encoded as "Futura%2BCondensed+Medium".
+                _params[k] = quote_plus(v).replace("+", "%20")
+
+        query_string = [f'{k}={_params[k]}' for k in sorted(_params.keys())]
+        delimeter = "?" if query_string else ""
+        return delimeter + "&".join(query_string)
+
+    def _sign_url(self, prefixed_path, query_string):
+        signature_base = self._sign_key + prefixed_path + query_string
+        signature = hashlib.md5(signature_base.encode('utf-8')).hexdigest()
+        delimeter = "&s=" if query_string else "?s="
+        return query_string + delimeter + signature
 
     def create_srcset(self, path, params={}, **kwargs):
         """
