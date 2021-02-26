@@ -126,6 +126,27 @@ def test_create_url_with_fully_qualified_url_and_parameters():
         "?h=300&w=400&s=a201fe1a3caef4944dcb40f6ce99e746"
 
 
+def test_create_url_with_unicode_path():
+    builder = _default_builder()
+    url = builder.create_url("ساندویچ.jpg")
+    assert url == "https://my-social-network.imgix.net/" \
+        "%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg"
+
+
+def test_create_url_with_spaces_brackets_in_path():
+    builder = _default_builder()
+    url = builder.create_url(r" <>[]{}|\^%.jpg")
+    assert url == "https://my-social-network.imgix.net/" \
+        "%20%3C%3E%5B%5D%7B%7D%7C%5C%5E%25.jpg"
+
+
+def test_create_url_with_questionable_chars_in_path():
+    builder = _default_builder()
+    url = builder.create_url("&$+,:;=?@#.jpg")
+    assert url == "https://my-social-network.imgix.net/" \
+        "&$%2B,%3A;=%3F@%23.jpg"
+
+
 def test_use_https():
     # Defaults to https
     builder = imgix.UrlBuilder('my-social-network.imgix.net')

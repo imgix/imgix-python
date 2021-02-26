@@ -110,6 +110,7 @@ class UrlBuilder(object):
         sanitized_path = self._sanitize_path(path)
 
         query_string = self._build_params(params)
+
         if self._sign_key:
             query_string = self._sign_url(sanitized_path, query_string)
 
@@ -138,8 +139,7 @@ class UrlBuilder(object):
             return "/" + self._encode_file_path(_path)
 
     def _encode_file_path(self, path):
-        # WIP
-        return quote(path)
+        return quote(path, safe="/&$;=@,")
 
     def _encode_proxy_path(self, path):
         # WIP
