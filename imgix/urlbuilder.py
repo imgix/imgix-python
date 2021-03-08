@@ -142,7 +142,6 @@ class UrlBuilder(object):
         return quote(path, safe="/&$;=@,")
 
     def _encode_proxy_path(self, path):
-        # WIP
         return quote_plus(path)
 
     def _build_params(self, params):
