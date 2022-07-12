@@ -41,7 +41,7 @@ To begin creating imgix URLs, import the imgix library and create a URL builder.
 
 ``` python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net", include_library_param=False)
+>>> ub = UrlBuilder("demo.imgix.net")
 >>> ub.create_url("bridge.png", {'w': 100, 'h': 100})
 'https://demo.imgix.net/bridge.png?h=100&w=100'
 
@@ -51,7 +51,7 @@ _HTTPS_ support is enabled by default. _HTTP_ can be toggled on by setting `use_
 
 ``` python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net", use_https=False, include_library_param=False)
+>>> ub = UrlBuilder("demo.imgix.net", use_https=False)
 >>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
 'http://demo.imgix.net/bridge.png?h=100&w=100'
 
@@ -63,7 +63,7 @@ To produce a signed URL, you must enable secure URLs on your source and then pro
 
 ``` python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234", include_library_param=False)
+>>> ub = UrlBuilder("demo.imgix.net", sign_key="test1234")
 >>> ub.create_url("/bridge.png", {'w': 100, 'h': 100})
 'https://demo.imgix.net/bridge.png?h=100&w=100&s=bb8f3a2ab832e35997456823272103a4'
 
@@ -79,7 +79,7 @@ from imgix import UrlBuilder
 
 # Keep Your Secrets Safe!
 SECRET = os.getenv("IX_SIGN_KEY")
-ub = UrlBuilder("demos.imgix.net", sign_key=SECRET, include_library_param=False)
+ub = UrlBuilder("demos.imgix.net", sign_key=SECRET)
 srcset = ub.create_srcset("image.png")
 ```
 
@@ -102,7 +102,7 @@ By invoking `create_srcset` with either a width **or** the height and aspect rat
 
 ``` python
 from imgix import UrlBuilder
->>> ub = UrlBuilder("demos.imgix.net", sign_key="my-token", include_library_param=False)
+>>> ub = UrlBuilder("demos.imgix.net", sign_key="my-token")
 >>> srcset = ub.create_srcset("image.png", {'h':800, 'ar':'3:2', 'fit':'crop'})
 
 ```
@@ -133,7 +133,7 @@ This behavior specifically occurs when a [fixed-width image](#fixed-width-images
 ```python
 # Note that `params={"w": 100}` allows `create_srcset` to _infer_ the creation
 # of a DPR based srcset attribute for fixed-width images.
-ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
+ub = imgix.UrlBuilder('demo.imgix.net')
 # Set `disable_variable_quality` to True to disable variable quality.
 srcset = ub.create_srcset('image.jpg', params={"w": 100}, disable_variable_quality=False)
 ```
@@ -156,7 +156,7 @@ In situations where specific widths are desired when generating `srcset` pairs, 
 
 ``` python
 >>> from imgix import UrlBuilder
->>> builder = UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> builder = UrlBuilder('demo.imgix.net')
 >>> builder.create_srcset('image.jpg', widths=[144, 240, 320, 446, 640])
 'https://demo.imgix.net/image.jpg?w=144 144w,\nhttps://demo.imgix.net/image.jpg?w=240 240w,\nhttps://demo.imgix.net/image.jpg?w=320 320w,\nhttps://demo.imgix.net/image.jpg?w=446 446w,\nhttps://demo.imgix.net/image.jpg?w=640 640w'
 
@@ -180,7 +180,7 @@ In certain circumstances, you may want to limit the minimum or maximum value of 
 
 ```python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> ub = UrlBuilder('demo.imgix.net')
 >>> ub.create_srcset('image.jpg', start=500, stop=2000)
 'https://demo.imgix.net/image.jpg?w=500 500w,\nhttps://demo.imgix.net/image.jpg?w=580 580w,\nhttps://demo.imgix.net/image.jpg?w=673 673w,\nhttps://demo.imgix.net/image.jpg?w=780 780w,\nhttps://demo.imgix.net/image.jpg?w=905 905w,\nhttps://demo.imgix.net/image.jpg?w=1050 1050w,\nhttps://demo.imgix.net/image.jpg?w=1218 1218w,\nhttps://demo.imgix.net/image.jpg?w=1413 1413w,\nhttps://demo.imgix.net/image.jpg?w=1639 1639w,\nhttps://demo.imgix.net/image.jpg?w=1901 1901w,\nhttps://demo.imgix.net/image.jpg?w=2000 2000w'
 
@@ -214,7 +214,7 @@ By default, srcset width `tol`erance is set to 0.08 (8 percent), which we consid
 
 ```python
 >>> import imgix
->>> ub = imgix.UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> ub = imgix.UrlBuilder('demo.imgix.net')
 >>> srcset = ub.create_srcset('image.jpg', start=100, stop=384, tol=0.20)
 
 ```
@@ -253,7 +253,7 @@ The above is convenient if `start`, `stop`, and `tol`erance are known in advance
 >>> widths
 [378, 600, 953, 1513, 2401]
 >>> # Serve
->>> ub = UrlBuilder('demo.imgix.net', include_library_param=False)
+>>> ub = UrlBuilder('demo.imgix.net')
 >>> srcset = ub.create_srcset('image.png', widths=widths)
 >>> srcset
 'https://demo.imgix.net/image.png?w=378 378w,\nhttps://demo.imgix.net/image.png?w=600 600w,\nhttps://demo.imgix.net/image.png?w=953 953w,\nhttps://demo.imgix.net/image.png?w=1513 1513w,\nhttps://demo.imgix.net/image.png?w=2401 2401w'
