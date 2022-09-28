@@ -141,7 +141,7 @@ tox -e flake8  # To run the linter
 
 ## Release
 
-To publish a new version of the package to PyPI, increment the version in [imgix/**init**.py](https://github.com/imgix/imgix-python/blob/main/imgix/__init__.py) run the following:
+To publish a new version of the package to PyPI, increment the version in [imgix/__init__.py](https://github.com/imgix/imgix-python/blob/main/imgix/__init__.py) run the following:
 
 ```bash
 pip install wheel
