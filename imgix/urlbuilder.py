@@ -137,7 +137,7 @@ class UrlBuilder(object):
 
         # Encode the path without a leading forward slash,
         # then add it back before returning.
-        if self._disable_path_encoding == False:
+        if not self._disable_path_encoding:
             if _path.startswith("http"):
                 return "/" + self._encode_proxy_path(_path)
             else:
