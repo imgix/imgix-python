@@ -3,8 +3,10 @@ language: python
 
 python:
   - 3.6
-  - 3.7
-  - 3.8
+  # TODO: re-enable these tests once the importlib_metadata version bug has
+  # been addressed
+  # - 3.7
+  # - 3.8
   - pypy3
 
 env:
