@@ -72,16 +72,24 @@ To produce a signed URL, you must enable secure URLs on your source and then pro
 
 ## Disabled Path Encoding
 
-Path encoding is enabled by default. It can be toggled off by setting `disable_path_encoding` to `True`:
+Path encoding is enabled by default. It can be toggled off by setting `disable_path_encoding` to `True` in the optional `options` paramater in `create_url()` and `create_srcset()` functions:
 
 ```python
 >>> from imgix import UrlBuilder
->>> ub = UrlBuilder("sdk-test.imgix.net", disable_path_encoding=True)
->>> ub.create_url(" <>[]{}|^%.jpg", {'w': 100, 'h': 100})  
+>>> ub = UrlBuilder("sdk-test.imgix.net")
+>>> ub.create_url(" <>[]{}|^%.jpg", params={'w': 100, 'h': 100}, options={'disable_path_encoding': True})
 'https://sdk-test.imgix.net/ <>[]{}|^%.jpg?h=100&w=100'
 ```
 
 Normally this would output a source URL like `https://demo.imgix.net/%20%3C%3E%5B%5D%7B%7D%7C%5E%25.jpg?h=100&2=100`, but since path encoding is disabled, it will output a source URL like `https://sdk-test.imgix.net/ <>[]{}|^%.jpg?h=100&w=100`.
+
+```python
+>>> from imgix import UrlBuilder
+>>> ub = UrlBuilder("sdk-test.imgix.net")
+>>> ub.create_srcset("image<>[]{} 123.png", widths=[100], options={'disable_path_encoding': True})
+'https://sdk-test.imgix.net/image<>[]{} 123.png?w=100 100w'
+```
+Normally this would output a source URL like `https://sdk-test.imgix.net/image%3C%3E%5B%5D%7B%7D%20123.png?&w=100 100w`, but since path encoding is disabled, it will output a source URL like `https://sdk-test.imgix.net//image<>[]{} 123.png?w=100 100w`.
 
 ## Srcset Generation
 
