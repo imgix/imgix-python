@@ -38,7 +38,8 @@ class UrlBuilder(object):
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
     disable_path_encoding : bool
-        If `True`, the path component of the URL will not be encoded. (default `False`)
+        If `True`, the path component of the URL
+        will not be encoded. (default `False`)
 
     Methods
     -------
@@ -56,12 +57,13 @@ class UrlBuilder(object):
     """
 
     def __init__(
-            self,
-            domain,
-            use_https=True,
-            sign_key=None,
-            include_library_param=True,
-            disable_path_encoding=False):
+        self,
+        domain,
+        use_https=True,
+        sign_key=None,
+        include_library_param=True,
+        disable_path_encoding=False,
+    ):
 
         self.validate_domain(domain)
 
@@ -86,9 +88,10 @@ class UrlBuilder(object):
         """
 
         err_str = str(
-            'Domain must be passed in as fully-qualified domain names and ' +
-            'should not include a protocol or any path element, i.e. ' +
-            '"example.imgix.net".')
+            "Domain must be passed in as fully-qualified domain names and "
+            + "should not include a protocol or any path element, i.e. "
+            + '"example.imgix.net".'
+        )
 
         if re.match(DOMAIN_PATTERN, domain) is None:
             raise ValueError(err_str)
@@ -120,10 +123,7 @@ class UrlBuilder(object):
 
         scheme = "https" if self._use_https else "http"
 
-        return scheme + "://" \
-            + self._domain \
-            + sanitized_path \
-            + query_string
+        return scheme + "://" + self._domain + sanitized_path + query_string
 
     def _sanitize_path(self, path):
         if not path:
@@ -165,21 +165,24 @@ class UrlBuilder(object):
                 # First we call encode on v to get a bytes-like object,
                 # then after replacing any padding characters that may
                 # be present, we call decode to get back a string object.
-                _params[k] = urlsafe_b64encode(
-                    v.encode('utf-8')).replace(b"=", b'').decode("utf-8")
+                _params[k] = (
+                    urlsafe_b64encode(v.encode("utf-8"))
+                    .replace(b"=", b"")
+                    .decode("utf-8")
+                )
             else:
                 # quote_plus will encode SPACE (' ') as PLUS (+). If a
                 # PLUS (+) is present, e.g. "Futura+Condensed Medium",
                 # it will be encoded as "Futura%2BCondensed+Medium".
                 _params[k] = quote_plus(v).replace("+", "%20")
 
-        query_string = [f'{k}={_params[k]}' for k in sorted(_params.keys())]
+        query_string = [f"{k}={_params[k]}" for k in sorted(_params.keys())]
         delimeter = "?" if query_string else ""
         return delimeter + "&".join(query_string)
 
     def _sign_url(self, prefixed_path, query_string):
         signature_base = self._sign_key + prefixed_path + query_string
-        signature = hashlib.md5(signature_base.encode('utf-8')).hexdigest()
+        signature = hashlib.md5(signature_base.encode("utf-8")).hexdigest()
         delimeter = "&s=" if query_string else "?s="
         return query_string + delimeter + signature
 
@@ -234,16 +237,16 @@ class UrlBuilder(object):
         str
             Srcset attribute string.
         """
-        widths_list = kwargs.get('widths', None)
+        widths_list = kwargs.get("widths", None)
         if widths_list:
             validate_widths(widths_list)
             return self._build_srcset_pairs(path, params, targets=widths_list)
 
         # Attempt to assign `start`, `stop`, and `tol` from `kwargs`.
         # If the key does not exist, assign `None`.
-        start = kwargs.get('start', None)
-        stop = kwargs.get('stop', None)
-        tol = kwargs.get('tol', None)
+        start = kwargs.get("start", None)
+        stop = kwargs.get("stop", None)
+        tol = kwargs.get("tol", None)
 
         # Attempt to generate the specified target widths.
         # Assign defaults where appropriate, then validate
@@ -258,35 +261,38 @@ class UrlBuilder(object):
 
         validate_min_max_tol(start, stop, tol)
 
-        targets = \
-            target_widths(start=start, stop=stop, tol=tol)
+        targets = target_widths(start=start, stop=stop, tol=tol)
 
-        if 'w' in params or 'h' in params:
-            disable_variable_quality = \
-                kwargs.get('disable_variable_quality', False)
+        if "w" in params or "h" in params:
+            disable_variable_quality = kwargs.get(
+                "disable_variable_quality", False
+            )
             return self._build_srcset_DPR(
-                path,
-                params,
-                disable_variable_quality=disable_variable_quality)
+                path, params, disable_variable_quality=disable_variable_quality
+            )
         else:
             return self._build_srcset_pairs(path, params, targets)
 
-    def _build_srcset_pairs(
-            self, path, params, targets=TARGET_WIDTHS):
+    def _build_srcset_pairs(self, path, params, targets=TARGET_WIDTHS):
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
 
         for w in targets:
-            srcset_params['w'] = w
-            srcset_entries.append(self.create_url(path, srcset_params) +
-                                  " " + str(w) + "w")
+            srcset_params["w"] = w
+            srcset_entries.append(
+                self.create_url(path, srcset_params) + " " + str(w) + "w"
+            )
 
         return ",\n".join(srcset_entries)
 
     def _build_srcset_DPR(
-            self, path, params, targets=TARGET_RATIOS,
-            disable_variable_quality=False):
+        self,
+        path,
+        params,
+        targets=TARGET_RATIOS,
+        disable_variable_quality=False,
+    ):
         # If variable quality output is _not disabled_, then output
         # quality values, 'q', will vary in accordance with the
         # default `DPR_QUALITIES` [1x => q=75, ... 5x => 20].
@@ -305,14 +311,15 @@ class UrlBuilder(object):
         srcset_entries = []
 
         for dpr in targets:
-            srcset_params['dpr'] = dpr
+            srcset_params["dpr"] = dpr
 
             if not disable_variable_quality:
-                quality = params.get('q', DPR_QUALITIES[dpr])
-                srcset_params['q'] = quality
+                quality = params.get("q", DPR_QUALITIES[dpr])
+                srcset_params["q"] = quality
 
-            srcset_entries.append(self.create_url(path, srcset_params) +
-                                  " " + str(dpr) + "x")
+            srcset_entries.append(
+                self.create_url(path, srcset_params) + " " + str(dpr) + "x"
+            )
 
         return ",\n".join(srcset_entries)
 

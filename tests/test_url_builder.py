@@ -27,8 +27,11 @@ def _default_builder_with_signature():
 
 
 def _default_builder_with_disable_path_encoding_true():
-    return imgix.UrlBuilder('my-social-network.imgix.net', disable_path_encoding=True,
-                            include_library_param=False)
+    return imgix.UrlBuilder(
+        "my-social-network.imgix.net",
+        disable_path_encoding=True,
+        include_library_param=False,
+    )
 
 
 def test_create():
@@ -169,24 +172,22 @@ def test_create_url_with_questionable_chars_in_path():
     )
 
 
-def test_create_url_with_unicode_path_and_disable_path_encoding_true():
+def test_create_url_with_unicode_path_and_disabled_path_encoding():
     builder = _default_builder_with_disable_path_encoding_true()
     url = builder.create_url("ساندویچ.jpg")
-    assert url == "https://my-social-network.imgix.net/" \
-        "ساندویچ.jpg"
+    assert url == "https://my-social-network.imgix.net/" "ساندویچ.jpg"
 
-def test_create_url_with_spaces_brackets_in_path_and_disable_path_encoding_true():
+
+def test_create_url_with_spaces_brackets_in_path_and_disabled_path_encoding():
     builder = _default_builder_with_disable_path_encoding_true()
     url = builder.create_url(r" <>[]{}|\^%.jpg")
-    assert url == "https://my-social-network.imgix.net/" \
-        r" <>[]{}|\^%.jpg"
+    assert url == "https://my-social-network.imgix.net/" r" <>[]{}|\^%.jpg"
 
 
-def test_create_url_with_questionable_chars_in_path_and_disable_path_encoding_true():
+def test_create_url_with_special_chars_in_path_and_disabled_path_encoding():
     builder = _default_builder_with_disable_path_encoding_true()
     url = builder.create_url("&$+,:;=?@#.jpg")
-    assert url == "https://my-social-network.imgix.net/" \
-        "&$+,:;=?@#.jpg"
+    assert url == "https://my-social-network.imgix.net/" "&$+,:;=?@#.jpg"
 
 
 def test_use_https():
