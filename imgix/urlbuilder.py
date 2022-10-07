@@ -37,6 +37,8 @@ class UrlBuilder(object):
     include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
+    disable_path_encoding : bool
+        If `True`, the path component of the URL will not be encoded. (default `False`)
 
     Methods
     -------
@@ -58,7 +60,8 @@ class UrlBuilder(object):
             domain,
             use_https=True,
             sign_key=None,
-            include_library_param=True):
+            include_library_param=True,
+            disable_path_encoding=False):
 
         self.validate_domain(domain)
 
@@ -66,6 +69,7 @@ class UrlBuilder(object):
         self._sign_key = sign_key
         self._use_https = use_https
         self._include_library_param = include_library_param
+        self._disable_path_encoding = disable_path_encoding
 
     def validate_domain(self, domain):
         """
@@ -133,7 +137,9 @@ class UrlBuilder(object):
 
         # Encode the path without a leading forward slash,
         # then add it back before returning.
-        if _path.startswith("http"):
+        if self._disable_path_encoding:
+            return "/" + _path
+        elif _path.startswith("http"):
             return "/" + self._encode_proxy_path(_path)
         else:
             return "/" + self._encode_file_path(_path)
