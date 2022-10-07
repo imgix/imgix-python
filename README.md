@@ -77,7 +77,7 @@ Path encoding is enabled by default. It can be toggled off by setting `disable_p
 ```python
 >>> from imgix import UrlBuilder
 >>> ub = UrlBuilder("sdk-test.imgix.net", disable_path_encoding=True)
->>> >>> ub.create_url(" <>[]{}|^%.jpg", {'w': 100, 'h': 100})  
+>>> ub.create_url(" <>[]{}|^%.jpg", {'w': 100, 'h': 100})  
 'https://sdk-test.imgix.net/ <>[]{}|^%.jpg?h=100&w=100'
 ```
 
