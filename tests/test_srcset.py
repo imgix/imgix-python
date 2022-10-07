@@ -134,20 +134,25 @@ def test_create_srcset_100_to_108():
 
 
 def test_create_srcset_with_widths_and_disable_path_encoding_true():
-    ub = imgix.UrlBuilder(
-        DOMAIN, include_library_param=False, disable_path_encoding=True
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH_WITH_SPACE,
+        widths=[100],
+        options={"disable_path_encoding": True},
     )
-    actual = ub.create_srcset(JPG_PATH_WITH_SPACE, widths=[100])
     expected = "https://testing.imgix.net/image 123.jpg?w=100 100w"
 
     assert expected == actual
 
 
 def test_create_srcset_start_equals_stop_with_disable_path_encoding_true():
-    ub = imgix.UrlBuilder(
-        DOMAIN, include_library_param=False, disable_path_encoding=True
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH_WITH_SPACE,
+        start=713,
+        stop=713,
+        options={"disable_path_encoding": True},
     )
-    actual = ub.create_srcset(JPG_PATH_WITH_SPACE, start=713, stop=713)
     expected = "https://testing.imgix.net/image 123.jpg?w=713 713w"
 
     assert expected == actual
