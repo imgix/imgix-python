@@ -135,19 +135,12 @@ class UrlBuilder(object):
 
         # Encode the path without a leading forward slash,
         # then add it back before returning.
-        # disable_path_encoding = not options["encode"]
         if options["disable_path_encoding"]:
             return "/" + _path
         elif _path.startswith("http"):
             return "/" + self._encode_proxy_path(_path)
         else:
             return "/" + self._encode_file_path(_path)
-        # if options["encode"] != False:
-        #     if _path.startswith("http"):
-        #         return "/" + self._encode_proxy_path(_path)
-        #     else:
-        #         return "/" + self._encode_file_path(_path)
-        # return "/" + _path
 
     def _encode_file_path(self, path):
         return quote(path, safe="/&$;=@,")
