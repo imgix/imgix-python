@@ -37,9 +37,6 @@ class UrlBuilder(object):
     include_library_param : bool
         If `True`, each created URL is suffixed with 'ixlib' parameter
         indicating the library used for generating the URLs. (default `True`)
-    disable_path_encoding : bool
-        If `True`, the path component of the URL
-        will not be encoded. (default `False`)
 
     Methods
     -------
@@ -57,12 +54,7 @@ class UrlBuilder(object):
     """
 
     def __init__(
-        self,
-        domain,
-        use_https=True,
-        sign_key=None,
-        include_library_param=True,
-        disable_path_encoding=False,
+        self, domain, use_https=True, sign_key=None, include_library_param=True
     ):
 
         self.validate_domain(domain)
@@ -71,7 +63,6 @@ class UrlBuilder(object):
         self._sign_key = sign_key
         self._use_https = use_https
         self._include_library_param = include_library_param
-        self._disable_path_encoding = disable_path_encoding
 
     def validate_domain(self, domain):
         """
@@ -96,9 +87,10 @@ class UrlBuilder(object):
         if re.match(DOMAIN_PATTERN, domain) is None:
             raise ValueError(err_str)
 
-    def create_url(self, path="", params={}):
+    def create_url(self, path="", params={}, options={}):
         """
-        Create URL with supplied path and `params` parameters dict.
+        Create URL with supplied path, `params` parameters dict
+        and optional `options` dict.
 
         Parameters
         ----------
@@ -108,13 +100,19 @@ class UrlBuilder(object):
             added to the URL unprocessed. For a complete list of imgix
             supported parameters, visit https://docs.imgix.com/apis/url .
             (default None)
+        options : dict
+            Dictionary specifying URL options such as disabled_path_encoding.
+            (default None)
 
         Returns
         -------
         str
             imgix URL
         """
-        sanitized_path = self._sanitize_path(path)
+        disable_path_encoding = options.get("disable_path_encoding", False)
+        sanitized_path = self._sanitize_path(
+            path, options={"disable_path_encoding": disable_path_encoding}
+        )
 
         query_string = self._build_params(params)
 
@@ -125,7 +123,7 @@ class UrlBuilder(object):
 
         return scheme + "://" + self._domain + sanitized_path + query_string
 
-    def _sanitize_path(self, path):
+    def _sanitize_path(self, path, options={}):
         if not path:
             return ""
 
@@ -137,12 +135,19 @@ class UrlBuilder(object):
 
         # Encode the path without a leading forward slash,
         # then add it back before returning.
-        if self._disable_path_encoding:
+        # disable_path_encoding = not options["encode"]
+        if options["disable_path_encoding"]:
             return "/" + _path
         elif _path.startswith("http"):
             return "/" + self._encode_proxy_path(_path)
         else:
             return "/" + self._encode_file_path(_path)
+        # if options["encode"] != False:
+        #     if _path.startswith("http"):
+        #         return "/" + self._encode_proxy_path(_path)
+        #     else:
+        #         return "/" + self._encode_file_path(_path)
+        # return "/" + _path
 
     def _encode_file_path(self, path):
         return quote(path, safe="/&$;=@,")
@@ -186,7 +191,7 @@ class UrlBuilder(object):
         delimeter = "&s=" if query_string else "?s="
         return query_string + delimeter + signature
 
-    def create_srcset(self, path, params={}, **kwargs):
+    def create_srcset(self, path, params={}, options={}, **kwargs):
         """
         Create a srcset attribute.
 
@@ -224,6 +229,9 @@ class UrlBuilder(object):
             Parameters that will be transformed into query parameters,
             including 'w' or 'ar' and 'h' if generating a pixel density
             described srcset, {} by default.
+        options: dict, optional
+            Options that will be used to generate the srcset,
+            including 'disable_path_encoding', {} by default.
         start : int, optional
             Starting minimum width value, MIN_WIDTH by default.
         stop : int, optional
@@ -240,7 +248,9 @@ class UrlBuilder(object):
         widths_list = kwargs.get("widths", None)
         if widths_list:
             validate_widths(widths_list)
-            return self._build_srcset_pairs(path, params, targets=widths_list)
+            return self._build_srcset_pairs(
+                path, params, options, targets=widths_list
+            )
 
         # Attempt to assign `start`, `stop`, and `tol` from `kwargs`.
         # If the key does not exist, assign `None`.
@@ -268,12 +278,17 @@ class UrlBuilder(object):
                 "disable_variable_quality", False
             )
             return self._build_srcset_DPR(
-                path, params, disable_variable_quality=disable_variable_quality
+                path,
+                params,
+                options,
+                disable_variable_quality=disable_variable_quality,
             )
         else:
-            return self._build_srcset_pairs(path, params, targets)
+            return self._build_srcset_pairs(path, params, options, targets)
 
-    def _build_srcset_pairs(self, path, params, targets=TARGET_WIDTHS):
+    def _build_srcset_pairs(
+        self, path, params, options, targets=TARGET_WIDTHS
+    ):
         # prevents mutating the params dict
         srcset_params = dict(params)
         srcset_entries = []
@@ -281,7 +296,10 @@ class UrlBuilder(object):
         for w in targets:
             srcset_params["w"] = w
             srcset_entries.append(
-                self.create_url(path, srcset_params) + " " + str(w) + "w"
+                self.create_url(path, srcset_params, options)
+                + " "
+                + str(w)
+                + "w"
             )
 
         return ",\n".join(srcset_entries)
@@ -290,6 +308,7 @@ class UrlBuilder(object):
         self,
         path,
         params,
+        options,
         targets=TARGET_RATIOS,
         disable_variable_quality=False,
     ):
@@ -318,7 +337,10 @@ class UrlBuilder(object):
                 srcset_params["q"] = quality
 
             srcset_entries.append(
-                self.create_url(path, srcset_params) + " " + str(dpr) + "x"
+                self.create_url(path, srcset_params, options)
+                + " "
+                + str(dpr)
+                + "x"
             )
 
         return ",\n".join(srcset_entries)
