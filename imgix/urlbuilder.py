@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 import re
 import hashlib
 
@@ -7,7 +8,11 @@ from ._version import __version__
 
 from base64 import urlsafe_b64encode
 from urllib.parse import quote_plus, quote
-from .validators import validate_min_max_tol, validate_widths
+from .validators import (
+    validate_min_max_tol,
+    validate_variable_qualities,
+    validate_widths,
+)
 
 from .constants import DPR_QUALITIES
 from .constants import IMAGE_MAX_WIDTH as MAX_WIDTH
@@ -224,7 +229,8 @@ class UrlBuilder(object):
             described srcset, {} by default.
         options: dict, optional
             Options that will be used to generate the srcset,
-            including 'disable_path_encoding', {} by default.
+            including 'disable_path_encoding', 'variable_qualities',
+            {} by default.
         start : int, optional
             Starting minimum width value, MIN_WIDTH by default.
         stop : int, optional
@@ -322,12 +328,23 @@ class UrlBuilder(object):
         srcset_params = dict(params)
         srcset_entries = []
 
+        variable_qualities = options.get("variable_qualities", {})
+        if variable_qualities:
+            validate_variable_qualities(variable_qualities)
+
+        qualities = DPR_QUALITIES | variable_qualities
+
         for dpr in targets:
             srcset_params["dpr"] = dpr
 
             if not disable_variable_quality:
-                quality = params.get("q", DPR_QUALITIES[dpr])
-                srcset_params["q"] = quality
+                quality = (
+                    params.get("q", None)
+                    or qualities.get("dpr")
+                    or qualities.get(math.floor(dpr))
+                )
+                if quality:
+                    srcset_params["q"] = quality
 
             srcset_entries.append(
                 self.create_url(path, srcset_params, options)

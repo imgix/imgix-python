@@ -23,3 +23,7 @@ class WidthRangeError(Error):
 
 class WidthToleranceError(Error):
     """Exception raised for an invalid width `tol`erance."""
+
+
+class VariableQualitiesError(Error):
+    """Exception raised for an invalid variable qualities."""
