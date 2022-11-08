@@ -96,6 +96,24 @@ def test_create_srcset_with_widths():
     assert expected == actual
 
 
+def test_create_srcset_with_variable_qualities():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {"variable_qualities": {1: 45, 2: 30, 3: 20, 4: 15, 5: 10}},
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=45&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=2&q=30&w=100 2x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=3&q=20&w=100 3x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=4&q=15&w=100 4x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=5&q=10&w=100 5x"
+    )
+
+    assert expected == actual
+
+
 def test_create_srcset_start_equals_stop():
     ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
     actual = ub.create_srcset(JPG_PATH, start=713, stop=713)
