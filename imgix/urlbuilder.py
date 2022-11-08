@@ -332,7 +332,7 @@ class UrlBuilder(object):
         if variable_qualities:
             validate_variable_qualities(variable_qualities)
 
-        qualities = DPR_QUALITIES | variable_qualities
+        qualities = {**DPR_QUALITIES, **variable_qualities}
 
         for dpr in targets:
             srcset_params["dpr"] = dpr
