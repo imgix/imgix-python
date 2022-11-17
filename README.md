@@ -20,7 +20,6 @@
 - [Srcset Generation](#srcset-generation)
     * [Fixed-Width Images](#fixed-width-images)
         + [Variable Quality](#variable-quality)
-        + [Variable Qualities](#variable-qualities)
     * [Fluid-Width Images](#fluid-width-images)
         + [Custom Widths](#custom-widths)
         + [Width Ranges](#width-ranges)
@@ -171,23 +170,21 @@ https://demo.imgix.net/image.jpg?w=100&dpr=4&q=23 4x,
 https://demo.imgix.net/image.jpg?w=100&dpr=5&q=20 5x
 ```
 
-#### Variable Qualities
-
 By default, this library will automatically append a variable `q` parameter mapped to each `dpr` parameter when generating a [fixed-width image](#fixed-width-images) srcset.
 
 To customize variable qualities, you can pass a `variable_qualities` dictionary in the `options` while creating srcset as below:
-```py
->>> from imgix import UrlBuilder
->>> client = UrlBuilder("sdk-test.imgix.net")
->>> client.create_srcset("image.jpg", {"w": 100}, {"variable_qualities": {1: 45, 2: 30, 3: 20, 4: 15, 5: 10}})
+```python
+from imgix import UrlBuilder
+client = UrlBuilder("demo.imgix.net")
+client.create_srcset("image.jpg", {"w": 100}, {"variable_qualities": {1: 45, 2: 30, 3: 20, 4: 15, 5: 10}})
 ```
 The above script will produce the following output:
 ```bash
-https://sdk-test.imgix.net/image.jpg?dpr=1&q=45&w=100 1x
-https://sdk-test.imgix.net/image.jpg?dpr=2&q=30&w=100 2x
-https://sdk-test.imgix.net/image.jpg?dpr=3&q=20&w=100 3x
-https://sdk-test.imgix.net/image.jpg?dpr=4&&q=15&w=100 4x
-https://sdk-test.imgix.net/image.jpg?dpr=5&q=10&w=100 5x
+https://demo.imgix.net/image.jpg?dpr=1&q=45&w=100 1x
+https://demo.imgix.net/image.jpg?dpr=2&q=30&w=100 2x
+https://demo.imgix.net/image.jpg?dpr=3&q=20&w=100 3x
+https://demo.imgix.net/image.jpg?dpr=4&&q=15&w=100 4x
+https://demo.imgix.net/image.jpg?dpr=5&q=10&w=100 5x
 ``` 
 
 ### Fluid-Width Images
