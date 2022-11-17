@@ -199,7 +199,7 @@ def validate_variable_qualities(variable_qualities):
     Parameters
     ----------
     variable_qualities : dict
-        A dictionary of variable qualities values.
+        A dictionary of variable quality values.
 
     Raises
     ------
