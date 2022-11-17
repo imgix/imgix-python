@@ -114,6 +114,22 @@ def test_create_srcset_with_variable_qualities():
     assert expected == actual
 
 
+def test_create_srcset_with_less_than_five_variable_qualities():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {"variable_qualities": {1: 100, 2: 90, 3: 80}},
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=100&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=2&q=90&w=100 2x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=3&q=80&w=100 3x"
+    )
+
+    assert expected == actual
+
+
 def test_create_srcset_start_equals_stop():
     ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
     actual = ub.create_srcset(JPG_PATH, start=713, stop=713)

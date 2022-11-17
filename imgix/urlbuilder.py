@@ -331,6 +331,7 @@ class UrlBuilder(object):
         variable_qualities = options.get("variable_qualities", {})
         if variable_qualities:
             validate_variable_qualities(variable_qualities)
+            targets = range(1, len(variable_qualities)+1)
 
         qualities = {**DPR_QUALITIES, **variable_qualities}
 
