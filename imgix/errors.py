@@ -27,3 +27,7 @@ class WidthToleranceError(Error):
 
 class VariableQualitiesError(Error):
     """Exception raised for an invalid variable qualities."""
+
+
+class DevicePixelRatiosError(Error):
+    """Exception raised for an invalid device pixel ratios."""

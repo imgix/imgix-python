@@ -1,4 +1,5 @@
 from .errors import (
+    DevicePixelRatiosError,
     VariableQualitiesError,
     WidthRangeError,
     WidthToleranceError,
@@ -208,3 +209,31 @@ def validate_variable_qualities(variable_qualities):
     """
     if not isinstance(variable_qualities, dict):
         raise VariableQualitiesError("`variable_qualities` must be a `dict`")
+
+
+def validate_device_pixel_ratios(device_pixel_ratios):
+    """Validate a list of `device_pixel_ratios`.
+
+    This function checks whether `device_pixel_ratios` is a list.
+
+
+    Parameters
+    ----------
+    device_pixel_ratios : list
+        A list of device pixel ratios.
+
+    Raises
+    ------
+    DevicePixelRatiosError
+        If `device_pixel_ratios` is not a list, raise.
+    """
+    if not isinstance(device_pixel_ratios, list):
+        raise DevicePixelRatiosError("`device_pixel_ratios` must be a `list`")
+    else:
+        all_valid_dpr = False
+        for dpr in device_pixel_ratios:
+            all_valid_dpr = isinstance(dpr, int) and dpr >= 1 and dpr <= 5
+
+        if not all_valid_dpr:
+            raise DevicePixelRatiosError("`device_pixel_ratios` can only \
+                contain positive integer values between 1 and 5")

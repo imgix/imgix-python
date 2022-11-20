@@ -9,6 +9,7 @@ from ._version import __version__
 from base64 import urlsafe_b64encode
 from urllib.parse import quote_plus, quote
 from .validators import (
+    validate_device_pixel_ratios,
     validate_min_max_tol,
     validate_variable_qualities,
     validate_widths,
@@ -230,7 +231,7 @@ class UrlBuilder(object):
         options: dict, optional
             Options that will be used to generate the srcset,
             including 'disable_path_encoding', 'variable_qualities',
-            {} by default.
+            'device pixel ratios', {} by default.
         start : int, optional
             Starting minimum width value, MIN_WIDTH by default.
         stop : int, optional
@@ -334,6 +335,11 @@ class UrlBuilder(object):
             targets = range(1, len(variable_qualities)+1)
 
         qualities = {**DPR_QUALITIES, **variable_qualities}
+
+        device_pixel_ratios = options.get("device_pixel_ratios", [])
+        if device_pixel_ratios:
+            validate_device_pixel_ratios(device_pixel_ratios)
+            targets = device_pixel_ratios
 
         for dpr in targets:
             srcset_params["dpr"] = dpr
