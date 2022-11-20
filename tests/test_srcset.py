@@ -130,6 +130,92 @@ def test_create_srcset_with_less_than_five_variable_qualities():
     assert expected == actual
 
 
+def test_create_srcset_with_custom_serial_target_dpr():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {"device_pixel_ratios": [1, 2]},
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=75&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=2&q=50&w=100 2x"
+    )
+
+    assert expected == actual
+
+
+def test_create_srcset_with_custom_random_target_dpr():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {"device_pixel_ratios": [1, 4]},
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=75&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=4&q=23&w=100 4x"
+    )
+
+    assert expected == actual
+
+
+def test_create_srcset_with_custom_serial_target_dpr_and_variable_qualities():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {
+            "device_pixel_ratios": [1, 2, 3],
+            "variable_qualities": {1: 100, 2: 90, 3: 80},
+        },
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=100&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=2&q=90&w=100 2x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=3&q=80&w=100 3x"
+    )
+
+    assert expected == actual
+
+
+def test_create_srcset_with_less_random_target_dpr_and_variable_qualities():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {
+            "device_pixel_ratios": [1, 3],
+            "variable_qualities": {1: 100, 2: 90, 3: 80},
+        },
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=100&w=100 1x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=3&q=80&w=100 3x"
+    )
+
+    assert expected == actual
+
+
+def test_create_srcset_with_random_target_dpr_and_less_variable_qualities():
+    ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
+    actual = ub.create_srcset(
+        JPG_PATH,
+        {"w": 100},
+        {
+            "device_pixel_ratios": [1, 2, 3],
+            "variable_qualities": {1: 100, 3: 80},
+        },
+    )
+    expected = (
+        "https://testing.imgix.net/image.jpg?dpr=1&q=100&w=100 1x,\n"
+        "https://testing.imgix.net/image.jpg?dpr=2&q=50&w=100 2x,\n"
+        + "https://testing.imgix.net/image.jpg?dpr=3&q=80&w=100 3x"
+    )
+
+    assert expected == actual
+
+
 def test_create_srcset_start_equals_stop():
     ub = imgix.UrlBuilder(DOMAIN, include_library_param=False)
     actual = ub.create_srcset(JPG_PATH, start=713, stop=713)
