@@ -139,6 +139,26 @@ https://demos.imgix.net/image.png?ar=3%3A2&dpr=4&fit=crop&h=800&s=c89c2fd3148957
 https://demos.imgix.net/image.png?ar=3%3A2&dpr=5&fit=crop&h=800&s=3d73af69d78d49eef0f81b4b5d718a2c 5x
 ```
 
+This library generate by default `1` to `5` dpr `srcset`. You can control generated target ratios with `device_pixel_ratios` parameters.
+
+```python
+from imgix import UrlBuilder
+client = UrlBuilder("demo.imgix.net")
+client.create_srcset(
+  "image.jpg",
+  { "w": 100 },
+  {
+    "device_pixel_ratios": [ 1, 2, 3 ]
+  }
+)
+```
+Will produce the following attribute value:
+```html
+https://demo.imgix.net/image.jpg?dpr=1&ixlib=python-3.2.1&q=75&w=100 1x,
+https://demo.imgix.net/image.jpg?dpr=2&ixlib=python-3.2.1&q=50&w=100 2x,
+https://demo.imgix.net/image.jpg?dpr=3&ixlib=python-3.2.1&q=35&w=100 3x'
+```
+
 For more information to better understand srcset, we highly recommend
 [Eric Portis' "Srcset and sizes" article](https://ericportis.com/posts/2014/srcset-sizes/) which goes into depth about the subject.
 
@@ -186,6 +206,26 @@ https://demo.imgix.net/image.jpg?dpr=3&q=20&w=100 3x
 https://demo.imgix.net/image.jpg?dpr=4&&q=15&w=100 4x
 https://demo.imgix.net/image.jpg?dpr=5&q=10&w=100 5x
 ``` 
+
+You can also pass `variable_qualities` along with the `device_pixel_ratios` option as below:
+```python
+from imgix import UrlBuilder
+client = UrlBuilder("demo.imgix.net")
+client.create_srcset(
+  "image.jpg",
+  { "w": 100 },
+  {
+    "device_pixel_ratios": [ 1, 2, 3 ],
+    "variable_qualities": { 1: 45, 2: 30, 3: 20 }
+  }
+)
+```
+The above script will produce the following output:
+```html
+https://testing.imgix.net/image.jpg?dpr=1&q=45&w=100 1x,
+https://testing.imgix.net/image.jpg?dpr=2&q=30&w=100 2x,
+https://testing.imgix.net/image.jpg?dpr=3&q=20&w=100 3x
+```
 
 ### Fluid-Width Images
 
