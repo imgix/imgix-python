@@ -139,7 +139,8 @@ https://demos.imgix.net/image.png?ar=3%3A2&dpr=4&fit=crop&h=800&s=c89c2fd3148957
 https://demos.imgix.net/image.png?ar=3%3A2&dpr=5&fit=crop&h=800&s=3d73af69d78d49eef0f81b4b5d718a2c 5x
 ```
 
-This library generate by default `1` to `5` dpr `srcset`. You can control generated target ratios with `device_pixel_ratios` parameters.
+By default, this library generates a `srcset` with pixel density values of `1` through `5`.
+These target ratios can be controlled by using the `devicePixelRatios` parameters.
 
 ```python
 from imgix import UrlBuilder
