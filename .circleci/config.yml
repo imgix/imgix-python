@@ -1,0 +1,35 @@
+version: 2.1
+orbs:
+  python: circleci/python@2.1.1
+
+jobs:
+  test:
+    parameters:
+      version:
+        default: "current"
+        description: Python version to install
+        type: string
+    docker:
+      - image: cimg/python:<<parameters.version>>
+    environment:
+      TOX_ENV: flake8
+    resource_class: large
+    steps:
+      - checkout
+      - run: python --version
+      - run:
+          name: Install
+          command: pip install .[dev]
+      - run:
+          name: Tests
+          command: tox -e $TOX_ENV
+
+workflows:
+  test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version:
+                - "current"
+                - "lts"
