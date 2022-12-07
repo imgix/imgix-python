@@ -22,7 +22,7 @@ jobs:
           command: pip install .[dev]
       - run:
           name: Tests
-          command: tox -e $TOX_ENV
+          command: tox
 
 workflows:
   test:
@@ -36,4 +36,3 @@ workflows:
                 - "3.9"
                 - "3.10"
                 - "3.11"
-                - "3.12"
