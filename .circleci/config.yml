@@ -1,0 +1,36 @@
+version: 2.1
+orbs:
+  python: circleci/python@2.1.1
+
+jobs:
+  test:
+    parameters:
+      version:
+        default: "3.11"
+        description: Python version to install
+        type: string
+    docker:
+      - image: cimg/python:<<parameters.version>>
+    resource_class: large
+    steps:
+      - checkout
+      - run: python --version
+      - run:
+          name: Install
+          command: pip install .[dev]
+      - run:
+          name: Tests
+          command: tox
+
+workflows:
+  test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version:
+                - "3.7"
+                - "3.8"
+                - "3.9"
+                - "3.10"
+                - "3.11"
