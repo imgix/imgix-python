@@ -6,7 +6,7 @@ jobs:
   test:
     parameters:
       version:
-        default: "current"
+        default: "3.11"
         description: Python version to install
         type: string
     docker:
