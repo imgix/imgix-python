@@ -32,7 +32,7 @@ setup(
     long_description=u'\n\n'.join([readme, changelog]),
     long_description_content_type=u'text/markdown',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.7',
